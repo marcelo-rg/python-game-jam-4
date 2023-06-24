@@ -111,5 +111,5 @@ class Game:
 
 if __name__ == "__main__":
 	# Create a game instance and start it
-	game = Game(fps = 90)
+	game = Game(fps = 60)
 	game.start()
