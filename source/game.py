@@ -1,5 +1,8 @@
 import pygame
-import window as win
+import os 
+cwd = os.getcwd()
+# import window as 
+from asteroid import Asteroid
 
 class Game:
     def __init__(self, screen_width, screen_height, fps):
@@ -17,6 +20,9 @@ class Game:
         # Game state
         self.running = False
         self.paused = False
+
+        # Add game elements here
+        self.asteroid = Asteroid(200, 100, cwd+"\\assets\\10.png")
 
     def start(self):
         self.running = True
@@ -47,11 +53,15 @@ class Game:
                     print("Move the character left")
                 elif event.key == pygame.K_d:
                     print("Move the character right")
+                elif event.key == pygame.K_q:
+                    self.running = False
 
 
     def update_game_logic(self):
         if not self.paused:
             # Update game state
+            keys_pressed = pygame.key.get_pressed()
+            self.asteroid.update(keys_pressed)
             pass
 
     def render(self):
@@ -59,6 +69,7 @@ class Game:
         self.screen.fill((0, 0, 0))  # Example background fill
 
         # Add your rendering code here
+        self.asteroid.draw(self.screen)
 
         # Update the screen
         pygame.display.flip()
