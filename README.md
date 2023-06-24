@@ -6,6 +6,9 @@
 ## Link for Project
 [To Do](https://github.com/users/marcelo-rg/projects/2/views/2)
 
+## Link for Project
+[Itch.io Jam URL](https://itch.io/jam/python-game-jam-4)
+
 # How to Install & Run
 - pip3 install pygame
 - pip3 install pyfiglet
