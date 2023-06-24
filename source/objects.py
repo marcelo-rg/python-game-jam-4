@@ -66,19 +66,31 @@ class Asteroid:
 
 
 class Planet:
-	def __init__(self, sprite ,x, y):
-		self.x = x
-		self.y = y
-		self.sprite = pygame.transform.scale(sprite, (256, 256))
-		self.half_width = self.sprite.get_width() // 2
-		self.half_height = self.sprite.get_height() // 2
+    def __init__(self, sprite, x, y):
+        self.x = x
+        self.y = y
+        self.sprite = pygame.transform.scale(sprite, (256, 256))
+        self.half_width = self.sprite.get_width() // 2
+        self.half_height = self.sprite.get_height() // 2
+        self.rotation_angle = 0
 
+    def update(self):
+        # Update the rotation angle
+        self.rotation_angle += 0.1  # Adjust the rotation speed as needed
 
-	def update(self):
-		pass
-	
-	
-	def render(self, screen):
-		# Draw the object on the screen
-		screen.blit(self.sprite, (self.x - self.half_width, self.y - self.half_height)) 
+    def render(self, screen):
+        # Rotate the sprite image
+        rotated_sprite = pygame.transform.rotate(self.sprite, self.rotation_angle)
+        
+        # Get the updated dimensions of the rotated sprite
+        rotated_rect = rotated_sprite.get_rect()
+        rotated_width = rotated_rect.width
+        rotated_height = rotated_rect.height
+        
+        # Calculate the position to render the rotated sprite
+        render_x = self.x - rotated_width // 2
+        render_y = self.y - rotated_height // 2
+        
+        # Draw the rotated sprite on the screen
+        screen.blit(rotated_sprite, (render_x, render_y))
 		

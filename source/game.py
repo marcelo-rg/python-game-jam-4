@@ -78,6 +78,7 @@ class Game:
 			# Update game state
 			# keys_pressed = pygame.key.get_pressed()
 			self.asteroid.update()
+			self.planet.update()
 
 	def render(self):
 		# Render the game elements
