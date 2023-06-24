@@ -2,9 +2,9 @@ import pygame
 import os 
 cwd = os.getcwd()
 
-
 from objects import Planet, Asteroid
 from sounds import *
+import variables
 
 class Game:
 	def __init__(self, screen_width = None, screen_height = None, fps= 60):
@@ -30,10 +30,10 @@ class Game:
 		self.paused = False
 
 		# Add game elements here
-		ast_sprite = pygame.image.load(cwd + "\\assets\\asteroid\\12-circular.png")
+		ast_sprite = pygame.image.load(os.path.join(cwd, variables.asteroid_asset))
 		self.asteroid = Asteroid(ast_sprite, screen_width // 2, screen_height // 2)
 
-		planet_sprite = pygame.image.load(cwd + "\\assets\\planet\\14.png")
+		planet_sprite = pygame.image.load(os.path.join(cwd, variables.planet_asset))
 		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
 
 		# Music
