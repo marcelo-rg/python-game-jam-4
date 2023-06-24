@@ -12,5 +12,5 @@
 # How to Install & Run
 - pip3 install pygame
 - pip3 install pyfiglet
-- pip3 install pyinstaller
+- pip3 install cx_Freeze
 - python3 game.py
