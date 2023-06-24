@@ -72,7 +72,7 @@ class Planet:
 
 class Meteor:
     def __init__(self, sprite, screen_width, screen_height, planet_x, planet_y):
-        self.sprite = pygame.transform.scale(sprite, (64, 64))
+        self.sprite = pygame.transform.scale(sprite, (32, 32))
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.planet_x = planet_x
@@ -100,9 +100,8 @@ class Meteor:
         self.direction_x = direction_x / length
         self.direction_y = direction_y / length
 
-    def update(self):
-        # Update the position based on the direction
-        speed = 2  # Adjust the speed as needed
+    def update(self, speed=1):
+        # Update the position based on the direction and speed
         self.x += self.direction_x * speed
         self.y += self.direction_y * speed
 

@@ -37,7 +37,7 @@ class Game:
 		planet_sprite = pygame.image.load(os.path.join(cwd, variables.planet_asset))
 		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
 
-		meteors_sprite_list = [pygame.image.load(cwd+f'\\assets\\meteors\\meteorBrown_big{i}.png') for i in range(1,4,1)]
+		meteors_sprite_list = [pygame.image.load(variables.meteors_assets_path+f'\\meteorBrown_big{i}.png') for i in range(1,4,1)]
 		self.meteor = Meteor(meteors_sprite_list[0], screen_width, screen_height, self.planet.x, self.planet.y)	
 
 		# Music
@@ -83,6 +83,7 @@ class Game:
 			# keys_pressed = pygame.key.get_pressed()
 			self.asteroid.update()
 			self.planet.update()
+			self.meteor.update()
 
 	def render(self):
 		# Render the game elements
@@ -91,6 +92,7 @@ class Game:
 		# Add your rendering code here
 		self.asteroid.render(self.screen)
 		self.planet.render(self.screen)
+		self.meteor.render(self.screen)
 
 		# Update the screen
 		pygame.display.flip()

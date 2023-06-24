@@ -3,7 +3,7 @@ import pygame
 import variables
 
 class MusicPlayer:
-	def __init__(self,volume=0.1):
+	def __init__(self,volume=0.0):
 		pygame.mixer.init()
 		# Using vars from variables.py
 		file_path = os.path.join(variables.background_music_path, variables.background_music)
