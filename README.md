@@ -12,4 +12,5 @@
 # How to Install & Run
 - pip3 install pygame
 - pip3 install pyfiglet
+- pip3 install pyinstaller
 - python3 game.py
