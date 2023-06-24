@@ -30,7 +30,7 @@ class Game:
 
 		# Add game elements here
 		ast_sprite = pygame.image.load(cwd + "\\assets\\12-circular.png")
-		self.planet = Planet(ast_sprite, screen_width // 2, screen_height // 2, 200, 0.01)
+		self.planet = Asteroid(ast_sprite, screen_width // 2, screen_height // 2)
 		# asteroid_rect = self.planet.sprite.get_rect()
 		# asteroid_x = (screen_width - asteroid_rect.width) // 2
 		# asteroid_y = (screen_height - asteroid_rect.height) // 2
@@ -74,7 +74,6 @@ class Game:
 			# Update game state
 			# keys_pressed = pygame.key.get_pressed()
 			self.planet.update()
-			pass
 
 	def render(self):
 		# Render the game elements

@@ -2,7 +2,7 @@ import pygame
 import math
 
 
-def spiral(center_x, center_y, radius, speed):
+def spiral(center_x, center_y, radius= 400, speed= 0.005, decay_rate=0.005):
 	angle = 0
 	while True:
 		x = center_x + (radius * math.cos(angle))
@@ -11,19 +11,28 @@ def spiral(center_x, center_y, radius, speed):
 		# Update the angle based on the speed
 		angle += speed
 		
+		# Decrease the radius using the decay_rate
+		radius -= decay_rate
+
+		if radius < 0:
+			break
+		
 		yield x, y
 
-
-class Planet:
-	def __init__(self, sprite ,screen_center_x, screen_center_y, radius, speed):
+class Asteroid:
+	def __init__(self, sprite ,screen_center_x, screen_center_y):
 		self.sprite = pygame.transform.scale(sprite, (128, 128))
-		self.spiral_generator = spiral(screen_center_x, screen_center_y, radius, speed)
+		self.spiral_generator = spiral(screen_center_x, screen_center_y)
 		self.x, self.y = next(self.spiral_generator)
 		self.half_width = self.sprite.get_width() // 2
 		self.half_height = self.sprite.get_height() // 2
 
 	def update(self):
-		self.x, self.y = next(self.spiral_generator)
+		try:
+			self.x, self.y = next(self.spiral_generator)
+		except StopIteration:
+			# fix the position of the planet if the spiral generator is empty
+			pass
 	
 	def render(self, screen):
 		# Draw the object on the screen, adjust the position to center the image
@@ -56,19 +65,19 @@ class Planet:
 
 
 
-class Asteroid:
-    def __init__(self, sprite ,screen_center_x, screen_center_y, radius, speed):
-        self.sprite = pygame.transform.scale(sprite, (128, 128))
-        asteroid_rect = self.sprite.get_rect()
-        asteroid_x = (screen_center_x - asteroid_rect.width) // 2
-        asteroid_y = (screen_center_y - asteroid_rect.height) // 2
-        self.spiral_generator = spiral(asteroid_x,asteroid_y, radius, speed)
-        self.x, self.y = next(self.spiral_generator)
-    
-    def update(self):
-        self.x, self.y = next(self.spiral_generator)
-    
-    def render(self, screen):
-        # Draw the object on the screen
-        screen.blit(self.sprite, (self.x, self.y)) 
-        
+class Planet:
+	def __init__(self, sprite ,screen_center_x, screen_center_y, radius, speed):
+		self.sprite = pygame.transform.scale(sprite, (128, 128))
+		asteroid_rect = self.sprite.get_rect()
+		self.asteroid_x = (screen_center_x - asteroid_rect.width) // 2
+		self.asteroid_y = (screen_center_y - asteroid_rect.height) // 2
+		self.spiral_generator = spiral(self.asteroid_x,self.asteroid_y, radius, speed)
+
+	def update(self):
+		pass
+	
+	
+	def render(self, screen):
+		# Draw the object on the screen
+		screen.blit(self.sprite, (self.x, self.y)) 
+		
