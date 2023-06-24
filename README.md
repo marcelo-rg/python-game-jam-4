@@ -17,3 +17,13 @@
 
 # How to Create the Executable
 - python3 ExeCreator.py build
+
+**Progress Screenshots**
+======
+## First Image
+![plot](./progress/first-image.png)
+
+## Asteroid Gif
+![plot](./progress/asteroid.gif)
+
+---
