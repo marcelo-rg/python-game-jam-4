@@ -4,6 +4,7 @@ cwd = os.getcwd()
 
 
 from objects import Planet, Asteroid
+from sounds import *
 
 class Game:
 	def __init__(self, screen_width = None, screen_height = None, fps= 60):
@@ -18,7 +19,7 @@ class Game:
 
 		# Set up the game window
 		self.screen = pygame.display.set_mode((screen_width, screen_height))
-		pygame.display.set_caption("My Game")
+		pygame.display.set_caption("Asteroid Wasters")
 
 		# Set up the game clock
 		self.clock = pygame.time.Clock()
@@ -35,6 +36,10 @@ class Game:
 		# asteroid_x = (screen_width - asteroid_rect.width) // 2
 		# asteroid_y = (screen_height - asteroid_rect.height) // 2
 		# self.planet.position = pygame.Vector2(asteroid_x, asteroid_y)
+
+		# Music
+		sound_player = MusicPlayer()
+		sound_player.playBackgroundMusic()
 
 	def start(self):
 		self.running = True
