@@ -1,5 +1,6 @@
 import pygame
 import math
+import random
 
 
 def spiral(center_x, center_y, radius= 400, speed= 0.005, decay_rate=0.005):
@@ -39,32 +40,6 @@ class Asteroid:
 		screen.blit(self.sprite, (self.x - self.half_width, self.y - self.half_height)) 
 
 
-
-# import pygame
-
-# class Asteroid:
-#     def __init__(self, x, y, image_path):
-#         self.position = pygame.Vector2(x, y)
-#         self.sprite = pygame.image.load(image_path)
-#         self.sprite = pygame.transform.scale(self.sprite, (128, 128))
-
-#     def update(self, keys_pressed):
-#         # Update the position based on user input or game logic
-#         if keys_pressed[pygame.K_w]:
-#             self.position.y -= 1
-#         elif keys_pressed[pygame.K_s]:
-#             self.position.y += 1
-#         elif keys_pressed[pygame.K_a]:
-#             self.position.x -= 1
-#         elif keys_pressed[pygame.K_d]:
-#             self.position.x += 1
-
-#     def draw(self, screen):
-#         # Draw the object on the screen
-#         screen.blit(self.sprite, self.position) 
-
-
-
 class Planet:
     def __init__(self, sprite, x, y):
         self.x = x
@@ -94,3 +69,66 @@ class Planet:
         # Draw the rotated sprite on the screen
         screen.blit(rotated_sprite, (render_x, render_y))
 		
+
+class Meteor:
+    def __init__(self, sprite, screen_width, screen_height, planet_x, planet_y):
+        self.sprite = pygame.transform.scale(sprite, (64, 64))
+        self.screen_width = screen_width
+        self.screen_height = screen_height
+        self.planet_x = planet_x
+        self.planet_y = planet_y
+
+        # Randomly determine the spawn position outside the screen
+        spawn_side = random.choice(["top", "bottom", "left", "right"])
+        if spawn_side == "top":
+            self.x = random.randint(0, self.screen_width)
+            self.y = -50
+        elif spawn_side == "bottom":
+            self.x = random.randint(0, self.screen_width)
+            self.y = self.screen_height + 50
+        elif spawn_side == "left":
+            self.x = -50
+            self.y = random.randint(0, self.screen_height)
+        elif spawn_side == "right":
+            self.x = self.screen_width + 50
+            self.y = random.randint(0, self.screen_height)
+
+        # Calculate the direction towards the planet
+        direction_x = self.planet_x - self.x
+        direction_y = self.planet_y - self.y
+        length = math.sqrt(direction_x ** 2 + direction_y ** 2)
+        self.direction_x = direction_x / length
+        self.direction_y = direction_y / length
+
+    def update(self):
+        # Update the position based on the direction
+        speed = 2  # Adjust the speed as needed
+        self.x += self.direction_x * speed
+        self.y += self.direction_y * speed
+
+        # Check if the meteor is off the screen
+        if (
+            self.x < -50
+            or self.x > self.screen_width + 50
+            or self.y < -50
+            or self.y > self.screen_height + 50
+        ):
+            # Respawn the meteor outside the screen
+            spawn_side = random.choice(["top", "bottom", "left", "right"])
+            if spawn_side == "top":
+                self.x = random.randint(0, self.screen_width)
+                self.y = -50
+            elif spawn_side == "bottom":
+                self.x = random.randint(0, self.screen_width)
+                self.y = self.screen_height + 50
+            elif spawn_side == "left":
+                self.x = -50
+                self.y = random.randint(0, self.screen_height)
+            elif spawn_side == "right":
+                self.x = self.screen_width + 50
+                self.y = random.randint(0, self.screen_height)
+
+    def render(self, screen):
+        # Draw the meteor on the screen
+        screen.blit(self.sprite, (self.x, self.y))
+
