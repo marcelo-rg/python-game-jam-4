@@ -25,5 +25,3 @@
 
 ## Asteroid Gif
 ![plot](./progress/asteroid.gif)
-
----
