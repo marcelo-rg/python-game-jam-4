@@ -14,3 +14,6 @@
 - pip3 install pyfiglet
 - pip3 install cx_Freeze
 - python3 game.py
+
+# How to Create the Executable
+- python3 ExeCreator.py build
