@@ -2,7 +2,8 @@ import pygame
 import os 
 cwd = os.getcwd()
 
-from objects import Planet, Asteroid
+
+from objects import Planet, Asteroid, Meteor
 from sounds import *
 import variables
 
@@ -35,6 +36,9 @@ class Game:
 
 		planet_sprite = pygame.image.load(os.path.join(cwd, variables.planet_asset))
 		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
+
+		meteors_sprite_list = [pygame.image.load(cwd+f'\\assets\\meteors\\meteorBrown_big{i}.png') for i in range(1,4,1)]
+		self.meteor = Meteor(meteors_sprite_list[0], screen_width, screen_height, self.planet.x, self.planet.y)	
 
 		# Music
 		sound_player = MusicPlayer()
