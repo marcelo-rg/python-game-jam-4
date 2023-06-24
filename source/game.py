@@ -26,12 +26,12 @@ class Game:
 		self.fps = fps
 
 		# Game state
-		self.running = False
+		self.running = False 
 		self.paused = False
 
 		# Add game elements here
 		ast_sprite = pygame.image.load(cwd + "\\assets\\asteroid\\12-circular.png")
-		self.planet = Planet(ast_sprite, screen_width // 2, screen_height // 2, 200, 0.01)
+		self.asteroid = Asteroid(ast_sprite, screen_width // 2, screen_height // 2)
 		# asteroid_rect = self.planet.sprite.get_rect()
 		# asteroid_x = (screen_width - asteroid_rect.width) // 2
 		# asteroid_y = (screen_height - asteroid_rect.height) // 2
@@ -78,15 +78,14 @@ class Game:
 		if not self.paused:
 			# Update game state
 			# keys_pressed = pygame.key.get_pressed()
-			self.planet.update()
-			pass
+			self.asteroid.update()
 
 	def render(self):
 		# Render the game elements
 		self.screen.fill((0, 0, 0))  # Example background fill
 
 		# Add your rendering code here
-		self.planet.render(self.screen)
+		self.asteroid.render(self.screen)
 
 		# Update the screen
 		pygame.display.flip()
