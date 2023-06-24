@@ -31,10 +31,9 @@ class Game:
 		# Add game elements here
 		ast_sprite = pygame.image.load(cwd + "\\assets\\asteroid\\12-circular.png")
 		self.asteroid = Asteroid(ast_sprite, screen_width // 2, screen_height // 2)
-		# asteroid_rect = self.planet.sprite.get_rect()
-		# asteroid_x = (screen_width - asteroid_rect.width) // 2
-		# asteroid_y = (screen_height - asteroid_rect.height) // 2
-		# self.planet.position = pygame.Vector2(asteroid_x, asteroid_y)
+
+		planet_sprite = pygame.image.load(cwd + "\\assets\\planet\\14.png")
+		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
 
 	def start(self):
 		self.running = True
@@ -81,6 +80,7 @@ class Game:
 
 		# Add your rendering code here
 		self.asteroid.render(self.screen)
+		self.planet.render(self.screen)
 
 		# Update the screen
 		pygame.display.flip()

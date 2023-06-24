@@ -66,12 +66,13 @@ class Asteroid:
 
 
 class Planet:
-	def __init__(self, sprite ,screen_center_x, screen_center_y, radius, speed):
-		self.sprite = pygame.transform.scale(sprite, (128, 128))
-		asteroid_rect = self.sprite.get_rect()
-		self.asteroid_x = (screen_center_x - asteroid_rect.width) // 2
-		self.asteroid_y = (screen_center_y - asteroid_rect.height) // 2
-		self.spiral_generator = spiral(self.asteroid_x,self.asteroid_y, radius, speed)
+	def __init__(self, sprite ,x, y):
+		self.x = x
+		self.y = y
+		self.sprite = pygame.transform.scale(sprite, (256, 256))
+		self.half_width = self.sprite.get_width() // 2
+		self.half_height = self.sprite.get_height() // 2
+
 
 	def update(self):
 		pass
@@ -79,5 +80,5 @@ class Planet:
 	
 	def render(self, screen):
 		# Draw the object on the screen
-		screen.blit(self.sprite, (self.x, self.y)) 
+		screen.blit(self.sprite, (self.x - self.half_width, self.y - self.half_height)) 
 		
