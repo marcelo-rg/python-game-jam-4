@@ -3,7 +3,7 @@ import os
 cwd = os.getcwd()
 
 
-from planet import Planet
+from objects import Planet, Asteroid
 
 class Game:
 	def __init__(self, screen_width = None, screen_height = None, fps= 60):
