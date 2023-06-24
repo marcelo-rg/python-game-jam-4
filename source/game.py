@@ -1,13 +1,20 @@
 import pygame
 import os 
 cwd = os.getcwd()
-# import window as 
+
+
 from asteroid import Asteroid
 
 class Game:
-    def __init__(self, screen_width, screen_height, fps):
+    def __init__(self, screen_width = None, screen_height = None, fps= 60):
         # Initialize Pygame
         pygame.init()
+
+        if screen_width is None or screen_height is None:
+            # Get the screen size
+            screen_info = pygame.display.Info()
+            screen_width = screen_info.current_w
+            screen_height = screen_info.current_h
 
         # Set up the game window
         self.screen = pygame.display.set_mode((screen_width, screen_height))
@@ -22,7 +29,12 @@ class Game:
         self.paused = False
 
         # Add game elements here
-        self.asteroid = Asteroid(200, 100, cwd+"\\assets\\10.png")
+        ast_sprite = pygame.image.load(cwd + "\\assets\\12-circular.png")
+        self.asteroid = Asteroid(ast_sprite, screen_width // 2, screen_height // 2, 200, 0.01)
+        # asteroid_rect = self.asteroid.sprite.get_rect()
+        # asteroid_x = (screen_width - asteroid_rect.width) // 2
+        # asteroid_y = (screen_height - asteroid_rect.height) // 2
+        # self.asteroid.position = pygame.Vector2(asteroid_x, asteroid_y)
 
     def start(self):
         self.running = True
@@ -60,8 +72,8 @@ class Game:
     def update_game_logic(self):
         if not self.paused:
             # Update game state
-            keys_pressed = pygame.key.get_pressed()
-            self.asteroid.update(keys_pressed)
+            # keys_pressed = pygame.key.get_pressed()
+            self.asteroid.update()
             pass
 
     def render(self):
@@ -69,7 +81,7 @@ class Game:
         self.screen.fill((0, 0, 0))  # Example background fill
 
         # Add your rendering code here
-        self.asteroid.draw(self.screen)
+        self.asteroid.render(self.screen)
 
         # Update the screen
         pygame.display.flip()
@@ -85,5 +97,5 @@ class Game:
 
 if __name__ == "__main__":
 	# Create a game instance and start it
-	game = Game(800, 600, 60)
+	game = Game(fps = 90)
 	game.start()
