@@ -38,7 +38,7 @@ class Game:
 		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
 
 		meteors_sprite_list = [pygame.image.load(variables.meteors_assets_path+f'\\meteorBrown_big{i}.png') for i in range(1,4,1)]
-		self.meteors = [Meteor(meteors_sprite_list[i], screen_width, screen_height, self.planet.x, self.planet.y) for i in range(len(meteors_sprite_list))]		
+		self.meteors = [Meteor(meteors_sprite_list[i], screen_width, screen_height, self.planet.rect.x, self.planet.rect.y) for i in range(len(meteors_sprite_list))]		
 
 
 		# Music
