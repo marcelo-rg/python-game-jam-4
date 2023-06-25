@@ -45,7 +45,7 @@ class Game:
 		meteors_sprite_list = [pygame.image.load( \
 				os.path.join(variables.meteor_big_asset + str(iterable) + variables.png_extension)) \
 				for iterable in range(1,4,1)]
-		self.meteors = [Meteor(meteors_sprite_list[iterable], screen_width, screen_height, self.planet.x, self.planet.y) \
+		self.meteors = [Meteor(meteors_sprite_list[iterable], screen_width, screen_height, self.planet.rect.centerx, self.planet.rect.centery) \
 		  		for iterable in range(len(meteors_sprite_list))]		
 
 		# Music
