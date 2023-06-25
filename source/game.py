@@ -97,9 +97,9 @@ class Game:
 	def render(self):
 		# Render the game elements
 		
-		#self.screen.fill((0, 0, 0))  # Example background fill
-		image_draw = ImageDraw(self.screen)
-		image_draw.set_background(variables.background_image)
+		self.screen.fill((0, 0, 0))  # Example background fill
+		#image_draw = ImageDraw(self.screen)
+		#image_draw.set_background(variables.background_image)
 
 		# Add your rendering code here
 		self.asteroid.render(self.screen)
