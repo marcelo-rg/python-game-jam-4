@@ -28,6 +28,7 @@ class Asteroid(Sprite):
 			self.rect = self.image.get_rect()  
 			self.spiral_generator = spiral(screen_center_x, screen_center_y)
 			self.rect.center = next(self.spiral_generator)  
+			self.radius = min(self.rect.width // 2, self.rect.height // 2) # radius for collision detection
 
 	def update(self):
 		try:
@@ -47,6 +48,7 @@ class Planet(Sprite):
 		self.image = self.original_image.copy()  # Create a copy to modify with rotation
 		self.rect = self.image.get_rect(center=(x, y))
 		self.rotation_angle = 0
+		self.radius = max(self.rect.width // 2, self.rect.height // 2) # radius for collision detection
 
 	def update(self):
 		# Update the rotation angle
@@ -65,15 +67,25 @@ class Planet(Sprite):
 class Meteor(Sprite):
 	def __init__(self, sprite, screen_width, screen_height, planet_x, planet_y):
 		super().__init__()
-		self.image = pygame.transform.scale(sprite, (32, 32))
+		self.original_image = pygame.transform.scale(sprite, (32, 32))  # Save the original image for rotating
+		self.image = self.original_image.copy()  # Create a copy to modify with rotation
 		self.rect = self.image.get_rect()
+		self.rotation_angle = 0  # New variable for rotation angle
 		self.screen_width = screen_width
 		self.screen_height = screen_height
 		self.planet_x = planet_x
 		self.planet_y = planet_y
-
+		self.radius = max(self.rect.width // 2, self.rect.height // 2) # radius for collision detection
 
 		# Randomly determine the spawn position outside the screen
+		self.respawn()
+
+		# Calculate the direction towards the planet
+		self.gravity = 0.1  # Adjust the gravity factor as needed
+
+		self.calculate_direction()
+
+	def respawn(self):
 		spawn_side = random.choice(["top", "bottom", "left", "right"])
 		if spawn_side == "top":
 			self.rect.centerx = random.randint(0, self.screen_width)
@@ -88,12 +100,6 @@ class Meteor(Sprite):
 			self.rect.centerx = self.screen_width + 50
 			self.rect.centery = random.randint(0, self.screen_height)
 
-
-		# Calculate the direction towards the planet
-		self.gravity = 0.1  # Adjust the gravity factor as needed
-
-		self.calculate_direction()
-
 	def calculate_direction(self):
 		# Calculate the direction towards the planet
 		direction_x = self.planet_x - self.rect.centerx
@@ -102,39 +108,31 @@ class Meteor(Sprite):
 		self.velocity_x = direction_x / length
 		self.velocity_y = direction_y / length
 
-		print(self.rect.centerx, self.rect.centery)
+	def update(self, speed=5):
+		# Update the rotation angle
+		self.rotation_angle += 2.5  # Adjust the rotation speed as needed
 
-	def update(self, speed=2):
+		# Rotate the original image without modifying it and get a new rect
+		self.image = pygame.transform.rotate(self.original_image, self.rotation_angle)
+		self.rect = self.image.get_rect(center=self.rect.center)  # rotate around center
+
 		# Update the position based on the direction, speed and gravity
-		# self.velocity_y += self.gravity  # Apply gravity to vertical velocity
 		self.rect.centerx += self.velocity_x * speed
 		self.rect.centery += self.velocity_y * speed
 
-		# Check if the meteor is off the screen
+		# Check if the meteor is off the screen and respawn if it is
 		if (
 			self.rect.centerx < -50
 			or self.rect.centerx > self.screen_width + 50
 			or self.rect.centery < -50
 			or self.rect.centery > self.screen_height + 50
 		):
-			# Respawn the meteor outside the screen
-			spawn_side = random.choice(["top", "bottom", "left", "right"])
-			if spawn_side == "top":
-				self.rect.centerx = random.randint(0, self.screen_width)
-				self.rect.centery = -50
-			elif spawn_side == "bottom":
-				self.rect.centerx = random.randint(0, self.screen_width)
-				self.rect.centery = self.screen_height + 50
-			elif spawn_side == "left":
-				self.rect.centerx = -50
-				self.rect.centery = random.randint(0, self.screen_height)
-			elif spawn_side == "right":
-				self.rect.centerx = self.screen_width + 50
-				self.rect.centery = random.randint(0, self.screen_height)
-				
+			self.respawn()  # Call the respawn method
 			self.calculate_direction()
 
 	def render(self, screen):
 		# Draw the meteor on the screen
 		screen.blit(self.image, self.rect.center)
+
+
 

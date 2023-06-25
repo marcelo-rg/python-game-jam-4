@@ -89,6 +89,10 @@ class Game:
 			self.asteroid.update()
 			self.planet.update()
 			for meteor in self.meteors:
+				# Check for collisions
+				if pygame.sprite.collide_circle(meteor, self.planet):
+					print("Collision detected!")
+					meteor.respawn()
 				meteor.update()
 
 	def render(self):
