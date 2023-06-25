@@ -4,8 +4,6 @@ from pygame.locals import *
 from game import Game
 import variables
 
-pygame.init()
-
 # Class for the Button
 class Button:
 	def __init__(self, x, y, w, h, text=''):
@@ -31,66 +29,60 @@ class Button:
 
 class MainMenu:
 	def __init__(self, screen_width = variables.screen_width, screen_height = variables.screen_height, fps= variables.fps):
-		# Initialize Pygame
-		pygame.init()
-	
+		# Create a screen object
+		self.display = pygame.display.set_mode((screen_width, screen_height))
+
+		# Define your buttons as instance variables here
+		self.play_button = Button(50, 50, 200, 50, 'PLAY')
+		self.options_button = Button(50, 110, 200, 50, 'OPTIONS')
+		self.quit_button = Button(50, 170, 200, 50, 'QUIT')
+
 	def start(self):
 		self.running = True
+
+		self.display.fill((0,0,0))
+		self.play_button.draw(self.display)
+		self.options_button.draw(self.display)
+		self.quit_button.draw(self.display)
+		pygame.display.update()
+
 		self.menu_loop()
 
 	def menu_loop(self):
-		while self.running:
-			self.handle_events()
-			self.update_game_logic()
-			self.render()
-			self.clock.tick(self.fps)
+		while True:
+			pygame.time.delay(100)
 
-		pygame.quit()
+			for event in pygame.event.get():
+				pos = pygame.mouse.get_pos()
 
-play_button = Button(50, 50, 200, 50, 'PLAY')
-options_button = Button(50, 110, 200, 50, 'OPTIONS')
-quit_button = Button(50, 170, 200, 50, 'QUIT')
+				if event.type == QUIT:
+					pygame.quit()
+					sys.exit()
 
-while True:
-	pygame.time.delay(100)
+				if event.type == MOUSEBUTTONDOWN:
+					if self.play_button.is_over(pos):
+						print('Play button clicked')
+						# Create a Game instance and start it
+						game = Game(variables.fps)
+						game.start()
+					elif self.options_button.is_over(pos):
+						print('Options button clicked')
+						# Add options code here
+					elif self.quit_button.is_over(pos):
+						print('Quit button clicked')
+						pygame.quit()
+						sys.exit()
 
-	for event in pygame.event.get():
-		pos = pygame.mouse.get_pos()
-
-		if event.type == QUIT:
-			pygame.quit()
-			sys.exit()
-
-		if event.type == MOUSEBUTTONDOWN:
-			if play_button.is_over(pos):
-				print('Play button clicked')
-				# Create a Game instance and start it
-				game = Game(variables.fps)
-				game.start()
-			elif options_button.is_over(pos):
-				print('Options button clicked')
-				# Add options code here
-			elif quit_button.is_over(pos):
-				print('Quit button clicked')
-				pygame.quit()
-				sys.exit()
-
-		if event.type == MOUSEMOTION:
-			if play_button.is_over(pos):
-				play_button.color = variables.GREEN
-			else:
-				play_button.color = variables.BLUE
-			if options_button.is_over(pos):
-				options_button.color = variables.GREEN
-			else:
-				options_button.color = variables.BLUE
-			if quit_button.is_over(pos):
-				quit_button.color = variables.GREEN
-			else:
-				quit_button.color = variables.BLUE
-
-	menu.display.fill((0,0,0))
-	play_button.draw(menu.display)
-	options_button.draw(menu.display)
-	quit_button.draw(menu.display)
-	pygame.display.update()
+				if event.type == MOUSEMOTION:
+					if self.play_button.is_over(pos):
+						self.play_button.color = variables.GREEN
+					else:
+						self.play_button.color = variables.BLUE
+					if self.options_button.is_over(pos):
+						self.options_button.color = variables.GREEN
+					else:
+						self.options_button.color = variables.BLUE
+					if self.quit_button.is_over(pos):
+						self.quit_button.color = variables.GREEN
+					else:
+						self.quit_button.color = variables.BLUE

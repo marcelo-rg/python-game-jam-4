@@ -1,8 +1,12 @@
 from game import Game
 import variables
-from mainMenu import *
+import pygame
+import sys
+from pygame.locals import *
+from mainMenu import MainMenu  # Import the MainMenu class
 
 if __name__ == "__main__":
 	# Create a Menu instance and start it
-	menu = Menu(variables.screen_width, variables.screen_height, variables.fps)
+	pygame.init()
+	menu = MainMenu(variables.screen_width, variables.screen_height, variables.fps)
 	menu.start()

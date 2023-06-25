@@ -38,6 +38,20 @@ meteor_big_asset = os.path.join(meteors_assets_path,"meteorBrown_big")
 
 ####################
 
+# SPRITE SIZES
+asteroid_sprite_size = 128
+planet_sprite_size = 256
+meteor_sprite_size = 32
+
+####################
+
+# Game Object Variables
+spiral_radius = 400
+spiral_speed = 0.005
+spiral_decay_rate = 0.005
+
+####################
+
 # Sound Variables
 global_volume = 0.0
 background_music = "Itro-Tobu-Cloud-9.mp3"

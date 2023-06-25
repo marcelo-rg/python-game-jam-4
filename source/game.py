@@ -4,6 +4,7 @@ cwd = os.getcwd()
 
 from objects import Planet, Asteroid, Meteor
 from sounds import *
+from ImageDraw import *
 import variables
 
 class Game:
@@ -95,7 +96,10 @@ class Game:
 
 	def render(self):
 		# Render the game elements
-		self.screen.fill((0, 0, 0))  # Example background fill
+		
+		#self.screen.fill((0, 0, 0))  # Example background fill
+		image_draw = ImageDraw(self.screen)
+		image_draw.set_background(variables.background_image)
 
 		# Add your rendering code here
 		self.asteroid.render(self.screen)

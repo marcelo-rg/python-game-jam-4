@@ -1,9 +1,9 @@
 import pygame
 import math
 import random
+import variables
 
-
-def spiral(center_x, center_y, radius= 400, speed= 0.005, decay_rate=0.005):
+def spiral(center_x, center_y, radius= variables.spiral_radius, speed= variables.spiral_speed, decay_rate=variables.spiral_decay_rate):
 	angle = 0
 	while True:
 		x = center_x + (radius * math.cos(angle))
@@ -22,7 +22,7 @@ def spiral(center_x, center_y, radius= 400, speed= 0.005, decay_rate=0.005):
 
 class Asteroid:
 	def __init__(self, sprite ,screen_center_x, screen_center_y):
-		self.sprite = pygame.transform.scale(sprite, (128, 128))
+		self.sprite = pygame.transform.scale(sprite, (variables.asteroid_sprite_size, variables.asteroid_sprite_size))
 		self.spiral_generator = spiral(screen_center_x, screen_center_y)
 		self.x, self.y = next(self.spiral_generator)
 		self.half_width = self.sprite.get_width() // 2
@@ -44,7 +44,7 @@ class Planet:
 	def __init__(self, sprite, x, y):
 		self.x = x
 		self.y = y
-		self.sprite = pygame.transform.scale(sprite, (256, 256))
+		self.sprite = pygame.transform.scale(sprite, (variables.planet_sprite_size, variables.planet_sprite_size))
 		self.half_width = self.sprite.get_width() // 2
 		self.half_height = self.sprite.get_height() // 2
 		self.rotation_angle = 0
@@ -72,7 +72,7 @@ class Planet:
 
 class Meteor:
 	def __init__(self, sprite, screen_width, screen_height, planet_x, planet_y):
-		self.sprite = pygame.transform.scale(sprite, (32, 32))
+		self.sprite = pygame.transform.scale(sprite, (variables.meteor_sprite_size, variables.meteor_sprite_size))
 		self.screen_width = screen_width
 		self.screen_height = screen_height
 		self.planet_x = planet_x
