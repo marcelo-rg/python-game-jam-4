@@ -2,9 +2,9 @@ import pygame
 from pygame.sprite import Sprite
 import math
 import random
+import variables
 
-
-def spiral(center_x, center_y, radius= 400, speed= 0.005, decay_rate=0.005):
+def spiral(center_x, center_y, radius= variables.spiral_radius, speed= variables.spiral_speed, decay_rate=variables.spiral_decay_rate):
 	angle = 0
 	while True:
 		x = center_x + (radius * math.cos(angle))
@@ -24,7 +24,7 @@ def spiral(center_x, center_y, radius= 400, speed= 0.005, decay_rate=0.005):
 class Asteroid(Sprite):
 	def __init__(self, sprite ,screen_center_x, screen_center_y):
 			super().__init__()
-			self.image = pygame.transform.scale(sprite, (128, 128))  # rename sprite to image, as per convention
+			self.image = pygame.transform.scale(sprite, (variables.asteroid_sprite_size, variables.asteroid_sprite_size))
 			self.rect = self.image.get_rect()  
 			self.spiral_generator = spiral(screen_center_x, screen_center_y)
 			self.rect.center = next(self.spiral_generator)  
@@ -43,7 +43,7 @@ class Asteroid(Sprite):
 class Planet(Sprite):
 	def __init__(self, sprite, x, y):
 		super().__init__()
-		self.original_image = pygame.transform.scale(sprite, (256, 256))  # Save the original image for rotating
+		self.original_image = pygame.transform.scale(sprite, (variables.planet_sprite_size, variables.planet_sprite_size))  # Save the original image for rotating
 		self.image = self.original_image.copy()  # Create a copy to modify with rotation
 		self.rect = self.image.get_rect(center=(x, y))
 		self.rotation_angle = 0
@@ -65,7 +65,7 @@ class Planet(Sprite):
 class Meteor(Sprite):
 	def __init__(self, sprite, screen_width, screen_height, planet_x, planet_y):
 		super().__init__()
-		self.image = pygame.transform.scale(sprite, (32, 32))
+		self.image =  pygame.transform.scale(sprite, (variables.meteor_sprite_size, variables.meteor_sprite_size))
 		self.rect = self.image.get_rect()
 		self.screen_width = screen_width
 		self.screen_height = screen_height
