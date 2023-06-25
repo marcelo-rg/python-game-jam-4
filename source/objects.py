@@ -102,6 +102,7 @@ class Meteor(Sprite):
 		self.velocity_x = direction_x / length
 		self.velocity_y = direction_y / length
 
+		print(self.rect.centerx, self.rect.centery)
 
 	def update(self, speed=2):
 		# Update the position based on the direction, speed and gravity
@@ -135,5 +136,5 @@ class Meteor(Sprite):
 
 	def render(self, screen):
 		# Draw the meteor on the screen
-		screen.blit(self.image, self.rect)
+		screen.blit(self.image, self.rect.center)
 
