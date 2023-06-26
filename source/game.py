@@ -77,14 +77,6 @@ class Game:
 					self.pause()
 				elif event.key == pygame.K_r:
 					self.restart()
-				elif event.key == pygame.K_w:
-					print("Move the character forwards")
-				elif event.key == pygame.K_s:
-					print("Move the character backwards")
-				elif event.key == pygame.K_a:
-					print("Move the character left")
-				elif event.key == pygame.K_d:
-					print("Move the character right")
 				elif event.key == pygame.K_q:
 					self.running = False
 
@@ -95,13 +87,30 @@ class Game:
 			# keys_pressed = pygame.key.get_pressed()
 			self.asteroid.update()
 			self.planet.update()
-			self.spaceship_one.update()
-			self.spaceship_two.update()
 			for meteor in self.meteors:
 				# Check for collisions
 				if pygame.sprite.collide_circle(meteor, self.planet):
 					meteor.respawn()
 				meteor.update()
+		# check for collisions between spaceships and planet
+		collide_one = pygame.sprite.collide_circle(self.spaceship_one, self.planet)
+		collide_two = pygame.sprite.collide_circle(self.spaceship_two, self.planet)
+
+		if not collide_one:
+			self.spaceship_one.update()
+		if not collide_two:
+			self.spaceship_two.update()
+		# if collide_one and not collide_two:
+		# 	# Spaceship one collided with planet, don't move it
+		# 	self.spaceship_two.update()
+		# elif collide_two and not collide_one:
+		# 	# Spaceship two collided with planet, don't move it
+		# 	self.spaceship_one.update()
+		# else:
+		# 	# Neither spaceship collided with planet, update both
+		# 	self.spaceship_one.update()
+		# 	self.spaceship_two.update()
+
 
 	def render(self):
 		# Render the game elements
