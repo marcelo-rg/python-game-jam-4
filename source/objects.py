@@ -49,7 +49,6 @@ class Planet(Sprite):
 		super().__init__()
 
 		self.original_image = pygame.transform.scale(sprite, (variables.planet_sprite_size, variables.planet_sprite_size))  # Save the original image for rotating
-		self.original_image = pygame.transform.scale(sprite, (variables.planet_sprite_size, variables.planet_sprite_size))  # Save the original image for rotating
 		self.image = self.original_image.copy()  # Create a copy to modify with rotation
 		self.rect = self.image.get_rect(center=(x, y))
 		self.rotation_angle = 0
@@ -158,3 +157,40 @@ class Meteor(Sprite):
 		# Draw the meteor on the screen
 		screen.blit(self.image, self.rect)
 
+class Spaceship(Sprite):
+	def __init__(self, level, spaceship_number, speed, sprite_path):
+		super().__init__()
+		self.sprite = pygame.image.load(sprite_path) # Load the spaceship sprite
+		self.image = pygame.transform.scale(self.sprite, (variables.spaceship_sprite_size["no_upgrade"][spaceship_number][0], 
+						    variables.spaceship_sprite_size["no_upgrade"][spaceship_number][1]))
+		print(variables.spaceship_sprite_size["no_upgrade"][spaceship_number][0] , variables.spaceship_sprite_size["no_upgrade"][spaceship_number][1])
+		self.rect = self.image.get_rect()
+		self.x = variables.spaceship_positions[level][spaceship_number-1][0]
+		self.y = variables.spaceship_positions[level][spaceship_number-1][1]
+		self.speed = speed
+
+	def move_left(self):
+		self.x -= self.speed
+
+	def move_right(self):
+		self.x += self.speed
+
+	def move_up(self):
+		self.y -= self.speed
+
+	def move_down(self):
+		self.y += self.speed
+
+#	def update(self):
+#		keys = pygame.key.get_pressed()
+#		if keys[pygame.K_LEFT]: # Left arrow key
+#			self.move_left()
+#		if keys[pygame.K_RIGHT]: # Right arrow key
+#			self.move_right()
+#		if keys[pygame.K_UP]: # Up arrow key
+#			self.move_up()
+#		if keys[pygame.K_DOWN]: # Down arrow key
+#			self.move_down()
+	
+	def render(self, window):
+		window.blit(self.image, (self.x, self.y))

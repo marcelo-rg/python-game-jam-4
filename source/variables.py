@@ -30,11 +30,23 @@ background_music_path = "music"
 
 ####################
 
+# Positions per Level
+spaceship_positions  = {
+	1: [(100, 100), (400, 200)],
+	2: [(100, 100), (400, 200)]
+}
+
+spaceship_speed = 5
+
+####################
+
 # Image Variables
 background_image = os.path.join(background_assets_path, "space-galaxy-background.jpg")
 asteroid_asset = os.path.join(asteroid_assets_path, "12-circular.png")
 planet_asset = os.path.join(planet_assets_path, "14.png")
 meteor_big_asset = os.path.join(meteors_assets_path,"meteorBrown_big")
+spaceship_one_asset = os.path.join(spaceships_assets_path,"playerShip2_blue.png")
+spaceship_two_asset = os.path.join(spaceships_assets_path,"playerShip2_green.png")
 
 ####################
 
@@ -42,6 +54,12 @@ meteor_big_asset = os.path.join(meteors_assets_path,"meteorBrown_big")
 asteroid_sprite_size = 128
 planet_sprite_size = 256
 meteor_sprite_size = 32
+spaceship_sprite_size  = {
+	"no_upgrade": [(56, 38), (56, 38)],
+	"upgrade_one": [(56, 38), (56, 38)]
+}
+# This dictionary above has sprite size for both spaceships
+# also it has a key 
 
 ####################
 

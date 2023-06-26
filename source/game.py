@@ -2,7 +2,7 @@ import pygame
 import os 
 cwd = os.getcwd()
 
-from objects import Planet, Asteroid, Meteor
+from objects import Planet, Asteroid, Meteor, Spaceship
 from sounds import *
 from ImageDraw import *
 import variables
@@ -42,12 +42,15 @@ class Game:
 		planet_sprite = pygame.image.load(os.path.join(cwd, variables.planet_asset))
 		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
 
-
 		meteors_sprite_list = [pygame.image.load( \
 				os.path.join(variables.meteor_big_asset + str(iterable) + variables.png_extension)) \
 				for iterable in range(1,4,1)]
 		self.meteors = [Meteor(meteors_sprite_list[iterable], screen_width, screen_height, self.planet.rect.centerx, self.planet.rect.centery) \
 		  		for iterable in range(len(meteors_sprite_list))]		
+
+		# Spaceships
+		self.spaceship_one = Spaceship(1,0,5,variables.spaceship_one_asset)
+		self.spaceship_two = Spaceship(1,1,5,variables.spaceship_two_asset)
 
 		# Music
 		sound_player = MusicPlayer()
@@ -92,6 +95,8 @@ class Game:
 			# keys_pressed = pygame.key.get_pressed()
 			self.asteroid.update()
 			self.planet.update()
+			self.spaceship_one.update()
+			self.spaceship_two.update()
 			for meteor in self.meteors:
 				# Check for collisions
 				if pygame.sprite.collide_circle(meteor, self.planet):
@@ -108,6 +113,8 @@ class Game:
 		# Add your rendering code here
 		self.asteroid.render(self.screen)
 		self.planet.render(self.screen)
+		self.spaceship_one.render(self.screen)
+		self.spaceship_two.render(self.screen)
 		for meteor in self.meteors:
 			meteor.render(self.screen)
 
