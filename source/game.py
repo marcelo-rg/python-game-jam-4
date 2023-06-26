@@ -42,6 +42,7 @@ class Game:
 		planet_sprite = pygame.image.load(os.path.join(cwd, variables.planet_asset))
 		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
 
+
 		meteors_sprite_list = [pygame.image.load( \
 				os.path.join(variables.meteor_big_asset + str(iterable) + variables.png_extension)) \
 				for iterable in range(1,4,1)]
@@ -92,6 +93,9 @@ class Game:
 			self.asteroid.update()
 			self.planet.update()
 			for meteor in self.meteors:
+				# Check for collisions
+				if pygame.sprite.collide_circle(meteor, self.planet):
+					meteor.respawn()
 				meteor.update()
 
 	def render(self):
