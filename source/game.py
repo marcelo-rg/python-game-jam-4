@@ -37,9 +37,6 @@ class Game:
 		planet_sprite = pygame.image.load(os.path.join(cwd, variables.planet_asset))
 		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
 
-		# debugging
-		print(self.planet.rect.centerx, self.planet.rect.centery)
-
 
 		meteors_sprite_list = [pygame.image.load(variables.meteors_assets_path+f'\\meteorBrown_big{i}.png') for i in range(1,4,1)]
 		self.meteors = [Meteor(meteors_sprite_list[i], screen_width, screen_height, self.planet.rect.centerx, self.planet.rect.centery) for i in range(len(meteors_sprite_list))]		
@@ -91,7 +88,6 @@ class Game:
 			for meteor in self.meteors:
 				# Check for collisions
 				if pygame.sprite.collide_circle(meteor, self.planet):
-					print("Collision detected!")
 					meteor.respawn()
 				meteor.update()
 
