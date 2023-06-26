@@ -123,7 +123,7 @@ class Game:
 
 		pygame.quit()
 
-#if __name__ == "__main__":
+if __name__ == "__main__":
 	# Create a game instance and start it
-#	game = Game(fps = variables.fps)
-#	game.start()
+	game = Game(fps = variables.fps)
+	game.start()
