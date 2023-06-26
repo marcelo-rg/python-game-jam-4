@@ -2,13 +2,13 @@ import pygame
 import os 
 cwd = os.getcwd()
 
-
 from objects import Planet, Asteroid, Meteor
 from sounds import *
+from ImageDraw import *
 import variables
 
 class Game:
-	def __init__(self, screen_width = None, screen_height = None, fps= 60):
+	def __init__(self, screen_width = None, screen_height = None, fps= variables.fps):
 		# Initialize Pygame
 		pygame.init()
 
@@ -17,10 +17,15 @@ class Game:
 			screen_info = pygame.display.Info()
 			screen_width = screen_info.current_w
 			screen_height = screen_info.current_h
+			
+			# Set the variables module screen size
+			variables.screen_width = screen_width
+			variables.screen_height = screen_height
+			#print("Screen size: {} x {}".format(variables.screen_width, variables.screen_height)) # Debugging
 
 		# Set up the game window
 		self.screen = pygame.display.set_mode((screen_width, screen_height))
-		pygame.display.set_caption("Asteroid Wasters")
+		pygame.display.set_caption(variables.game_name)
 
 		# Set up the game clock
 		self.clock = pygame.time.Clock()
@@ -38,9 +43,11 @@ class Game:
 		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
 
 
-		meteors_sprite_list = [pygame.image.load(variables.meteors_assets_path+f'\\meteorBrown_big{i}.png') for i in range(1,4,1)]
-		self.meteors = [Meteor(meteors_sprite_list[i], screen_width, screen_height, self.planet.rect.centerx, self.planet.rect.centery) for i in range(len(meteors_sprite_list))]		
-
+		meteors_sprite_list = [pygame.image.load( \
+				os.path.join(variables.meteor_big_asset + str(iterable) + variables.png_extension)) \
+				for iterable in range(1,4,1)]
+		self.meteors = [Meteor(meteors_sprite_list[iterable], screen_width, screen_height, self.planet.rect.centerx, self.planet.rect.centery) \
+		  		for iterable in range(len(meteors_sprite_list))]		
 
 		# Music
 		sound_player = MusicPlayer()
@@ -93,7 +100,10 @@ class Game:
 
 	def render(self):
 		# Render the game elements
+		
 		self.screen.fill((0, 0, 0))  # Example background fill
+		#image_draw = ImageDraw(self.screen)
+		#image_draw.set_background(variables.background_image)
 
 		# Add your rendering code here
 		self.asteroid.render(self.screen)
@@ -113,7 +123,7 @@ class Game:
 
 		pygame.quit()
 
-if __name__ == "__main__":
+#if __name__ == "__main__":
 	# Create a game instance and start it
-	game = Game(fps = 60)
-	game.start()
+#	game = Game(fps = variables.fps)
+#	game.start()
