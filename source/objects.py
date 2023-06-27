@@ -3,7 +3,6 @@ from pygame.sprite import Sprite
 import math
 import random
 import variables
-from player import Player
 
 def spiral(center_x, center_y, radius= variables.spiral_radius, speed= variables.spiral_speed, decay_rate=variables.spiral_decay_rate):
 	angle = 0
