@@ -37,10 +37,10 @@ class Player(Sprite):
 		# Update player's x and y based on new angle
 		self.x = self.planet_center[0] + self.radius * math.cos(self.angle)
 		self.y = self.planet_center[1] + self.radius * math.sin(self.angle)
-
+		
 		# Rotate the sprite so its feet are always facing toward the planet
-		self.image = pygame.transform.rotate(self.sprite, math.degrees(self.angle) - 180)
+		rotation_angle = math.degrees(math.atan2(self.planet_center[1] - self.y, self.planet_center[0] - self.x)) - 90
+		self.image = pygame.transform.rotate(self.sprite, rotation_angle)
 
 	def render(self, window):
-		# The sprite's position is its center, adjust for this
 		window.blit(self.image, (self.x - self.image.get_width() / 2, self.y - self.image.get_height() / 2))
