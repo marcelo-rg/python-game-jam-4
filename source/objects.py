@@ -3,7 +3,7 @@ from pygame.sprite import Sprite
 import math
 import random
 import variables
-
+from player import Player
 
 def spiral(center_x, center_y, radius= variables.spiral_radius, speed= variables.spiral_speed, decay_rate=variables.spiral_decay_rate):
 	angle = 0
@@ -138,8 +138,6 @@ class Meteor(Sprite):
 		self.pos_x += self.velocity_x * speed
 		self.pos_y += self.velocity_y * speed
 
-
-
 		# Convert floating point position values to integer for rect
 		self.rect.centerx = round(self.pos_x)
 		self.rect.centery = round(self.pos_y)
@@ -163,7 +161,6 @@ class Spaceship(Sprite):
 		self.sprite = pygame.image.load(sprite_path) # Load the spaceship sprite
 		self.image = pygame.transform.scale(self.sprite, (variables.spaceship_sprite_size["no_upgrade"][spaceship_number][0], 
 						    variables.spaceship_sprite_size["no_upgrade"][spaceship_number][1]))
-		print(variables.spaceship_sprite_size["no_upgrade"][spaceship_number][0] , variables.spaceship_sprite_size["no_upgrade"][spaceship_number][1])
 		self.rect = self.image.get_rect()
 		self.x = variables.spaceship_positions[level][spaceship_number-1][0]
 		self.y = variables.spaceship_positions[level][spaceship_number-1][1]
