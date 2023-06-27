@@ -17,7 +17,7 @@ class Player(Sprite):
 		self.planet_center = planet_center  # A tuple (x, y)
 		self.angle = random.uniform(0, 2*math.pi)  # Initial angle - random between 0 and 2π
 		self.previous_angle = self.angle
-		self.flip = False
+		self.is_flipped = False  # Add variable to keep track of sprite's direction
 		# Calculate initial x and y based on the angle
 		self.x, self.y = self.calculate_position(self.angle)
 
@@ -27,14 +27,14 @@ class Player(Sprite):
 		return x, y
 
 	def move_left(self):
-		#self.x -= self.speed
 		self.angle -= self.speed / self.planet_radius
+		self.is_flipped = False
 		
 
 	def move_right(self):
-		#self.x += self.speed
 		self.angle += self.speed / self.planet_radius
-		# self.image = pygame.transform.flip(self.original_sprite_scaled, False, False)
+		self.is_flipped = True
+		
 
 	def update(self, playerID):
 		keys = pygame.key.get_pressed()
@@ -47,12 +47,10 @@ class Player(Sprite):
 		self.x, self.y = self.calculate_position(self.angle)
 
 		# Flip sprite if necessary
-		if self.angle > self.previous_angle:  # Player moved right
+		if self.is_flipped:  # Player moved right
 			self.image = pygame.transform.flip(self.original_sprite_scaled, True, False)
-		elif self.angle < self.previous_angle:  # Player moved left
+		else:  # Player moved left or no movement
 			self.image = pygame.transform.flip(self.original_sprite_scaled, False, False)
-		else:  # No movement
-			self.image = self.original_sprite_scaled
 
 		# Rotate the sprite so its feet are always facing toward the planet
 		rotation_angle = math.degrees(-self.angle) + 270  # Convert from radians to degrees and negate, add 90 if sprite initially points right
