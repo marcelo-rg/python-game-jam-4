@@ -67,6 +67,7 @@ spaceship_sprite_size  = {
 spiral_radius = 400
 spiral_speed = 0.005
 spiral_decay_rate = 0.005
+spaceship_rotation_speed = 1.5
 
 ####################
 
