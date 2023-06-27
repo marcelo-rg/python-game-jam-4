@@ -7,16 +7,18 @@ import random
 class Player(Sprite):
 	def __init__(self, playerID, speed, player_sprite_path, planet_radius, planet_center):
 		super().__init__()
-		self.sprite = pygame.image.load(player_sprite_path) # Load the spaceship sprite
-		self.image = pygame.transform.scale(self.sprite, (variables.player_assets_size[playerID]["x"],variables.player_assets_size[playerID]["y"]))
+		self.original_sprite = pygame.image.load(player_sprite_path) # Load the spaceship sprite
+		self.original_sprite_scaled = pygame.transform.scale(self.original_sprite, (variables.player_assets_size[playerID]["x"],variables.player_assets_size[playerID]["y"]))
+		self.image = self.original_sprite_scaled.copy()
 		self.rect = self.image.get_rect()
 		self.speed = speed
 		# Walking Logic
 		self.planet_radius = planet_radius
 		self.planet_center = planet_center  # A tuple (x, y)
-		self.init_angle = random.uniform(0, 2*math.pi)  # Initial angle - random between 0 and 2π
+		self.angle = random.uniform(0, 2*math.pi)  # Initial angle - random between 0 and 2π
+		self.angle = -math.pi/2
 		# Calculate initial x and y based on the angle
-		self.x, self.y = self.calculate_position(self.init_angle)
+		self.x, self.y = self.calculate_position(self.angle)
 
 	def calculate_position(self, angle):
 		x = self.planet_center[0] + self.planet_radius * math.cos(angle)
@@ -25,11 +27,11 @@ class Player(Sprite):
 
 	def move_left(self):
 		#self.x -= self.speed
-		self.init_angle -= self.speed / self.planet_radius
+		self.angle -= self.speed / self.planet_radius
 
 	def move_right(self):
 		#self.x += self.speed
-		self.init_angle += self.speed / self.planet_radius
+		self.angle += self.speed / self.planet_radius
 
 	def update(self, playerID):
 		keys = pygame.key.get_pressed()
@@ -39,11 +41,11 @@ class Player(Sprite):
 			self.move_right()
 
 		# Update player's x and y based on new angle
-		self.x, self.y = self.calculate_position(self.init_angle)
+		self.x, self.y = self.calculate_position(self.angle)
 
 		# Rotate the sprite so its feet are always facing toward the planet
-		rotation_angle = math.degrees(math.atan2(self.planet_center[1] - self.y, self.planet_center[0] - self.x)) + 90  # Add 90 degrees to the angle
-		self.image = pygame.transform.rotate(self.sprite, rotation_angle)
+		rotation_angle = math.degrees(-self.angle) + 270  # Convert from radians to degrees and negate, add 90 if sprite initially points right
+		self.image = pygame.transform.rotate(self.original_sprite, rotation_angle)
 		# self.image = pygame.transform.scale(rotated_sprite, self.scale)
 
 	def render(self, window):
