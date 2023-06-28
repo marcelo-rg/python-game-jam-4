@@ -24,6 +24,11 @@ class Game:
 			variables.screen_height = screen_height
 			#print("Screen size: {} x {}".format(variables.screen_width, variables.screen_height)) # Debugging
 
+		# Music
+		sound_player = SoundManager(variables.sounds)
+		sound_player.loadBackgroundMusic(os.path.join(variables.background_music_path, variables.background_music))
+		sound_player.playBackgroundMusic()
+
 		# Set up the game window
 		self.screen = pygame.display.set_mode((screen_width, screen_height))
 		pygame.display.set_caption(variables.game_name)
@@ -60,13 +65,10 @@ class Game:
 			   						(self.planet.rect.centerx,
 									self.planet.rect.centery)
 								)
+    
 		# Spaceships
-		self.spaceship_one = Spaceship(1,0,5,variables.spaceship_one_asset, screen_width=screen_width, screen_height=screen_height)
-		self.spaceship_two = Spaceship(1,1,5,variables.spaceship_two_asset, screen_width=screen_width, screen_height=screen_height)
-
-		# Music
-		sound_player = MusicPlayer()
-		sound_player.playBackgroundMusic()
+		self.spaceship_one = Spaceship(1,0,variables.spaceship_speed, variables.spaceship_one_asset, screen_width=screen_width, screen_height=screen_height, sound_manager= sound_player)
+		self.spaceship_two = Spaceship(1,1,variables.spaceship_speed, variables.spaceship_two_asset, screen_width=screen_width, screen_height=screen_height, sound_manager= sound_player)
 
 	def start(self):
 		self.running = True
@@ -103,7 +105,7 @@ class Game:
 
 	def update_game_logic(self):
 		if not self.paused:
-			# Update game state
+			# Update game stated
 			# keys_pressed = pygame.key.get_pressed()
 			self.asteroid.update()
 			self.planet.update()
@@ -116,27 +118,15 @@ class Game:
 		collide_one = pygame.sprite.collide_circle(self.spaceship_one, self.planet)
 		collide_two = pygame.sprite.collide_circle(self.spaceship_two, self.planet)
 
-		if not collide_one:
-			self.spaceship_one.update()
-		if not collide_two:
-			self.spaceship_two.update()
-		# if collide_one and not collide_two:
-		# 	# Spaceship one collided with planet, don't move it
-		# 	self.spaceship_two.update()
-		# elif collide_two and not collide_one:
-		# 	# Spaceship two collided with planet, don't move it
-		# 	self.spaceship_one.update()
-		# else:
-		# 	# Neither spaceship collided with planet, update both
-		# 	self.spaceship_one.update()
-		# 	self.spaceship_two.update()
-		# self.player_one.update("Player1")
+		self.spaceship_one.update()
+		self.spaceship_two.update()
+
+		self.player_one.update("Player1")
 		self.player_two.update("Player2") 
 
 
 	def render(self):
 		# Render the game elements
-		
 		self.screen.fill((0, 0, 0))  # Example background fill
 		#image_draw = ImageDraw(self.screen)
 		#image_draw.set_background(variables.background_image)

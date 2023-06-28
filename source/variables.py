@@ -15,7 +15,7 @@ fps = 60
 
 # Player Variables
 player_speed = 1
-spaceship_speed = 5
+spaceship_speed = 3
 
 # Player Bindings
 player_controls = { 
@@ -79,6 +79,8 @@ spaceships_assets_path = os.path.join(assets_path, "spaceships")
 player_assets_path = os.path.join(assets_path, "player")
 background_assets_path = os.path.join(assets_path, "background")
 background_music_path = "music"
+bullet_sprite_path = os.path.join(assets_path, "bullets","bullet1.png")
+shooting_sound_path = os.path.join(assets_path, "..", "music","shooting1.mp3")
 
 ####################
 
@@ -113,6 +115,7 @@ player_assets = {
 asteroid_sprite_size = 128
 planet_sprite_size = 256
 meteor_sprite_size = 32
+bullet_sprite_size = (22,12)
 spaceship_sprite_size  = {
 	"no_upgrade": [(56, 38), (56, 38)],
 	"upgrade_one": [(56, 38), (56, 38)]
@@ -131,12 +134,15 @@ player_assets_size = {
 spiral_radius = 400
 spiral_speed = 0.005
 spiral_decay_rate = 0.005
-spaceship_rotation_speed = 1.5
+spaceship_rotation_speed = 2.0
+bullet_speed = 6
+bullet_cooldown = 20
 
 ####################
 
 # Sound Variables
-global_volume = 0.0
+global_music_volume = 0.1
+global_sound_volume = 0.05
 background_music = "Itro-Tobu-Cloud-9.mp3"
 
 ####################
@@ -146,3 +152,8 @@ jpg_extension = ".jpg"
 png_extension = ".png"
 
 ####################
+
+sounds = {
+    'shooting': shooting_sound_path,
+    # Add more sounds here
+}
