@@ -7,8 +7,8 @@ import pygame
 
 # Game Variables
 game_name = "Asteroid Wasters"
-screen_width = 800
-screen_height = 600
+screen_width = 1536
+screen_height = 864
 fps = 60
 
 ####################
@@ -30,6 +30,9 @@ player_controls = {
 			"Use": pygame.K_e
 		},
 		"Upgrade": {
+			"Use": pygame.K_f
+		},
+        "Repair": {
 			"Use": pygame.K_r
 		},
 		"Fire": {
@@ -51,6 +54,9 @@ player_controls = {
 		},
 		"Upgrade": {
 			"Use": pygame.K_k
+		},
+        "Repair": {
+			"Use": pygame.K_u
 		},
 		"Fire": {
 			"Use": pygame.K_l
@@ -136,8 +142,16 @@ spaceship_rotation_speed = 1.5
 ####################
 
 # Sound Variables
-global_volume = 0.0
+global_music_volume = 0.1
+pause_menu_music = "Razihel-LoveU.mp3"
 background_music = "Itro-Tobu-Cloud-9.mp3"
+#background_music = {
+#	1: "Itro-Tobu-Cloud-9.mp3",
+#	2: "Defqwop-Awakening.mp3",
+#    3: "Razihel-LoveU.mp3",
+#    4: "JJD-Adventure.mp3",
+#    5: "Janji-HeroesTonight.mp3"
+#}
 
 ####################
 

@@ -9,7 +9,7 @@ class MusicPlayer:
 		file_path = os.path.join(variables.background_music_path, variables.background_music)
 		pygame.mixer.music.load(file_path)
 		# Using volume vars from variables.py
-		pygame.mixer.music.set_volume(variables.global_volume)  # Set the volume
+		pygame.mixer.music.set_volume(variables.global_music_volume)  # Set the volume
 
 	def playBackgroundMusic(self):
 		pygame.mixer.music.play(-1)  # -1 means loop indefinitely
