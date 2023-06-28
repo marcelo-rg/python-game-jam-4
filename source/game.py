@@ -61,8 +61,8 @@ class Game:
 									self.planet.rect.centery)
 								)
 		# Spaceships
-		self.spaceship_one = Spaceship(1,0,5,variables.spaceship_one_asset)
-		self.spaceship_two = Spaceship(1,1,5,variables.spaceship_two_asset)
+		self.spaceship_one = Spaceship(1,0,5,variables.spaceship_one_asset, screen_width=screen_width, screen_height=screen_height)
+		self.spaceship_two = Spaceship(1,1,5,variables.spaceship_two_asset, screen_width=screen_width, screen_height=screen_height)
 
 		# Music
 		sound_player = MusicPlayer()
@@ -130,8 +130,8 @@ class Game:
 		# 	# Neither spaceship collided with planet, update both
 		# 	self.spaceship_one.update()
 		# 	self.spaceship_two.update()
-		self.player_one.update("Player1")
-		self.player_two.update("Player2")
+		# self.player_one.update("Player1")
+		self.player_two.update("Player2") 
 
 
 	def render(self):

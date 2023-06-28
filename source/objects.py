@@ -155,7 +155,7 @@ class Meteor(Sprite):
 		screen.blit(self.image, self.rect)
 
 class Spaceship(Sprite):
-	def __init__(self, level, spaceship_number, speed, sprite_path):
+	def __init__(self, level, spaceship_number, speed, sprite_path, screen_width, screen_height):
 		super().__init__()
 		self.original_sprite = pygame.image.load(sprite_path) # Load the original spaceship sprite
 		self.scale = (variables.spaceship_sprite_size["no_upgrade"][spaceship_number][0], 
@@ -170,6 +170,8 @@ class Spaceship(Sprite):
 		self.radius = max(self.rect.width // 2, self.rect.height // 2) # radius for collision detection
 		self.angle = 0
 		self.rot_speed = variables.spaceship_rotation_speed
+		self.screen_width = screen_width
+		self.screen_height = screen_height
 
 	def rotate_left(self):
 		self.angle += self.rot_speed
@@ -190,10 +192,18 @@ class Spaceship(Sprite):
 	def move(self, distance):
 		adjusted_angle = -self.angle - 90
 		radians = math.radians(adjusted_angle)
-		self.x += distance * math.cos(radians)
-		self.y += distance * math.sin(radians)
-		self.rect.x = self.x
-		self.rect.y = self.y
+		new_x = self.x + distance * math.cos(radians)
+		new_y = self.y + distance * math.sin(radians)
+
+		# Adjust the new x and y positions to ensure the spaceship does not go offscreen
+		new_x = max(min(new_x, self.screen_width - self.rect.width / 2), self.rect.width / 2)
+		new_y = max(min(new_y, self.screen_height - self.rect.height / 2), self.rect.height / 2)
+
+		self.x = new_x
+		self.y = new_y
+		# self.rect.x = self.x
+		# self.rect.y = self.y
+		self.rect.center = (self.x, self.y)
 
 	def update(self):
 		keys = pygame.key.get_pressed()
