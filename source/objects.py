@@ -173,6 +173,8 @@ class Spaceship(Sprite):
 		self.screen_width = screen_width
 		self.screen_height = screen_height
 		self.bullets = []  # List to store bullets
+		self.shoot_cooldown = 0  # Cool down timer for shooting
+		self.shoot_delay = variables.bullet_cooldown  # Delay between shots
 
 	def shoot(self):
 		# Compute the offset position of the bullet
@@ -229,8 +231,13 @@ class Spaceship(Sprite):
 			self.move_forward()
 		if keys[pygame.K_s]: # S key
 			self.move_backward()
-		if keys[pygame.K_SPACE]:
+		if keys[pygame.K_SPACE] and self.shoot_cooldown <= 0:
 			self.shoot()
+			self.shoot_cooldown = self.shoot_delay # Reset the cooldown 
+		
+		# Reduce the cooldown over time
+		if self.shoot_cooldown > 0:
+			self.shoot_cooldown -= 1
 
 		# Update the position of all bullets
 		for bullet in self.bullets:

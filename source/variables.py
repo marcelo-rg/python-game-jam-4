@@ -135,6 +135,7 @@ spiral_speed = 0.005
 spiral_decay_rate = 0.005
 spaceship_rotation_speed = 1.5
 bullet_speed = 6
+bullet_cooldown = 20
 
 ####################
 
