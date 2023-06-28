@@ -80,7 +80,7 @@ player_assets_path = os.path.join(assets_path, "player")
 background_assets_path = os.path.join(assets_path, "background")
 background_music_path = "music"
 bullet_sprite_path = os.path.join(assets_path, "bullets","bullet1.png")
-shooting_sound_path = os.path.join(assets_path, "..", "music","shooting1.mp3")
+sound_path = os.path.join(assets_path, "..", "music")
 
 ####################
 
@@ -141,10 +141,18 @@ bullet_cooldown = 20
 ####################
 
 # Sound Variables
-global_music_volume = 0.1
+global_music_volume = 0.05
 global_sound_volume = 0.05
+italian_sound_volume = 0.5
 background_music = "Itro-Tobu-Cloud-9.mp3"
-
+sounds = {
+    'shooting': os.path.join(sound_path, "shooting1.mp3"),
+    'meteor_impact': os.path.join(sound_path, "Meteor1.mp3"),
+}
+sounds_volume = {
+    'shooting': global_sound_volume,
+    'meteor_impact': italian_sound_volume,
+}
 ####################
 
 # Exra Variables
@@ -153,7 +161,3 @@ png_extension = ".png"
 
 ####################
 
-sounds = {
-    'shooting': shooting_sound_path,
-    # Add more sounds here
-}

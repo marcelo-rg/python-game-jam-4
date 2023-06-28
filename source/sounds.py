@@ -22,7 +22,7 @@ class SoundManager:
     def playSoundEffect(self, name):
         if name in self.sounds:
             self.sounds[name].play()
-            self.sounds[name].set_volume(self.sound_volume)
+            self.sounds[name].set_volume(variables.sounds_volume[name])
         else:
             print(f"Sound {name} not found!")
 

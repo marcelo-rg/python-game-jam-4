@@ -25,9 +25,9 @@ class Game:
 			#print("Screen size: {} x {}".format(variables.screen_width, variables.screen_height)) # Debugging
 
 		# Music
-		sound_player = SoundManager(variables.sounds)
-		sound_player.loadBackgroundMusic(os.path.join(variables.background_music_path, variables.background_music))
-		sound_player.playBackgroundMusic()
+		self.sound_player = SoundManager(variables.sounds)
+		self.sound_player.loadBackgroundMusic(os.path.join(variables.background_music_path, variables.background_music))
+		self.sound_player.playBackgroundMusic()
 
 		# Set up the game window
 		self.screen = pygame.display.set_mode((screen_width, screen_height))
@@ -67,8 +67,8 @@ class Game:
 								)
     
 		# Spaceships
-		self.spaceship_one = Spaceship(1,0,variables.spaceship_speed, variables.spaceship_one_asset, screen_width=screen_width, screen_height=screen_height, sound_manager= sound_player)
-		self.spaceship_two = Spaceship(1,1,variables.spaceship_speed, variables.spaceship_two_asset, screen_width=screen_width, screen_height=screen_height, sound_manager= sound_player)
+		self.spaceship_one = Spaceship(1,0,variables.spaceship_speed, variables.spaceship_one_asset, screen_width=screen_width, screen_height=screen_height, sound_manager= self.sound_player)
+		self.spaceship_two = Spaceship(1,1,variables.spaceship_speed, variables.spaceship_two_asset, screen_width=screen_width, screen_height=screen_height, sound_manager= self.sound_player)
 
 	def start(self):
 		self.running = True
@@ -112,6 +112,7 @@ class Game:
 			for meteor in self.meteors:
 				# Check for collisions
 				if pygame.sprite.collide_circle(meteor, self.planet):
+					self.sound_player.playSoundEffect("meteor_impact")
 					meteor.respawn()
 				meteor.update()
 		# check for collisions between spaceships and planet
