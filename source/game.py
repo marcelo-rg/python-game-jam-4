@@ -24,6 +24,11 @@ class Game:
 			variables.screen_height = screen_height
 			#print("Screen size: {} x {}".format(variables.screen_width, variables.screen_height)) # Debugging
 
+		# Music
+		sound_player = SoundManager(variables.sounds)
+		sound_player.loadBackgroundMusic(os.path.join(variables.background_music_path, variables.background_music))
+		sound_player.playBackgroundMusic()
+
 		# Set up the game window
 		self.screen = pygame.display.set_mode((screen_width, screen_height))
 		pygame.display.set_caption(variables.game_name)
@@ -61,12 +66,9 @@ class Game:
 									self.planet.rect.centery)
 								)
 		# Spaceships
-		self.spaceship_one = Spaceship(1,0,variables.spaceship_speed, variables.spaceship_one_asset, screen_width=screen_width, screen_height=screen_height)
-		self.spaceship_two = Spaceship(1,1,variables.spaceship_speed, variables.spaceship_two_asset, screen_width=screen_width, screen_height=screen_height)
+		self.spaceship_one = Spaceship(1,0,variables.spaceship_speed, variables.spaceship_one_asset, screen_width=screen_width, screen_height=screen_height, sound_manager= sound_player)
+		self.spaceship_two = Spaceship(1,1,variables.spaceship_speed, variables.spaceship_two_asset, screen_width=screen_width, screen_height=screen_height, sound_manager= sound_player)
 
-		# Music
-		sound_player = MusicPlayer()
-		sound_player.playBackgroundMusic()
 
 	def start(self):
 		self.running = True
@@ -103,7 +105,7 @@ class Game:
 
 	def update_game_logic(self):
 		if not self.paused:
-			# Update game state
+			# Update game stated
 			# keys_pressed = pygame.key.get_pressed()
 			self.asteroid.update()
 			self.planet.update()

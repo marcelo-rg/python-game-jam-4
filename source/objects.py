@@ -155,7 +155,7 @@ class Meteor(Sprite):
 		screen.blit(self.image, self.rect)
 
 class Spaceship(Sprite):
-	def __init__(self, level, spaceship_number, speed, sprite_path, screen_width, screen_height):
+	def __init__(self, level, spaceship_number, speed, sprite_path, screen_width, screen_height, sound_manager):
 		super().__init__()
 		self.original_sprite = pygame.image.load(sprite_path) # Load the original spaceship sprite
 		self.scale = (variables.spaceship_sprite_size["no_upgrade"][spaceship_number][0], 
@@ -175,6 +175,7 @@ class Spaceship(Sprite):
 		self.bullets = []  # List to store bullets
 		self.shoot_cooldown = 0  # Cool down timer for shooting
 		self.shoot_delay = variables.bullet_cooldown  # Delay between shots
+		self.sound_manager = sound_manager
 
 	def shoot(self):
 		# Compute the offset position of the bullet
@@ -233,6 +234,7 @@ class Spaceship(Sprite):
 			self.move_backward()
 		if keys[pygame.K_SPACE] and self.shoot_cooldown <= 0:
 			self.shoot()
+			self.sound_manager.playSoundEffect('shooting')
 			self.shoot_cooldown = self.shoot_delay # Reset the cooldown 
 		
 		# Reduce the cooldown over time
