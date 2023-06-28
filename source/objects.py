@@ -175,8 +175,18 @@ class Spaceship(Sprite):
 		self.bullets = []  # List to store bullets
 
 	def shoot(self):
+		# Compute the offset position of the bullet
+		half_height = self.rect.height / 2
+		adjusted_angle = math.radians(-self.angle - 90)  # Convert angle to radians and adjust by -90 degrees
+		offset_x = half_height * math.cos(adjusted_angle)
+		offset_y = half_height * math.sin(adjusted_angle)
+
+		# Compute the bullet's initial position
+		bullet_x = self.x + offset_x
+		bullet_y = self.y + offset_y
+
 		# Create a new bullet and add it to the bullets list
-		bullet = Bullet(self.x, self.y, self.angle, variables.bullet_speed, variables.bullet_sprite_path, variables.bullet_sprite_size) # Note: angle - math.pi/2 is to make the bullet go in the direction the spaceship is facing
+		bullet = Bullet(bullet_x, bullet_y, self.angle, variables.bullet_speed, variables.bullet_sprite_path, variables.bullet_sprite_size)
 		self.bullets.append(bullet)
 
 	def rotate_left(self):

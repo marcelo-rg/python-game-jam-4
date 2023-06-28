@@ -61,8 +61,8 @@ class Game:
 									self.planet.rect.centery)
 								)
 		# Spaceships
-		self.spaceship_one = Spaceship(1,0,5,variables.spaceship_one_asset, screen_width=screen_width, screen_height=screen_height)
-		self.spaceship_two = Spaceship(1,1,5,variables.spaceship_two_asset, screen_width=screen_width, screen_height=screen_height)
+		self.spaceship_one = Spaceship(1,0,variables.spaceship_speed, variables.spaceship_one_asset, screen_width=screen_width, screen_height=screen_height)
+		self.spaceship_two = Spaceship(1,1,variables.spaceship_speed, variables.spaceship_two_asset, screen_width=screen_width, screen_height=screen_height)
 
 		# Music
 		sound_player = MusicPlayer()

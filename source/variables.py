@@ -15,7 +15,7 @@ fps = 60
 
 # Player Variables
 player_speed = 1
-spaceship_speed = 5
+spaceship_speed = 3
 
 # Player Bindings
 player_controls = { 
