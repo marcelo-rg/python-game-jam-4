@@ -1,4 +1,5 @@
 import os
+import pygame
 
 ####################
 # Variables
@@ -9,6 +10,56 @@ game_name = "Asteroid Wasters"
 screen_width = 800
 screen_height = 600
 fps = 60
+
+####################
+
+# Player Variables
+player_speed = 1
+spaceship_speed = 5
+
+# Player Bindings
+player_controls = { 
+	"Player1": {
+		"Move": {
+			"Up": pygame.K_w,
+			"Down": pygame.K_s,
+			"Left": pygame.K_a,
+			"Right": pygame.K_d
+		},
+		"Interact": {
+			"Use": pygame.K_e
+		},
+		"Upgrade": {
+			"Use": pygame.K_r
+		},
+		"Fire": {
+			"Use": pygame.K_SPACE
+		},
+		"Menu": {
+			"Use": pygame.K_ESCAPE
+		}
+	},
+	"Player2": {
+		"Move": {
+			"Up": pygame.K_UP,
+			"Down": pygame.K_DOWN,
+			"Left": pygame.K_LEFT,
+			"Right": pygame.K_RIGHT
+		},
+		"Interact": {
+			"Use": pygame.K_j
+		},
+		"Upgrade": {
+			"Use": pygame.K_k
+		},
+		"Fire": {
+			"Use": pygame.K_l
+		},
+		"Menu": {
+			"Use": pygame.K_p
+		}
+	}
+}
 
 ####################
 
@@ -25,6 +76,7 @@ planet_assets_path = os.path.join(assets_path, "planet")
 asteroid_assets_path = os.path.join(assets_path, "asteroid")
 meteors_assets_path = os.path.join(assets_path, "meteors")
 spaceships_assets_path = os.path.join(assets_path, "spaceships")
+player_assets_path = os.path.join(assets_path, "player")
 background_assets_path = os.path.join(assets_path, "background")
 background_music_path = "music"
 
@@ -36,7 +88,10 @@ spaceship_positions  = {
 	2: [(100, 100), (400, 200)]
 }
 
-spaceship_speed = 5
+player_assets_positions = {
+	"Player1": {"x": 300, "y": 300},
+	"Player2": {"x": 400, "y": 400}
+}
 
 ####################
 
@@ -47,6 +102,10 @@ planet_asset = os.path.join(planet_assets_path, "14.png")
 meteor_big_asset = os.path.join(meteors_assets_path,"meteorBrown_big")
 spaceship_one_asset = os.path.join(spaceships_assets_path,"playerShip2_blue.png")
 spaceship_two_asset = os.path.join(spaceships_assets_path,"playerShip2_green.png")
+player_assets = {
+	"Player1": os.path.join(player_assets_path, "player1.png"),
+	"Player2": os.path.join(player_assets_path, "player2.png")
+}
 
 ####################
 
@@ -58,6 +117,11 @@ spaceship_sprite_size  = {
 	"no_upgrade": [(56, 38), (56, 38)],
 	"upgrade_one": [(56, 38), (56, 38)]
 }
+player_assets_size = {
+	"Player1": {"x": 32, "y": 32},
+	"Player2": {"x": 32, "y": 32}
+}
+
 # This dictionary above has sprite size for both spaceships
 # also it has a key 
 

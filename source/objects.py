@@ -4,7 +4,6 @@ import math
 import random
 import variables
 
-
 def spiral(center_x, center_y, radius= variables.spiral_radius, speed= variables.spiral_speed, decay_rate=variables.spiral_decay_rate):
 	angle = 0
 	while True:
@@ -137,8 +136,6 @@ class Meteor(Sprite):
 		# Update the position based on the direction, speed and gravity
 		self.pos_x += self.velocity_x * speed
 		self.pos_y += self.velocity_y * speed
-
-
 
 		# Convert floating point position values to integer for rect
 		self.rect.centerx = round(self.pos_x)

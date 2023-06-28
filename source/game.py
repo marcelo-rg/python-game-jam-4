@@ -6,6 +6,7 @@ from objects import Planet, Asteroid, Meteor, Spaceship
 from sounds import *
 from ImageDraw import *
 import variables
+from player import Player
 
 class Game:
 	def __init__(self, screen_width = None, screen_height = None, fps= variables.fps):
@@ -48,6 +49,17 @@ class Game:
 		self.meteors = [Meteor(meteors_sprite_list[iterable], screen_width, screen_height, self.planet.rect.centerx, self.planet.rect.centery) \
 		  		for iterable in range(len(meteors_sprite_list))]		
 
+		# Players
+		self.player_one = Player("Player1", variables.player_speed, variables.player_assets["Player1"],
+			   						self.planet.radius,
+			   						(self.planet.rect.centerx,
+			    					self.planet.rect.centery)
+								)
+		self.player_two = Player("Player2", variables.player_speed, variables.player_assets["Player2"],
+			   						self.planet.radius,
+			   						(self.planet.rect.centerx,
+			    					self.planet.rect.centery)
+								)
 		# Spaceships
 		self.spaceship_one = Spaceship(1,0,5,variables.spaceship_one_asset)
 		self.spaceship_two = Spaceship(1,1,5,variables.spaceship_two_asset)
@@ -73,11 +85,19 @@ class Game:
 			if event.type == pygame.QUIT:
 				self.running = False
 			elif event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_p:
-					self.pause()
-				elif event.key == pygame.K_r:
-					self.restart()
-				elif event.key == pygame.K_q:
+				#if event.key == pygame.K_p:
+				#	self.pause()
+				#elif event.key == pygame.K_r:
+				#	self.restart()
+				#elif event.key == pygame.K_w:
+				#	print("Move the character forwards")
+				#elif event.key == pygame.K_s:
+				#	print("Move the character backwards")
+				#elif event.key == pygame.K_a:
+				#	print("Move the character left")
+				#elif event.key == pygame.K_d:
+				#	print("Move the character right")
+				if event.key == pygame.K_q:
 					self.running = False
 
 
@@ -110,6 +130,8 @@ class Game:
 		# 	# Neither spaceship collided with planet, update both
 		# 	self.spaceship_one.update()
 		# 	self.spaceship_two.update()
+    self.player_one.update("Player1")
+		self.player_two.update("Player2")
 
 
 	def render(self):
@@ -122,6 +144,8 @@ class Game:
 		# Add your rendering code here
 		self.asteroid.render(self.screen)
 		self.planet.render(self.screen)
+		self.player_one.render(self.screen)
+		self.player_two.render(self.screen)
 		self.spaceship_one.render(self.screen)
 		self.spaceship_two.render(self.screen)
 		for meteor in self.meteors:
