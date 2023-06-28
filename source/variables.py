@@ -79,6 +79,7 @@ spaceships_assets_path = os.path.join(assets_path, "spaceships")
 player_assets_path = os.path.join(assets_path, "player")
 background_assets_path = os.path.join(assets_path, "background")
 background_music_path = "music"
+bullet_sprite_path = os.path.join(assets_path, "bullets","bullet1.png")
 
 ####################
 
@@ -113,6 +114,7 @@ player_assets = {
 asteroid_sprite_size = 128
 planet_sprite_size = 256
 meteor_sprite_size = 32
+bullet_sprite_size = (22,12)
 spaceship_sprite_size  = {
 	"no_upgrade": [(56, 38), (56, 38)],
 	"upgrade_one": [(56, 38), (56, 38)]
@@ -132,6 +134,7 @@ spiral_radius = 400
 spiral_speed = 0.005
 spiral_decay_rate = 0.005
 spaceship_rotation_speed = 1.5
+bullet_speed = 6
 
 ####################
 

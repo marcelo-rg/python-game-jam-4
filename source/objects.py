@@ -172,6 +172,12 @@ class Spaceship(Sprite):
 		self.rot_speed = variables.spaceship_rotation_speed
 		self.screen_width = screen_width
 		self.screen_height = screen_height
+		self.bullets = []  # List to store bullets
+
+	def shoot(self):
+		# Create a new bullet and add it to the bullets list
+		bullet = Bullet(self.x, self.y, self.angle, variables.bullet_speed, variables.bullet_sprite_path, variables.bullet_sprite_size) # Note: angle - math.pi/2 is to make the bullet go in the direction the spaceship is facing
+		self.bullets.append(bullet)
 
 	def rotate_left(self):
 		self.angle += self.rot_speed
@@ -201,8 +207,6 @@ class Spaceship(Sprite):
 
 		self.x = new_x
 		self.y = new_y
-		# self.rect.x = self.x
-		# self.rect.y = self.y
 		self.rect.center = (self.x, self.y)
 
 	def update(self):
@@ -215,6 +219,42 @@ class Spaceship(Sprite):
 			self.move_forward()
 		if keys[pygame.K_s]: # S key
 			self.move_backward()
+		if keys[pygame.K_SPACE]:
+			self.shoot()
+
+		# Update the position of all bullets
+		for bullet in self.bullets:
+			bullet.update()
 
 	def render(self, window):
 		window.blit(self.image, self.rect)
+		for bullet in self.bullets:
+			bullet.render(window)
+
+
+class Bullet(Sprite):
+	def __init__(self, x, y, angle, speed, bullet_sprite_path, bullet_scale):
+		super().__init__()
+		self.x = x
+		self.y = y
+		self.angle = angle 
+		self.speed = speed
+
+		self.original_sprite = pygame.image.load(bullet_sprite_path)
+		self.original_sprite_scaled = pygame.transform.scale(self.original_sprite, bullet_scale)
+
+		# Rotate the bullet sprite to match the spaceship's angle
+		self.image = pygame.transform.rotate(self.original_sprite_scaled, -90-self.angle)
+
+		self.rect = self.image.get_rect(center=(self.x, self.y))
+		self.radius = max(self.rect.width // 2, self.rect.height // 2) # radius for collision detection
+
+	def update(self):
+		# Calculate the new position of the bullet
+		self.x += self.speed * math.cos(math.radians(self.angle))
+		self.y += self.speed * math.sin(math.radians(self.angle))
+		self.rect.center = (self.x, self.y)
+
+	def render(self, window):
+		window.blit(self.image, self.rect)
+
