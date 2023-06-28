@@ -237,14 +237,14 @@ class Bullet(Sprite):
 		super().__init__()
 		self.x = x
 		self.y = y
-		self.angle = angle 
+		self.angle = -angle -90
 		self.speed = speed
 
 		self.original_sprite = pygame.image.load(bullet_sprite_path)
 		self.original_sprite_scaled = pygame.transform.scale(self.original_sprite, bullet_scale)
 
 		# Rotate the bullet sprite to match the spaceship's angle
-		self.image = pygame.transform.rotate(self.original_sprite_scaled, -90-self.angle)
+		self.image = pygame.transform.rotate(self.original_sprite_scaled, -self.angle)
 
 		self.rect = self.image.get_rect(center=(self.x, self.y))
 		self.radius = max(self.rect.width // 2, self.rect.height // 2) # radius for collision detection
