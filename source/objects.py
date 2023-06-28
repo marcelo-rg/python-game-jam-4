@@ -172,6 +172,7 @@ class Spaceship(Sprite):
 		self.rot_speed = variables.spaceship_rotation_speed
 		self.screen_width = screen_width
 		self.screen_height = screen_height
+
 		self.bullets = []  # List to store bullets
 		self.shoot_cooldown = 0  # Cool down timer for shooting
 		self.shoot_delay = variables.bullet_cooldown  # Delay between shots
@@ -191,6 +192,7 @@ class Spaceship(Sprite):
 		# Create a new bullet and add it to the bullets list
 		bullet = Bullet(bullet_x, bullet_y, self.angle, variables.bullet_speed, variables.bullet_sprite_path, variables.bullet_sprite_size)
 		self.bullets.append(bullet)
+
 
 	def rotate_left(self):
 		self.angle += self.rot_speed
@@ -220,6 +222,7 @@ class Spaceship(Sprite):
 
 		self.x = new_x
 		self.y = new_y
+    
 		self.rect.center = (self.x, self.y)
 
 	def update(self):

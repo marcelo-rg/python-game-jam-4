@@ -65,10 +65,10 @@ class Game:
 			   						(self.planet.rect.centerx,
 									self.planet.rect.centery)
 								)
+    
 		# Spaceships
 		self.spaceship_one = Spaceship(1,0,variables.spaceship_speed, variables.spaceship_one_asset, screen_width=screen_width, screen_height=screen_height, sound_manager= sound_player)
 		self.spaceship_two = Spaceship(1,1,variables.spaceship_speed, variables.spaceship_two_asset, screen_width=screen_width, screen_height=screen_height, sound_manager= sound_player)
-
 
 	def start(self):
 		self.running = True
@@ -127,7 +127,6 @@ class Game:
 
 	def render(self):
 		# Render the game elements
-		
 		self.screen.fill((0, 0, 0))  # Example background fill
 		#image_draw = ImageDraw(self.screen)
 		#image_draw.set_background(variables.background_image)
