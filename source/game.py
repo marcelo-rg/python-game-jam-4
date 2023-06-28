@@ -53,12 +53,12 @@ class Game:
 		self.player_one = Player("Player1", variables.player_speed, variables.player_assets["Player1"],
 			   						self.planet.radius,
 			   						(self.planet.rect.centerx,
-			    					self.planet.rect.centery)
+									self.planet.rect.centery)
 								)
 		self.player_two = Player("Player2", variables.player_speed, variables.player_assets["Player2"],
 			   						self.planet.radius,
 			   						(self.planet.rect.centerx,
-			    					self.planet.rect.centery)
+									self.planet.rect.centery)
 								)
 		# Spaceships
 		self.spaceship_one = Spaceship(1,0,5,variables.spaceship_one_asset)
@@ -130,7 +130,7 @@ class Game:
 		# 	# Neither spaceship collided with planet, update both
 		# 	self.spaceship_one.update()
 		# 	self.spaceship_two.update()
-    self.player_one.update("Player1")
+		self.player_one.update("Player1")
 		self.player_two.update("Player2")
 
 
