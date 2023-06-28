@@ -157,36 +157,54 @@ class Meteor(Sprite):
 class Spaceship(Sprite):
 	def __init__(self, level, spaceship_number, speed, sprite_path):
 		super().__init__()
-		self.sprite = pygame.image.load(sprite_path) # Load the spaceship sprite
-		self.image = pygame.transform.scale(self.sprite, (variables.spaceship_sprite_size["no_upgrade"][spaceship_number][0], 
-						    variables.spaceship_sprite_size["no_upgrade"][spaceship_number][1]))
+		self.original_sprite = pygame.image.load(sprite_path) # Load the original spaceship sprite
+		self.scale = (variables.spaceship_sprite_size["no_upgrade"][spaceship_number][0], 
+					  variables.spaceship_sprite_size["no_upgrade"][spaceship_number][1])
+		self.original_sprite_scaled = pygame.transform.scale(self.original_sprite, self.scale) # Scale the sprite
+		self.image = pygame.transform.scale(self.original_sprite, self.scale) # Scale the sprite
 		self.rect = self.image.get_rect()
 		self.x = variables.spaceship_positions[level][spaceship_number-1][0]
 		self.y = variables.spaceship_positions[level][spaceship_number-1][1]
+		self.rect.center = (self.x, self.y)
 		self.speed = speed
+		self.radius = max(self.rect.width // 2, self.rect.height // 2) # radius for collision detection
+		self.angle = 0
+		self.rot_speed = variables.spaceship_rotation_speed
 
-	def move_left(self):
-		self.x -= self.speed
+	def rotate_left(self):
+		self.angle += self.rot_speed
+		self.image = pygame.transform.rotate(self.original_sprite_scaled, self.angle)
+		self.rect = self.image.get_rect(center=self.rect.center)
 
-	def move_right(self):
-		self.x += self.speed
+	def rotate_right(self):
+		self.angle -= self.rot_speed
+		self.image = pygame.transform.rotate(self.original_sprite_scaled, self.angle)
+		self.rect = self.image.get_rect(center=self.rect.center)
 
-	def move_up(self):
-		self.y -= self.speed
+	def move_forward(self):
+		self.move(self.speed)
 
-	def move_down(self):
-		self.y += self.speed
+	def move_backward(self):
+		self.move(-self.speed)
 
-#	def update(self):
-#		keys = pygame.key.get_pressed()
-#		if keys[pygame.K_LEFT]: # Left arrow key
-#			self.move_left()
-#		if keys[pygame.K_RIGHT]: # Right arrow key
-#			self.move_right()
-#		if keys[pygame.K_UP]: # Up arrow key
-#			self.move_up()
-#		if keys[pygame.K_DOWN]: # Down arrow key
-#			self.move_down()
-	
+	def move(self, distance):
+		adjusted_angle = -self.angle - 90
+		radians = math.radians(adjusted_angle)
+		self.x += distance * math.cos(radians)
+		self.y += distance * math.sin(radians)
+		self.rect.x = self.x
+		self.rect.y = self.y
+
+	def update(self):
+		keys = pygame.key.get_pressed()
+		if keys[pygame.K_a]: # A key
+			self.rotate_left()
+		if keys[pygame.K_d]: # D key
+			self.rotate_right()
+		if keys[pygame.K_w]: # W key
+			self.move_forward()
+		if keys[pygame.K_s]: # S key
+			self.move_backward()
+
 	def render(self, window):
-		window.blit(self.image, (self.x, self.y))
+		window.blit(self.image, self.rect)
