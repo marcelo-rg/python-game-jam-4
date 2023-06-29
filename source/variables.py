@@ -103,7 +103,7 @@ player_assets_positions = {
 ####################
 
 # Image Variables
-background_image = os.path.join(background_assets_path, "space-galaxy-background.jpg")
+background_image = os.path.join(background_assets_path, "purple_light.jpg")
 asteroid_asset = os.path.join(asteroid_assets_path, "12-circular.png")
 planet_asset = os.path.join(planet_assets_path, "14.png")
 meteor_big_asset = os.path.join(meteors_assets_path,"meteorBrown_big")

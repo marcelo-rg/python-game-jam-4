@@ -3,8 +3,7 @@ import os
 cwd = os.getcwd()
 
 from objects import Planet, Asteroid, Meteor, Spaceship
-from sounds import *
-from background import Background
+from sounds import SoundManager
 import variables
 from player import Player
 
