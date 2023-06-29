@@ -158,12 +158,10 @@ background_music = {
 	4: "JJD-Adventure.mp3",
 	5: "Janji-HeroesTonight.mp3"
 }
-sounds = {
-	'shooting': os.path.join(sound_path, "shooting1.mp3"),
-	'meteor_impact': os.path.join(sound_path, "Meteor1.mp3"),
-}
+
 sounds = {
 	"shooting": os.path.join(sound_path, "shooting1.mp3"),
+    "meteor_blast": os.path.join(sound_path, "Explosion.wav"),
 	"meteor_impact_1": os.path.join(sound_path, "Meteor1.mp3"),
 	"meteor_impact_2": os.path.join(sound_path, "Meteor_2.wav"),
 	"meteor_impact_3": os.path.join(sound_path, "Meteor_3.wav"),
@@ -172,6 +170,7 @@ sounds = {
 }
 sounds_volume = {
 	'shooting': global_sound_volume,
+	'meteor_blast': italian_sound_volume,
 	'meteor_impact_1': italian_sound_volume,
 	'meteor_impact_2': italian_sound_volume,
 	'meteor_impact_3': italian_sound_volume,
