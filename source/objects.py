@@ -269,7 +269,7 @@ class Spaceship(Sprite):
 			self.move_forward()
 		if keys[pygame.K_s]: # S key
 			self.move_backward()
-		if keys[pygame.K_SPACE] and self.shoot_cooldown <= 0:
+		if keys[variables.player_controls['Player1']['Fire']['Use']] and self.shoot_cooldown <= 0: # change 'Player1' to a player id variable
 			self.shoot()
 			self.sound_manager.playSoundEffect('shooting')
 			self.shoot_cooldown = self.shoot_delay # Reset the cooldown 
