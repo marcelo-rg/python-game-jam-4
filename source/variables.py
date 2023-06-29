@@ -147,16 +147,16 @@ bullet_cooldown = 20
 ####################
 
 # Sound Variables
-global_music_volume = 0.05
+global_music_volume = 0.3
 global_sound_volume = 0.05
 italian_sound_volume = 0.5
 pause_menu_music = "Razihel-LoveU.mp3"
 background_music = {
-	1: "Itro-Tobu-Cloud-9.mp3",
-	2: "Defqwop-Awakening.mp3",
-	3: "Razihel-LoveU.mp3",
-	4: "JJD-Adventure.mp3",
-	5: "Janji-HeroesTonight.mp3"
+	1: "Not_far_enough.wav",
+	2: "Trying_to_go_home.wav",
+	# 3: "Razihel-LoveU.mp3",
+	# 4: "JJD-Adventure.mp3",
+	# 5: "Janji-HeroesTonight.mp3"
 }
 
 sounds = {
