@@ -110,11 +110,19 @@ class Game:
 			# Update game stated
 			self.asteroid.update()
 			self.planet.update()
+
 			for meteor in self.meteors:
 				# Check for collisions
 				if pygame.sprite.collide_circle(meteor, self.planet):
 					self.sound_player.playSoundEffect("meteor_impact")
 					meteor.respawn()
+
+				# Check for collisions between bullets and meteors
+				for bullet in self.spaceship_one.bullets + self.spaceship_two.bullets:
+					if pygame.sprite.collide_circle(meteor, bullet):
+						meteor.respawn()
+						bullet.remove() # You will need to implement a remove() method in the Bullet class
+
 				meteor.update()
 
 			# check for collisions between spaceships and asteroid
@@ -128,6 +136,7 @@ class Game:
 
 			self.player_one.update("Player1")
 			self.player_two.update("Player2")
+
 
 
 
