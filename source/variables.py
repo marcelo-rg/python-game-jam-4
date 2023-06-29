@@ -146,7 +146,7 @@ bullet_cooldown = 20
 ####################
 
 # Sound Variables
-global_music_volume = 0.1
+global_music_volume = 0.05
 global_sound_volume = 0.05
 italian_sound_volume = 0.5
 pause_menu_music = "Razihel-LoveU.mp3"
