@@ -123,6 +123,7 @@ class Game:
 				for bullet in self.spaceship_one.bullets + self.spaceship_two.bullets:
 					if pygame.sprite.collide_circle(meteor, bullet):
 						meteor.respawn()
+						self.sound_player.playSoundEffect("meteor_blast")
 						bullet.remove() # You will need to implement a remove() method in the Bullet class
 					if pygame.sprite.collide_circle(self.planet, bullet) or pygame.sprite.collide_circle(self.asteroid, bullet):
 						bullet.remove()
