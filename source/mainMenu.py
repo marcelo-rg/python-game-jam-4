@@ -68,6 +68,9 @@ class MainMenu:
 		self.display.fill((0, 0, 0))
 		self.display.blit(scaled_background, (0, 0))
 
+		# Add the title above the buttons
+		self.render_title(variables.game_name, 125, variables.WHITE, 50)  # Adjust the size and position as needed
+
 		self.play_button.draw(self.display)
 		#self.options_button.draw(self.display)
 		self.quit_button.draw(self.display)
@@ -126,3 +129,9 @@ class MainMenu:
 			self.display.blit(fade_surface, (0, 0))
 			pygame.display.update()
 			time.sleep(0.05)
+	
+	def render_title(self, text, size, color, y_position):
+		font = pygame.font.Font(None, size)
+		text_surface = font.render(text, True, color)
+		text_rect = text_surface.get_rect(center=(self.screen_width/2, y_position))
+		self.display.blit(text_surface, text_rect)
