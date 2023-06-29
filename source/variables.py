@@ -15,7 +15,7 @@ fps = 60
 
 # Player Variables
 player_speed = 1
-spaceship_speed = 5
+spaceship_speed = 3
 
 # Player Bindings
 player_controls = { 
@@ -86,7 +86,6 @@ player_assets_path = os.path.join(assets_path, "player")
 background_assets_path = os.path.join(assets_path, "background")
 bullet_sprite_path = os.path.join(assets_path, "bullets","bullet1.png")
 sound_path = os.path.join(assets_path, "..", "music")
-
 
 ####################
 
@@ -175,3 +174,4 @@ jpg_extension = ".jpg"
 png_extension = ".png"
 
 ####################
+
