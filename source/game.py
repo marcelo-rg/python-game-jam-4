@@ -36,6 +36,10 @@ class Game:
 		self.running = False 
 		self.paused = False
 
+		# Load the background image
+		self.background_image = pygame.image.load(variables.background_image).convert()
+		self.background_image = pygame.transform.scale(self.background_image, (screen_width, screen_height))
+	
 		# Add game elements here
 		ast_sprite = pygame.image.load(os.path.join(cwd, variables.asteroid_asset))
 		self.asteroid = Asteroid(ast_sprite, screen_width // 2, screen_height // 2)
@@ -65,8 +69,8 @@ class Game:
 		self.spaceship_two = Spaceship(1,1,5,variables.spaceship_two_asset)
 
 		# Music
-		sound_player = MusicPlayer()
-		sound_player.playBackgroundMusic()
+		#sound_player = SoundManager(variables.sounds)
+		#sound_player.playBackgroundMusic()
 
 	def start(self):
 		self.running = True
@@ -136,10 +140,10 @@ class Game:
 
 	def render(self):
 		# Render the game elements
-		
 		#self.screen.fill((0, 0, 0))  # Example background fill
-		background_image = Background(self.screen)
-		background_image.set_background(variables.background_image)
+
+		 # Blit the background image to the screen
+		self.screen.blit(self.background_image, (0, 0))
 
 		# Add your rendering code here
 		self.asteroid.render(self.screen)
