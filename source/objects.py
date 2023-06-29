@@ -155,8 +155,11 @@ class Meteor(Sprite):
 		screen.blit(self.image, self.rect)
 
 class Spaceship(Sprite):
-	def __init__(self, level, spaceship_number, speed, sprite_path, screen_width, screen_height, sound_manager):
+	def __init__(self, level, spaceship_number, speed, sprite_path, screen_width, screen_height, sound_manager, planet_radius):
 		super().__init__()
+		self.planet_radius = planet_radius
+		self.level = level
+		self.spaceship_number = spaceship_number
 		self.original_sprite = pygame.image.load(sprite_path) # Load the original spaceship sprite
 		self.scale = (variables.spaceship_sprite_size["no_upgrade"][spaceship_number][0], 
 					  variables.spaceship_sprite_size["no_upgrade"][spaceship_number][1])
@@ -178,6 +181,16 @@ class Spaceship(Sprite):
 		self.shoot_delay = variables.bullet_cooldown  # Delay between shots
 		self.sound_manager = sound_manager
 
+
+	def reposition(self):
+		"""Reposition the spaceship to its original location in case of collision."""
+		# Load the original position from variables
+		self.x = variables.spaceship_positions[self.level][self.spaceship_number-1][0]
+		self.y = variables.spaceship_positions[self.level][self.spaceship_number-1][1]
+
+		# Apply the position to the spaceship rect
+		self.rect.center = (self.x, self.y)
+
 	def shoot(self):
 		# Compute the offset position of the bullet
 		half_height = self.rect.height / 2
@@ -190,7 +203,7 @@ class Spaceship(Sprite):
 		bullet_y = self.y + offset_y
 
 		# Create a new bullet and add it to the bullets list
-		bullet = Bullet(bullet_x, bullet_y, self.angle, variables.bullet_speed, variables.bullet_sprite_path, variables.bullet_sprite_size)
+		bullet = Bullet(bullet_x, bullet_y, self.angle, variables.bullet_speed, variables.bullet_sprite_path, variables.bullet_sprite_size, self.screen_width, self.screen_height)
 		self.bullets.append(bullet)
 
 
@@ -220,10 +233,24 @@ class Spaceship(Sprite):
 		new_x = max(min(new_x, self.screen_width - self.rect.width / 2), self.rect.width / 2)
 		new_y = max(min(new_y, self.screen_height - self.rect.height / 2), self.rect.height / 2)
 
+		# Calculate the distance to the center of the screen (where the planet is)
+		center_x = self.screen_width / 2
+		center_y = self.screen_height / 2
+		dist_to_center = ((new_x - center_x)**2 + (new_y - center_y)**2)**0.5  # Pythagorean theorem
+
+		# Check if the spaceship would go inside the planet
+		if dist_to_center < self.planet_radius + self.radius:  # I'm assuming the planet_radius is accessible from the variables module
+			return  # If it would, block the movement
+
+		# If it wouldn't, apply the movement
 		self.x = new_x
 		self.y = new_y
-    
+
 		self.rect.center = (self.x, self.y)
+
+	def cleanup_bullets(self):
+		"""Removes 'dead' bullets from the bullets list."""
+		self.bullets = [bullet for bullet in self.bullets if bullet.is_alive]
 
 	def update(self):
 		keys = pygame.key.get_pressed()
@@ -248,6 +275,9 @@ class Spaceship(Sprite):
 		for bullet in self.bullets:
 			bullet.update()
 
+		# Remove dead bullets
+		self.cleanup_bullets()
+
 	def render(self, window):
 		window.blit(self.image, self.rect)
 		for bullet in self.bullets:
@@ -255,27 +285,38 @@ class Spaceship(Sprite):
 
 
 class Bullet(Sprite):
-	def __init__(self, x, y, angle, speed, bullet_sprite_path, bullet_scale):
-		super().__init__()
-		self.x = x
-		self.y = y
-		self.angle = -angle -90
-		self.speed = speed
+	def __init__(self, x, y, angle, speed, bullet_sprite_path, bullet_scale, screen_width, screen_height):
+			super().__init__()
+			self.x = x
+			self.y = y
+			self.angle = -angle -90
+			self.speed = speed
+			self.is_alive = True  # Bullet is initially alive
+			self.screen_width = screen_width
+			self.screen_height = screen_height
 
-		self.original_sprite = pygame.image.load(bullet_sprite_path)
-		self.original_sprite_scaled = pygame.transform.scale(self.original_sprite, bullet_scale)
+			self.original_sprite = pygame.image.load(bullet_sprite_path)
+			self.original_sprite_scaled = pygame.transform.scale(self.original_sprite, bullet_scale)
 
-		# Rotate the bullet sprite to match the spaceship's angle
-		self.image = pygame.transform.rotate(self.original_sprite_scaled, -self.angle)
+			# Rotate the bullet sprite to match the spaceship's angle
+			self.image = pygame.transform.rotate(self.original_sprite_scaled, -self.angle)
 
-		self.rect = self.image.get_rect(center=(self.x, self.y))
-		self.radius = max(self.rect.width // 2, self.rect.height // 2) # radius for collision detection
+			self.rect = self.image.get_rect(center=(self.x, self.y))
+			self.radius = max(self.rect.width // 2, self.rect.height // 2) # radius for collision detection
+
+	def remove(self):
+		"""Mark the bullet as 'dead' so it can be removed."""
+		self.is_alive = False
 
 	def update(self):
 		# Calculate the new position of the bullet
 		self.x += self.speed * math.cos(math.radians(self.angle))
 		self.y += self.speed * math.sin(math.radians(self.angle))
 		self.rect.center = (self.x, self.y)
+
+		# Check if the bullet has gone off-screen
+		if self.x < 0 or self.x > self.screen_width or self.y < 0 or self.y > self.screen_height:
+			self.remove()
 
 	def render(self, window):
 		window.blit(self.image, self.rect)
