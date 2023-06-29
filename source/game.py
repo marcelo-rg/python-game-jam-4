@@ -26,7 +26,7 @@ class Game:
 
 		# Music
 		self.sound_player = SoundManager(variables.sounds)
-		self.sound_player.loadBackgroundMusic(os.path.join(variables.background_music_path, variables.background_music))
+		self.sound_player.loadBackgroundMusic(os.path.join(variables.sound_path, variables.background_music))
 		self.sound_player.playBackgroundMusic()
 
 		# Set up the game window
