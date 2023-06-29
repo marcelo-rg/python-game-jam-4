@@ -69,7 +69,7 @@ class MainMenu:
 		self.display.blit(scaled_background, (0, 0))
 
 		# Add the title above the buttons
-		self.render_title(variables.game_name, 125, variables.WHITE, 50)  # Adjust the size and position as needed
+		self.render_title(variables.game_name, 125, variables.TITLE_COLOR, 100)  # Adjust the size and position as needed
 
 		self.play_button.draw(self.display)
 		#self.options_button.draw(self.display)

@@ -6,7 +6,7 @@ import pygame
 ####################
 
 # Game Variables
-game_name = "Asteroid Wasters"
+game_name = "Meteor Mayhem"
 screen_width = 800
 screen_height = 600
 fps = 60
@@ -73,6 +73,7 @@ player_controls = {
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
+TITLE_COLOR = (219, 161, 15)
 
 ####################
 
@@ -156,10 +157,6 @@ background_music = {
 	3: "Razihel-LoveU.mp3",
 	4: "JJD-Adventure.mp3",
 	5: "Janji-HeroesTonight.mp3"
-}
-sounds = {
-	'shooting': os.path.join(sound_path, "shooting1.mp3"),
-	'meteor_impact': os.path.join(sound_path, "Meteor1.mp3"),
 }
 sounds = {
 	"shooting": os.path.join(sound_path, "shooting1.mp3"),
