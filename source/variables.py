@@ -7,8 +7,8 @@ import pygame
 
 # Game Variables
 game_name = "Asteroid Wasters"
-screen_width = 800
-screen_height = 600
+screen_width = 1536
+screen_height = 864
 fps = 60
 
 ####################
@@ -30,6 +30,9 @@ player_controls = {
 			"Use": pygame.K_e
 		},
 		"Upgrade": {
+			"Use": pygame.K_f
+		},
+        "Repair": {
 			"Use": pygame.K_r
 		},
 		"Fire": {
@@ -51,6 +54,9 @@ player_controls = {
 		},
 		"Upgrade": {
 			"Use": pygame.K_k
+		},
+        "Repair": {
+			"Use": pygame.K_u
 		},
 		"Fire": {
 			"Use": pygame.K_l
@@ -78,7 +84,6 @@ meteors_assets_path = os.path.join(assets_path, "meteors")
 spaceships_assets_path = os.path.join(assets_path, "spaceships")
 player_assets_path = os.path.join(assets_path, "player")
 background_assets_path = os.path.join(assets_path, "background")
-background_music_path = "music"
 bullet_sprite_path = os.path.join(assets_path, "bullets","bullet1.png")
 sound_path = os.path.join(assets_path, "..", "music")
 
@@ -144,7 +149,15 @@ bullet_cooldown = 20
 global_music_volume = 0.05
 global_sound_volume = 0.05
 italian_sound_volume = 0.5
+pause_menu_music = "Razihel-LoveU.mp3"
 background_music = "Itro-Tobu-Cloud-9.mp3"
+#background_music = {
+#	1: "Itro-Tobu-Cloud-9.mp3",
+#	2: "Defqwop-Awakening.mp3",
+#    3: "Razihel-LoveU.mp3",
+#    4: "JJD-Adventure.mp3",
+#    5: "Janji-HeroesTonight.mp3"
+#}
 sounds = {
     'shooting': os.path.join(sound_path, "shooting1.mp3"),
     'meteor_impact': os.path.join(sound_path, "Meteor1.mp3"),
@@ -153,6 +166,7 @@ sounds_volume = {
     'shooting': global_sound_volume,
     'meteor_impact': italian_sound_volume,
 }
+
 ####################
 
 # Exra Variables

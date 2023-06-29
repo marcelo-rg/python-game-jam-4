@@ -4,7 +4,7 @@ cwd = os.getcwd()
 
 from objects import Planet, Asteroid, Meteor, Spaceship
 from sounds import *
-from ImageDraw import *
+from background import Background
 import variables
 from player import Player
 
@@ -22,7 +22,7 @@ class Game:
 			# Set the variables module screen size
 			variables.screen_width = screen_width
 			variables.screen_height = screen_height
-			#print("Screen size: {} x {}".format(variables.screen_width, variables.screen_height)) # Debugging
+			print("Screen size: {} x {}".format(variables.screen_width, variables.screen_height)) # Debugging
 
 		# Music
 		self.sound_player = SoundManager(variables.sounds)
@@ -41,6 +41,10 @@ class Game:
 		self.running = False 
 		self.paused = False
 
+		# Load the background image
+		self.background_image = pygame.image.load(variables.background_image).convert()
+		self.background_image = pygame.transform.scale(self.background_image, (screen_width, screen_height))
+	
 		# Add game elements here
 		ast_sprite = pygame.image.load(os.path.join(cwd, variables.asteroid_asset))
 		self.asteroid = Asteroid(ast_sprite, screen_width // 2, screen_height // 2)
@@ -128,9 +132,11 @@ class Game:
 
 	def render(self):
 		# Render the game elements
-		self.screen.fill((0, 0, 0))  # Example background fill
-		#image_draw = ImageDraw(self.screen)
-		#image_draw.set_background(variables.background_image)
+    # Set the screen to black
+		#self.screen.fill((0, 0, 0))  # Example background fill
+
+		 # Blit the background image to the screen
+		self.screen.blit(self.background_image, (0, 0))
 
 		# Add your rendering code here
 		self.asteroid.render(self.screen)
