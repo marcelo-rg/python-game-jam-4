@@ -8,5 +8,5 @@ from mainMenu import MainMenu  # Import the MainMenu class
 if __name__ == "__main__":
 	# Create a Menu instance and start it
 	pygame.init()
-	menu = MainMenu(variables.screen_width, variables.screen_height, variables.fps)
+	menu = MainMenu(variables.fps)
 	menu.start()
