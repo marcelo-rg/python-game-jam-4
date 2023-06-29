@@ -68,10 +68,10 @@ class Game:
 			   						(self.planet.rect.centerx,
 									self.planet.rect.centery)
 								)
-    
+	
 		# Spaceships
-		self.spaceship_one = Spaceship(1,0,variables.spaceship_speed, variables.spaceship_one_asset, screen_width=screen_width, screen_height=screen_height, sound_manager= self.sound_player)
-		self.spaceship_two = Spaceship(1,1,variables.spaceship_speed, variables.spaceship_two_asset, screen_width=screen_width, screen_height=screen_height, sound_manager= self.sound_player)
+		self.spaceship_one = Spaceship(1,0,variables.spaceship_speed, variables.spaceship_one_asset, screen_width=screen_width, screen_height=screen_height, sound_manager= self.sound_player, planet_radius=self.planet.radius)
+		self.spaceship_two = Spaceship(1,1,variables.spaceship_speed, variables.spaceship_two_asset, screen_width=screen_width, screen_height=screen_height, sound_manager= self.sound_player, planet_radius=self.planet.radius)
 
 	def start(self):
 		self.running = True
@@ -105,11 +105,9 @@ class Game:
 				if event.key == pygame.K_q:
 					self.running = False
 
-
 	def update_game_logic(self):
 		if not self.paused:
 			# Update game stated
-			# keys_pressed = pygame.key.get_pressed()
 			self.asteroid.update()
 			self.planet.update()
 			for meteor in self.meteors:
@@ -118,20 +116,24 @@ class Game:
 					self.sound_player.playSoundEffect("meteor_impact")
 					meteor.respawn()
 				meteor.update()
-		# check for collisions between spaceships and planet
-		collide_one = pygame.sprite.collide_circle(self.spaceship_one, self.planet)
-		collide_two = pygame.sprite.collide_circle(self.spaceship_two, self.planet)
 
-		self.spaceship_one.update()
-		self.spaceship_two.update()
+			# check for collisions between spaceships and asteroid
+			if pygame.sprite.collide_circle(self.spaceship_one, self.asteroid):
+				self.spaceship_one.reposition()  
+			if pygame.sprite.collide_circle(self.spaceship_two, self.asteroid):
+				self.spaceship_two.reposition() 
 
-		self.player_one.update("Player1")
-		self.player_two.update("Player2") 
+			self.spaceship_one.update()
+			self.spaceship_two.update()
+
+			self.player_one.update("Player1")
+			self.player_two.update("Player2")
+
 
 
 	def render(self):
 		# Render the game elements
-    # Set the screen to black
+	# Set the screen to black
 		#self.screen.fill((0, 0, 0))  # Example background fill
 
 		 # Blit the background image to the screen

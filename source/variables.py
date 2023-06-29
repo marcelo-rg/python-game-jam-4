@@ -92,7 +92,6 @@ sound_path = os.path.join(assets_path, "..", "music")
 # Positions per Level
 spaceship_positions  = {
 	1: [(100, 100), (400, 200)],
-	2: [(100, 100), (400, 200)]
 }
 
 player_assets_positions = {

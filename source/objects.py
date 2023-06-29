@@ -155,8 +155,11 @@ class Meteor(Sprite):
 		screen.blit(self.image, self.rect)
 
 class Spaceship(Sprite):
-	def __init__(self, level, spaceship_number, speed, sprite_path, screen_width, screen_height, sound_manager):
+	def __init__(self, level, spaceship_number, speed, sprite_path, screen_width, screen_height, sound_manager, planet_radius):
 		super().__init__()
+		self.planet_radius = planet_radius
+		self.level = level
+		self.spaceship_number = spaceship_number
 		self.original_sprite = pygame.image.load(sprite_path) # Load the original spaceship sprite
 		self.scale = (variables.spaceship_sprite_size["no_upgrade"][spaceship_number][0], 
 					  variables.spaceship_sprite_size["no_upgrade"][spaceship_number][1])
@@ -177,6 +180,16 @@ class Spaceship(Sprite):
 		self.shoot_cooldown = 0  # Cool down timer for shooting
 		self.shoot_delay = variables.bullet_cooldown  # Delay between shots
 		self.sound_manager = sound_manager
+
+
+	def reposition(self):
+		"""Reposition the spaceship to its original location in case of collision."""
+		# Load the original position from variables
+		self.x = variables.spaceship_positions[self.level][self.spaceship_number-1][0]
+		self.y = variables.spaceship_positions[self.level][self.spaceship_number-1][1]
+
+		# Apply the position to the spaceship rect
+		self.rect.center = (self.x, self.y)
 
 	def shoot(self):
 		# Compute the offset position of the bullet
@@ -220,10 +233,21 @@ class Spaceship(Sprite):
 		new_x = max(min(new_x, self.screen_width - self.rect.width / 2), self.rect.width / 2)
 		new_y = max(min(new_y, self.screen_height - self.rect.height / 2), self.rect.height / 2)
 
+		# Calculate the distance to the center of the screen (where the planet is)
+		center_x = self.screen_width / 2
+		center_y = self.screen_height / 2
+		dist_to_center = ((new_x - center_x)**2 + (new_y - center_y)**2)**0.5  # Pythagorean theorem
+
+		# Check if the spaceship would go inside the planet
+		if dist_to_center < self.planet_radius + self.radius:  # I'm assuming the planet_radius is accessible from the variables module
+			return  # If it would, block the movement
+
+		# If it wouldn't, apply the movement
 		self.x = new_x
 		self.y = new_y
-    
+
 		self.rect.center = (self.x, self.y)
+
 
 	def update(self):
 		keys = pygame.key.get_pressed()
