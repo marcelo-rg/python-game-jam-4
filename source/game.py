@@ -6,6 +6,7 @@ from objects import Planet, Asteroid, Meteor, Spaceship
 from sounds import SoundManager
 import variables
 from player import Player
+import random
 
 class Game:
 	def __init__(self, screen_width = None, screen_height = None, fps= variables.fps):
@@ -25,7 +26,7 @@ class Game:
 
 		# Music
 		self.sound_player = SoundManager(variables.sounds)
-		self.sound_player.loadBackgroundMusic(os.path.join(variables.sound_path, variables.background_music))
+		self.sound_player.loadBackgroundMusic(variables.background_music)
 		self.sound_player.playBackgroundMusic()
 
 		# Set up the game window
@@ -114,7 +115,8 @@ class Game:
 			for meteor in self.meteors:
 				# Check for collisions
 				if pygame.sprite.collide_circle(meteor, self.planet):
-					self.sound_player.playSoundEffect("meteor_impact")
+					random_number = random.randint(1, 5)
+					self.sound_player.playSoundEffect("meteor_impact_"+random_number.__str__())
 					meteor.respawn()
 
 				# Check for collisions between bullets and meteors

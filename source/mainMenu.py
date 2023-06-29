@@ -3,6 +3,7 @@ import sys
 from pygame.locals import *
 from game import Game
 import variables
+import time
 
 # Class for the Button
 class Button:
@@ -28,21 +29,47 @@ class Button:
 
 
 class MainMenu:
-	def __init__(self, screen_width = variables.screen_width, screen_height = variables.screen_height, fps= variables.fps):
+	def __init__(self, fps=variables.fps):
 		# Create a screen object
-		self.display = pygame.display.set_mode((screen_width, screen_height))
+		self.screen_info = pygame.display.Info()
+		self.screen_width = self.screen_info.current_w
+		self.screen_height = self.screen_info.current_h
+		# Set the variables module screen size
+		variables.screen_width = self.screen_width
+		variables.screen_height = self.screen_height
+		print("Screen size: {} x {}".format(variables.screen_width, variables.screen_height)) # Debugging
+
+		self.display = pygame.display.set_mode((self.screen_width, self.screen_height))
 
 		# Define your buttons as instance variables here
-		self.play_button = Button(50, 50, 200, 50, 'PLAY')
-		self.options_button = Button(50, 110, 200, 50, 'OPTIONS')
-		self.quit_button = Button(50, 170, 200, 50, 'QUIT')
+		self.play_button = Button(0, 0, 200, 50, 'PLAY')
+		#self.options_button = Button(0, 0, 200, 50, 'OPTIONS')
+		self.quit_button = Button(0, 0, 200, 50, 'QUIT')
 
 	def start(self):
 		self.running = True
+		
+		#screen_width, screen_height = self.display.get_size()
 
-		self.display.fill((0,0,0))
+		# Load the background image
+		background_image = pygame.image.load(variables.menu_background_image)
+		scaled_background = pygame.transform.scale(background_image, (self.screen_width, self.screen_height))
+
+		# Calculate the positions of the buttons
+		button_x = (self.screen_width - self.play_button.rect.width) // 2
+		#button_y = (screen_height - (self.play_button.rect.height + self.options_button.rect.height + self.quit_button.rect.height + 20)) // 2
+		button_y = (self.screen_height - (self.play_button.rect.height + self.quit_button.rect.height + 20)) // 2
+
+		self.play_button.rect.topleft = (button_x, button_y)
+		#self.options_button.rect.topleft = (button_x, button_y + self.play_button.rect.height + 10)
+		#self.quit_button.rect.topleft = (button_x, button_y + (self.play_button.rect.height + self.options_button.rect.height + 20))
+		self.quit_button.rect.topleft = (button_x, button_y + (self.play_button.rect.height + 20))
+
+		self.display.fill((0, 0, 0))
+		self.display.blit(scaled_background, (0, 0))
+
 		self.play_button.draw(self.display)
-		self.options_button.draw(self.display)
+		#self.options_button.draw(self.display)
 		self.quit_button.draw(self.display)
 		pygame.display.update()
 
@@ -62,12 +89,15 @@ class MainMenu:
 				if event.type == MOUSEBUTTONDOWN:
 					if self.play_button.is_over(pos):
 						print('Play button clicked')
+						self.fade_transition()  # Call the fade transition
 						# Create a Game instance and start it
-						game = Game(variables.fps)
+						game = Game(variables.screen_width, variables.screen_height, variables.fps)
 						game.start()
-					elif self.options_button.is_over(pos):
-						print('Options button clicked')
-						# Add options code here
+						pygame.quit()
+						sys.exit()
+					#elif self.options_button.is_over(pos):
+					#	print('Options button clicked')
+					#	# Add options code here
 					elif self.quit_button.is_over(pos):
 						print('Quit button clicked')
 						pygame.quit()
@@ -78,11 +108,21 @@ class MainMenu:
 						self.play_button.color = variables.GREEN
 					else:
 						self.play_button.color = variables.BLUE
-					if self.options_button.is_over(pos):
-						self.options_button.color = variables.GREEN
-					else:
-						self.options_button.color = variables.BLUE
+					#if self.options_button.is_over(pos):
+					#	self.options_button.color = variables.GREEN
+					#else:
+					#	self.options_button.color = variables.BLUE
 					if self.quit_button.is_over(pos):
 						self.quit_button.color = variables.GREEN
 					else:
 						self.quit_button.color = variables.BLUE
+
+	def fade_transition(self):
+		fade_surface = pygame.Surface((self.screen_width, self.screen_height))
+		fade_surface.fill((0, 0, 0))
+
+		for alpha in range(0, 255, 10):
+			fade_surface.set_alpha(alpha)
+			self.display.blit(fade_surface, (0, 0))
+			pygame.display.update()
+			time.sleep(0.05)

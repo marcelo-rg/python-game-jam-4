@@ -7,8 +7,8 @@ import pygame
 
 # Game Variables
 game_name = "Asteroid Wasters"
-screen_width = 1536
-screen_height = 864
+screen_width = 800
+screen_height = 600
 fps = 60
 
 ####################
@@ -32,7 +32,7 @@ player_controls = {
 		"Upgrade": {
 			"Use": pygame.K_f
 		},
-        "Repair": {
+		"Repair": {
 			"Use": pygame.K_r
 		},
 		"Fire": {
@@ -55,7 +55,7 @@ player_controls = {
 		"Upgrade": {
 			"Use": pygame.K_k
 		},
-        "Repair": {
+		"Repair": {
 			"Use": pygame.K_u
 		},
 		"Fire": {
@@ -102,6 +102,7 @@ player_assets_positions = {
 ####################
 
 # Image Variables
+menu_background_image = os.path.join(background_assets_path, "menu-background.jpg")
 background_image = os.path.join(background_assets_path, "purple_light_cleanup.png")
 asteroid_asset = os.path.join(asteroid_assets_path, "12-circular.png")
 planet_asset = os.path.join(planet_assets_path, "14.png")
@@ -149,21 +150,32 @@ global_music_volume = 0.0
 global_sound_volume = 0.05
 italian_sound_volume = 0.5
 pause_menu_music = "Razihel-LoveU.mp3"
-background_music = "Itro-Tobu-Cloud-9.mp3"
-#background_music = {
-#	1: "Itro-Tobu-Cloud-9.mp3",
-#	2: "Defqwop-Awakening.mp3",
-#    3: "Razihel-LoveU.mp3",
-#    4: "JJD-Adventure.mp3",
-#    5: "Janji-HeroesTonight.mp3"
-#}
+background_music = {
+	1: "Itro-Tobu-Cloud-9.mp3",
+	2: "Defqwop-Awakening.mp3",
+	3: "Razihel-LoveU.mp3",
+	4: "JJD-Adventure.mp3",
+	5: "Janji-HeroesTonight.mp3"
+}
 sounds = {
-    'shooting': os.path.join(sound_path, "shooting1.mp3"),
-    'meteor_impact': os.path.join(sound_path, "Meteor1.mp3"),
+	'shooting': os.path.join(sound_path, "shooting1.mp3"),
+	'meteor_impact': os.path.join(sound_path, "Meteor1.mp3"),
+}
+sounds = {
+	"shooting": os.path.join(sound_path, "shooting1.mp3"),
+	"meteor_impact_1": os.path.join(sound_path, "Meteor1.mp3"),
+	"meteor_impact_2": os.path.join(sound_path, "Meteor_2.wav"),
+	"meteor_impact_3": os.path.join(sound_path, "Meteor_3.wav"),
+	"meteor_impact_4": os.path.join(sound_path, "Meteor_4.wav"),
+	"meteor_impact_5": os.path.join(sound_path, "Meteor_5.wav")
 }
 sounds_volume = {
-    'shooting': global_sound_volume,
-    'meteor_impact': italian_sound_volume,
+	'shooting': global_sound_volume,
+	'meteor_impact_1': italian_sound_volume,
+	'meteor_impact_2': italian_sound_volume,
+	'meteor_impact_3': italian_sound_volume,
+	'meteor_impact_4': italian_sound_volume,
+	'meteor_impact_5': italian_sound_volume
 }
 
 ####################
