@@ -119,7 +119,7 @@ class Game:
 
 				# Check for collisions between bullets and meteors
 				for bullet in self.spaceship_one.bullets + self.spaceship_two.bullets:
-					if pygame.sprite.collide_circle(meteor, bullet):
+					if pygame.sprite.collide_circle(meteor, bullet) or pygame.sprite.collide_circle(self.planet, bullet):
 						meteor.respawn()
 						bullet.remove() # You will need to implement a remove() method in the Bullet class
 
