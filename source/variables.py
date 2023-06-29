@@ -1,5 +1,6 @@
 import os
 import pygame
+import math
 
 ####################
 # Variables
@@ -90,8 +91,8 @@ sound_path = os.path.join(assets_path, "..", "music")
 ####################
 
 # Positions per Level
-spaceship_positions  = {
-	1: [(100, 100), (400, 200)],
+spaceship_position_angles  = {
+	1: [math.pi/2, -math.pi/2],
 }
 
 player_assets_positions = {

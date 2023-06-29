@@ -159,6 +159,8 @@ class Spaceship(Sprite):
 		super().__init__()
 		self.planet_radius = planet_radius
 		self.level = level
+		self.screen_width = screen_width
+		self.screen_height = screen_height
 		self.spaceship_number = spaceship_number
 		self.original_sprite = pygame.image.load(sprite_path) # Load the original spaceship sprite
 		self.scale = (variables.spaceship_sprite_size["no_upgrade"][spaceship_number][0], 
@@ -166,27 +168,31 @@ class Spaceship(Sprite):
 		self.original_sprite_scaled = pygame.transform.scale(self.original_sprite, self.scale) # Scale the sprite
 		self.image = pygame.transform.scale(self.original_sprite, self.scale) # Scale the sprite
 		self.rect = self.image.get_rect()
-		self.x = variables.spaceship_positions[level][spaceship_number-1][0]
-		self.y = variables.spaceship_positions[level][spaceship_number-1][1]
+		self.radius = max(self.rect.width // 2, self.rect.height // 2) # radius for collision detection
+		# self.x = variables.spaceship_positions[level][spaceship_number-1][0]
+		# self.y = variables.spaceship_positions[level][spaceship_number-1][1]
+		self.initial_angle = variables.spaceship_position_angles[level][spaceship_number-1]
+		self.reposition()
 		self.rect.center = (self.x, self.y)
 		self.speed = speed
-		self.radius = max(self.rect.width // 2, self.rect.height // 2) # radius for collision detection
-		self.angle = 0
+		self.angle = self.initial_angle
 		self.rot_speed = variables.spaceship_rotation_speed
-		self.screen_width = screen_width
-		self.screen_height = screen_height
+
 
 		self.bullets = []  # List to store bullets
 		self.shoot_cooldown = 0  # Cool down timer for shooting
 		self.shoot_delay = variables.bullet_cooldown  # Delay between shots
 		self.sound_manager = sound_manager
 
-
 	def reposition(self):
 		"""Reposition the spaceship to its original location in case of collision."""
 		# Load the original position from variables
-		self.x = variables.spaceship_positions[self.level][self.spaceship_number-1][0]
-		self.y = variables.spaceship_positions[self.level][self.spaceship_number-1][1]
+		# self.x = variables.spaceship_positions[self.level][self.spaceship_number-1][0]
+		# self.y = variables.spaceship_positions[self.level][self.spaceship_number-1][1]
+		platet_center_x, platet_center_y = (self.screen_width//2, self.screen_height//2)
+		self.x = platet_center_x + (self.planet_radius +self.radius)* math.cos(self.initial_angle)
+		self.y = platet_center_y + (self.planet_radius +self.radius)* math.sin(self.initial_angle)
+		self.image = pygame.transform.rotate(self.original_sprite_scaled, -self.initial_angle)
 
 		# Apply the position to the spaceship rect
 		self.rect.center = (self.x, self.y)
