@@ -192,7 +192,8 @@ class Spaceship(Sprite):
 		platet_center_x, platet_center_y = (self.screen_width//2, self.screen_height//2)
 		self.x = platet_center_x + (self.planet_radius +self.radius)* math.cos(self.initial_angle)
 		self.y = platet_center_y + (self.planet_radius +self.radius)* math.sin(self.initial_angle)
-		self.image = pygame.transform.rotate(self.original_sprite_scaled, -self.initial_angle)
+		self.angle = self.initial_angle
+		self.image = pygame.transform.rotate(self.original_sprite_scaled, self.initial_angle)
 
 		# Apply the position to the spaceship rect
 		self.rect.center = (self.x, self.y)
