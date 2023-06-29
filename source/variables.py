@@ -92,7 +92,6 @@ sound_path = os.path.join(assets_path, "..", "music")
 # Positions per Level
 spaceship_positions  = {
 	1: [(100, 100), (400, 200)],
-	2: [(100, 100), (400, 200)]
 }
 
 player_assets_positions = {
@@ -146,7 +145,7 @@ bullet_cooldown = 20
 ####################
 
 # Sound Variables
-global_music_volume = 0.05
+global_music_volume = 0.0
 global_sound_volume = 0.05
 italian_sound_volume = 0.5
 pause_menu_music = "Razihel-LoveU.mp3"
