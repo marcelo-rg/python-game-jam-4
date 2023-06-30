@@ -15,17 +15,19 @@ class Button:
 		self.current_color = self.color
 		self.text = text
 		self.txt_color = variables.WHITE
-		        self.clicked = False  # New click state flag
+		self.clicked = False  # New click state flag
 
 	def draw(self, screen):
-		pygame.draw.rect(screen, self.color, self.rect)
+		pygame.draw.rect(screen, self.current_color, self.rect)
 		if self.text != '':
 			font = pygame.font.Font(None, 20)
 			text = font.render(self.text, True, self.txt_color)
-			screen.blit(text, (self.rect.x + (self.rect.w / 2 - text.get_width() / 2), self.rect.y + (self.rect.h / 2 - text.get_height() / 2)))
+			screen.blit(text, (
+				self.rect.x + (self.rect.w / 2 - text.get_width() / 2),
+				self.rect.y + (self.rect.h / 2 - text.get_height() / 2)
+			))
 
 	def is_over(self, pos):
-		# Pos is the mouse position or a tuple of (x,y) coordinates
 		if self.rect.x < pos[0] < self.rect.x + self.rect.w and self.rect.y < pos[1] < self.rect.y + self.rect.h:
 			return True
 		return False
@@ -33,15 +35,24 @@ class Button:
 	def handle_event(self, event, pos):
 		if self.is_over(pos):
 			if event.type == pygame.MOUSEBUTTONDOWN:
-				self.current_color = self.clicked_color
+				self.clicked = True  # Set the click state flag
 			elif event.type == pygame.MOUSEBUTTONUP:
-				return True
+				if self.clicked:
+					self.clicked = False  # Reset the click state flag
+					return True
 			else:
-				self.current_color = self.hover_color
+				self.clicked = False  # Reset the click state flag
+
+		if self.clicked:
+			self.current_color = self.clicked_color
+		elif self.is_hover(pos):
+			self.current_color = self.hover_color
 		else:
 			self.current_color = self.color
+
 		return False
-	
+
+
 	def is_hover(self, pos):
 		if self.rect.x < pos[0] < self.rect.x + self.rect.w and self.rect.y < pos[1] < self.rect.y + self.rect.h:
 			return True
