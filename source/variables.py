@@ -72,6 +72,9 @@ player_controls = {
 # Some colors
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
+DARK_GREEN_v1 = (21, 71, 52)
+DARK_GREEN = (54, 143, 107)
+DARKER_GREEN = (15, 50, 36)
 BLUE = (0, 0, 255)
 TITLE_COLOR = (219, 161, 15)
 
