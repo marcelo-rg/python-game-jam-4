@@ -7,7 +7,7 @@ import math
 ####################
 
 # Game Variables
-game_name = "Asteroid Wasters"
+game_name = "Meteor Mayhem"
 screen_width = 800
 screen_height = 600
 fps = 60
@@ -73,7 +73,11 @@ player_controls = {
 # Some colors
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
+DARK_GREEN_v1 = (21, 71, 52)
+DARK_GREEN = (54, 143, 107)
+DARKER_GREEN = (15, 50, 36)
 BLUE = (0, 0, 255)
+TITLE_COLOR = (219, 161, 15)
 
 ####################
 
@@ -153,10 +157,7 @@ italian_sound_volume = 0.5
 pause_menu_music = "Razihel-LoveU.mp3"
 background_music = {
 	1: "Not_far_enough.wav",
-	2: "Trying_to_go_home.wav",
-	# 3: "Razihel-LoveU.mp3",
-	# 4: "JJD-Adventure.mp3",
-	# 5: "Janji-HeroesTonight.mp3"
+	2: "Trying_to_go_home.wav"
 }
 
 sounds = {
