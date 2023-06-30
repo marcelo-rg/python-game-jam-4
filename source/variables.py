@@ -1,5 +1,6 @@
 import os
 import pygame
+import math
 
 ####################
 # Variables
@@ -94,8 +95,8 @@ sound_path = os.path.join(assets_path, "..", "music")
 ####################
 
 # Positions per Level
-spaceship_positions  = {
-	1: [(100, 100), (400, 200)],
+spaceship_position_angles  = {
+	1: [math.pi/2, -math.pi/2],
 }
 
 player_assets_positions = {
@@ -150,19 +151,18 @@ bullet_cooldown = 20
 ####################
 
 # Sound Variables
-global_music_volume = 0.05
+global_music_volume = 0.3
 global_sound_volume = 0.05
 italian_sound_volume = 0.5
 pause_menu_music = "Razihel-LoveU.mp3"
 background_music = {
-	1: "Itro-Tobu-Cloud-9.mp3",
-	2: "Defqwop-Awakening.mp3",
-	3: "Razihel-LoveU.mp3",
-	4: "JJD-Adventure.mp3",
-	5: "Janji-HeroesTonight.mp3"
+	1: "Not_far_enough.wav",
+	2: "Trying_to_go_home.wav"
 }
+
 sounds = {
 	"shooting": os.path.join(sound_path, "shooting1.mp3"),
+    "meteor_blast": os.path.join(sound_path, "Explosion.wav"),
 	"meteor_impact_1": os.path.join(sound_path, "Meteor1.mp3"),
 	"meteor_impact_2": os.path.join(sound_path, "Meteor_2.wav"),
 	"meteor_impact_3": os.path.join(sound_path, "Meteor_3.wav"),
@@ -171,6 +171,7 @@ sounds = {
 }
 sounds_volume = {
 	'shooting': global_sound_volume,
+	'meteor_blast': italian_sound_volume,
 	'meteor_impact_1': italian_sound_volume,
 	'meteor_impact_2': italian_sound_volume,
 	'meteor_impact_3': italian_sound_volume,
