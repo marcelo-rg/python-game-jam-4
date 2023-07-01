@@ -42,18 +42,24 @@ class Button:
 		if self.is_over(pos):
 			if event.type == pygame.MOUSEBUTTONDOWN:
 				self.clicked = True
+				self.current_color = self.clicked_color
+				self.sound_manager.playSoundEffect("click_button")
 			elif event.type == pygame.MOUSEBUTTONUP:
 				if self.clicked:
 					self.clicked = False
+					if self.is_hover(pos):
+						self.current_color = self.hover_color
+					else:
+						self.current_color = self.color
 					return True
 		else:
 			self.clicked = False
+			self.hovered = False  # Reset hovered state
+			self.current_color = self.color  # Set default color
 
-		if self.clicked:
-			self.current_color = self.clicked_color
-			self.sound_manager.playSoundEffect("click_button")
-		elif self.is_hover(pos):
-			self.current_color = self.hover_color
+		if self.is_hover(pos):
+			if not self.clicked:
+				self.current_color = self.hover_color
 			if not self.hovered:
 				self.hovered = True
 				if self.hover_sound:
@@ -63,8 +69,8 @@ class Button:
 					self.hovered_button.current_color = self.hovered_button.color
 				self.hovered_button = self
 		else:
-			self.current_color = self.color
-			self.hovered = False
+			if not self.clicked:
+				self.current_color = self.color
 
 		return False
 
@@ -77,6 +83,11 @@ class Button:
 		if self.is_hover(pos) and event.type == pygame.MOUSEBUTTONDOWN:
 			return True
 		return False
+	
+	def reset(self):
+		self.clicked = False
+		self.current_color = self.color
+		self.hovered = False
 
 
 class MainMenu:
@@ -102,6 +113,10 @@ class MainMenu:
 		self.options_button = Button(0, 0, 200, 50, 'OPTIONS', self.sound_player, "option_button")
 		self.quit_button = Button(0, 0, 200, 50, 'QUIT', self.sound_player, "quit_button")
 
+		# Initialize menu state
+		self.menu_state = "main"
+		self.options_menu = OptionsMenu(self.display, self.sound_player, self.back_to_main_menu)
+
 	def start(self):
 		self.running = True
 
@@ -120,6 +135,11 @@ class MainMenu:
 		self.display.fill((0, 0, 0))
 		self.display.blit(self.scaled_background, (0, 0))
 
+		# Reset button states
+		self.play_button.reset()
+		self.options_button.reset()
+		self.quit_button.reset()
+
 		self.play_button.draw(self.display)
 		self.options_button.draw(self.display)
 		self.quit_button.draw(self.display)
@@ -127,84 +147,59 @@ class MainMenu:
 
 		self.menu_loop()
 
+		pygame.quit()
+		sys.exit()
 
 	def menu_loop(self):
 		while True:
-			pygame.time.delay(100)
-
+			#pygame.time.delay(100)
+			pos = pygame.mouse.get_pos()
+			
 			for event in pygame.event.get():
-				pos = pygame.mouse.get_pos()
-
 				if event.type == QUIT:
-					pygame.quit()
-					sys.exit()
+					self.running = False
+					return
 
-				if self.play_button.handle_event(event, pos):
-					print('Play button clicked')
-					self.fade_transition()
-					game = Game(variables.screen_width, variables.screen_height, variables.fps)
-					game.start()
-					pygame.quit()
-					sys.exit()
-
-				if self.options_button.handle_event(event, pos):  # Add this line
-					print('Options button clicked')
-					# Add options code here
-
-				if self.quit_button.handle_event(event, pos):
-					print('Quit button clicked')
-					pygame.quit()
-					sys.exit()
-
-				# Handle button hover and click colors
-				if event.type == MOUSEMOTION:
-					if self.play_button.is_hover(pos):
-						self.play_button.color = variables.DARKER_GREEN
-					else:
-						self.play_button.color = variables.DARK_GREEN
-					if self.options_button.is_hover(pos):
-						self.options_button.color = variables.DARKER_GREEN
-					else:
-						self.options_button.color = variables.DARK_GREEN
-					if self.quit_button.is_hover(pos):
-						self.quit_button.color = variables.DARKER_GREEN
-					else:
-						self.quit_button.color = variables.DARK_GREEN
-
-				if event.type == MOUSEBUTTONDOWN:
-					if self.play_button.is_click(pos, event):
-						self.play_button.color = variables.TITLE_COLOR
-					if self.options_button.is_click(pos, event):
-						self.options_button.color = variables.TITLE_COLOR
-					if self.quit_button.is_click(pos, event):
-						self.quit_button.color = variables.TITLE_COLOR
-					pygame.display.update()  # Move the display update here
-
-				if event.type == MOUSEBUTTONUP:
-					if self.play_button.is_click(pos, event):
+				if self.menu_state == "main":
+					if self.play_button.handle_event(event, pos):
 						print('Play button clicked')
 						self.fade_transition()
 						game = Game(variables.screen_width, variables.screen_height, variables.fps)
 						game.start()
-						pygame.quit()
-						sys.exit()
-					if self.options_button.is_over(pos):
-						print('Options button clicked')
-						# Add options code here
-					if self.quit_button.is_click(pos, event):
-						print('Quit button clicked')
-						pygame.quit()
-						sys.exit()
+						self.running = False
+						return
 
-			# Update the screen
+					if self.options_button.handle_event(event, pos):
+						print('Options button clicked')
+						self.menu_state = "options"
+						self.options_menu.reset_buttons()  # Reset the buttons in the options menu
+					
+					if self.quit_button.handle_event(event, pos):
+						print('Quit button clicked')
+						self.running = False
+						return
+
+				elif self.menu_state == "options":
+					if self.options_menu.handle_event(event, pos):  # If back button is clicked in options menu
+						self.menu_state = "main"
+						self.play_button.reset()   # Reset the buttons in the main menu
+						self.options_button.reset()
+						self.quit_button.reset()
+
+			# Update the screen outside the event loop
 			self.display.fill((0, 0, 0))
 			self.display.blit(self.scaled_background, (0, 0))
-			self.render_title(variables.game_name, 125, variables.TITLE_COLOR, 100)
-			self.play_button.draw(self.display)
-			self.options_button.draw(self.display)  # Add this line
-			self.quit_button.draw(self.display)
-			pygame.display.update()
+			
+			if self.menu_state == "main":
+				self.render_title(variables.game_name, 125, variables.TITLE_COLOR, 100)
+				self.play_button.draw(self.display)
+				self.options_button.draw(self.display)
+				self.quit_button.draw(self.display)
+			elif self.menu_state == "options":
+				self.render_title(variables.options_menu_name, 125, variables.TITLE_COLOR, 100)
+				self.options_menu.draw()
 
+			pygame.display.update()
 
 	def fade_transition(self):
 		fade_surface = pygame.Surface((self.screen_width, self.screen_height))
@@ -221,3 +216,78 @@ class MainMenu:
 		text_surface = font.render(text, True, color)
 		text_rect = text_surface.get_rect(center=(self.screen_width/2, y_position))
 		self.display.blit(text_surface, text_rect)
+	
+	def back_to_main_menu(self):
+		self.menu_state = "main"
+
+
+class Slider:
+	def __init__(self, x, y, w, h, text='', sound_manager=None, value=0, slider_type=''):
+		self.rect = pygame.Rect(x, y, w, h)
+		self.color = variables.DARK_GREEN
+		self.txt_color = variables.WHITE
+		self.text = text
+		self.value = value
+		self.sound_manager = sound_manager
+		self.slider_type = slider_type  # Added slider type
+
+	def draw(self, screen):
+		pygame.draw.rect(screen, self.color, self.rect)
+		font_size = min(int(self.rect.height * 0.9), int(self.rect.width * 0.80))
+		font = pygame.font.Font(None, font_size)
+		text = font.render(self.text + ": " + str(int(self.value * 100)), True, self.txt_color)
+		screen.blit(text, (
+			self.rect.x + (self.rect.w / 2 - text.get_width() / 2),
+			self.rect.y + (self.rect.h / 2 - text.get_height() / 2)
+		))
+
+	def handle_event(self, event, pos):
+		if event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(pos):
+			old_value = self.value
+			self.value = (pos[0] - self.rect.x) / self.rect.w
+			if self.slider_type == 'music' and old_value != self.value:  # Check if slider type is music and the value has changed
+				print("Music volume was changed to: " + str(self.value))
+				variables.music_slider = self.value
+				self.sound_manager.setMusicVolume(variables.music_slider, variables.global_music_volume)
+			elif self.slider_type == 'sfx' and old_value != self.value:  # Check if slider type is sfx and the value has changed
+				print("SFX volume was changed to: " + str(self.value))
+				variables.sound_effect_slider = self.value
+			return True
+		return False
+
+class OptionsMenu:
+	def __init__(self, display, sound_player, back_callback):
+		self.display = display
+		self.sound_player = sound_player
+		self.back_button = Button(0, 0, 200, 50, 'BACK', sound_player, "option_button")
+		self.music_slider = Slider(0, 0, 400, 50, 'Music Volume', sound_player, variables.music_slider, 'music')
+		self.sfx_slider = Slider(0, 0, 400, 50, 'SFX Volume', sound_player, variables.sound_effect_slider, 'sfx')
+		self.back_callback = back_callback
+		
+		# Set the positions of the buttons and sliders before drawing them.
+		screen_width, screen_height = self.display.get_size()
+		self.slider_x = (screen_width - self.music_slider.rect.width) // 2
+		self.button_y = (screen_height - (self.back_button.rect.height + self.music_slider.rect.height + self.sfx_slider.rect.height + 20)) // 2
+		self.music_slider.rect.topleft = (self.slider_x, self.button_y)
+		self.sfx_slider.rect.topleft = (self.slider_x, self.button_y + self.music_slider.rect.height + 10)
+		
+		self.button_x = self.music_slider.rect.x + (self.music_slider.rect.width - self.back_button.rect.width) // 2
+		self.back_button.rect.topleft = (self.button_x, self.button_y + (self.music_slider.rect.height + self.sfx_slider.rect.height + 20))	
+
+	def draw(self):
+		# Now you can draw them.
+		self.music_slider.draw(self.display)
+		self.sfx_slider.draw(self.display)
+		self.back_button.draw(self.display)
+
+	def handle_event(self, event, pos):
+		if self.back_button.handle_event(event, pos):
+			self.back_callback()
+			self.reset_buttons()  # Reset the buttons in the options menu
+			return True
+		self.music_slider.handle_event(event, pos)
+		self.sfx_slider.handle_event(event, pos)
+		return False
+
+	def reset_buttons(self):
+		self.back_button.reset()

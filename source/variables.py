@@ -11,6 +11,7 @@ game_name = "Meteor Mayhem"
 screen_width = 800
 screen_height = 600
 fps = 60
+options_menu_name = "Options Menu"
 
 ####################
 
@@ -150,6 +151,10 @@ bullet_speed = 6
 bullet_cooldown = 20
 
 ####################
+
+# Slider Variables
+music_slider = 1
+sound_effect_slider = 1
 
 # Sound Variables
 global_music_volume = 0.3
