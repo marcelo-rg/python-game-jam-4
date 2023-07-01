@@ -226,13 +226,26 @@ class Slider:
 		self.rect = pygame.Rect(x, y, w, h)
 		self.color = variables.DARK_GREEN
 		self.txt_color = variables.WHITE
+		#self.fill_color = variables.LIGHT_GREEN  # New fill color
+		self.fill_color = variables.ANOTHER_GREEN  # New fill color
+		self.border_color = variables.BLACK  # New border color
 		self.text = text
 		self.value = value
 		self.sound_manager = sound_manager
 		self.slider_type = slider_type  # Added slider type
+		self.border_width = 2  # New border width
 
 	def draw(self, screen):
-		pygame.draw.rect(screen, self.color, self.rect)
+		# Draw the border
+		pygame.draw.rect(screen, self.border_color, self.rect, self.border_width)
+		
+		# Draw the fill bar
+		fill_rect = pygame.Rect(self.rect.x + self.border_width, self.rect.y + self.border_width,
+								(self.rect.w - 2 * self.border_width) * self.value,
+								self.rect.h - 2 * self.border_width)
+		pygame.draw.rect(screen, self.fill_color, fill_rect)
+
+		# Draw the text
 		font_size = min(int(self.rect.height * 0.9), int(self.rect.width * 0.80))
 		font = pygame.font.Font(None, font_size)
 		text = font.render(self.text + ": " + str(int(self.value * 100)), True, self.txt_color)
@@ -244,7 +257,7 @@ class Slider:
 	def handle_event(self, event, pos):
 		if event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(pos):
 			old_value = self.value
-			self.value = (pos[0] - self.rect.x) / self.rect.w
+			self.value = max(0, min((pos[0] - (self.rect.x + self.border_width)) / (self.rect.w - 2 * self.border_width), 1))
 			if self.slider_type == 'music' and old_value != self.value:  # Check if slider type is music and the value has changed
 				print("Music volume was changed to: " + str(self.value))
 				variables.music_slider = self.value
