@@ -21,12 +21,13 @@ class Button:
 
 		# Sound effects
 		self.sound_manager = sound_manager
+		self.hovered = False
+		self.hovered_button = None
 
 	def draw(self, screen):
 		pygame.draw.rect(screen, self.current_color, self.rect)
 		if self.text != '':
-			#font = pygame.font.Font(None, 20)
-			font_size = min(int(self.rect.height * 0.9), int(self.rect.width * 0.80))  # Calculate font size based on button dimensions
+			font_size = min(int(self.rect.height * 0.9), int(self.rect.width * 0.80))
 			font = pygame.font.Font(None, font_size)
 			text = font.render(self.text, True, self.txt_color)
 			screen.blit(text, (
@@ -35,32 +36,37 @@ class Button:
 			))
 
 	def is_over(self, pos):
-		if self.rect.x < pos[0] < self.rect.x + self.rect.w and self.rect.y < pos[1] < self.rect.y + self.rect.h:
-			return True
-		return False
-	
+		return self.rect.collidepoint(pos)
+
 	def handle_event(self, event, pos):
 		if self.is_over(pos):
 			if event.type == pygame.MOUSEBUTTONDOWN:
-				self.clicked = True  # Set the click state flag
+				self.clicked = True
 			elif event.type == pygame.MOUSEBUTTONUP:
 				if self.clicked:
-					self.clicked = False  # Reset the click state flag
+					self.clicked = False
 					return True
-			else:
-				self.clicked = False  # Reset the click state flag
+		else:
+			self.clicked = False
 
 		if self.clicked:
 			self.current_color = self.clicked_color
 			self.sound_manager.playSoundEffect("click_button")
 		elif self.is_hover(pos):
 			self.current_color = self.hover_color
-			self.sound_manager.playSoundEffect(self.hover_sound)
+			if not self.hovered:
+				self.hovered = True
+				if self.hover_sound:
+					self.sound_manager.playSoundEffect(self.hover_sound)
+				if self.hovered_button and self.hovered_button != self:
+					self.hovered_button.hovered = False
+					self.hovered_button.current_color = self.hovered_button.color
+				self.hovered_button = self
 		else:
 			self.current_color = self.color
+			self.hovered = False
 
 		return False
-
 
 	def is_hover(self, pos):
 		if self.rect.x < pos[0] < self.rect.x + self.rect.w and self.rect.y < pos[1] < self.rect.y + self.rect.h:
