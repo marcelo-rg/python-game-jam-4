@@ -10,14 +10,19 @@ class SoundManager:
 		self.music_volume = variables.global_music_volume
 		self.sound_volume = variables.global_sound_volume
 
-	def loadBackgroundMusic(self, music_dict):
+	def loadBackgroundMusic(self, level, music_dict):
 		# Generate a random number between 1 and the size of the dictionary
-		random_number = random.randint(1, len(music_dict))
+		#random_number = random.randint(1, len(music_dict))
 
 		# Select the music file based on the random number
-		music_file = music_dict[random_number]
+		music_file = music_dict[level]
 		
 		pygame.mixer.music.load(os.path.join(variables.sound_path,music_file))
+		pygame.mixer.music.set_volume(self.music_volume)
+	
+	def loadMenuBackgroundMusic(self, music_file):
+		
+		pygame.mixer.music.load(os.path.join(variables.isolaproduction_path,music_file))
 		pygame.mixer.music.set_volume(self.music_volume)
 
 	def playBackgroundMusic(self):

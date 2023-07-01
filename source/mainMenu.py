@@ -4,10 +4,11 @@ from pygame.locals import *
 from game import Game
 import variables
 import time
+from sounds import SoundManager
 
 # Class for the Button
 class Button:
-	def __init__(self, x, y, w, h, text=''):
+	def __init__(self, x, y, w, h, text='', sound_manager=None, hover_sound=None):
 		self.rect = pygame.Rect(x, y, w, h)
 		self.color = variables.DARK_GREEN
 		self.hover_color = variables.DARKER_GREEN
@@ -16,11 +17,17 @@ class Button:
 		self.text = text
 		self.txt_color = variables.WHITE
 		self.clicked = False  # New click state flag
+		self.hover_sound = hover_sound
+
+		# Sound effects
+		self.sound_manager = sound_manager
 
 	def draw(self, screen):
 		pygame.draw.rect(screen, self.current_color, self.rect)
 		if self.text != '':
-			font = pygame.font.Font(None, 20)
+			#font = pygame.font.Font(None, 20)
+			font_size = min(int(self.rect.height * 0.9), int(self.rect.width * 0.80))  # Calculate font size based on button dimensions
+			font = pygame.font.Font(None, font_size)
 			text = font.render(self.text, True, self.txt_color)
 			screen.blit(text, (
 				self.rect.x + (self.rect.w / 2 - text.get_width() / 2),
@@ -45,8 +52,10 @@ class Button:
 
 		if self.clicked:
 			self.current_color = self.clicked_color
+			self.sound_manager.playSoundEffect("click_button")
 		elif self.is_hover(pos):
 			self.current_color = self.hover_color
+			self.sound_manager.playSoundEffect(self.hover_sound)
 		else:
 			self.current_color = self.color
 
@@ -77,10 +86,15 @@ class MainMenu:
 
 		self.display = pygame.display.set_mode((self.screen_width, self.screen_height))
 
+		# Music
+		self.sound_player = SoundManager(variables.sounds)
+		self.sound_player.loadMenuBackgroundMusic(variables.pause_menu_music)
+		self.sound_player.playBackgroundMusic()
+
 		# Define your buttons as instance variables here
-		self.play_button = Button(0, 0, 200, 50, 'PLAY')
-		self.options_button = Button(0, 0, 200, 50, 'OPTIONS')
-		self.quit_button = Button(0, 0, 200, 50, 'QUIT')
+		self.play_button = Button(0, 0, 200, 50, 'PLAY', self.sound_player, "play_button")
+		self.options_button = Button(0, 0, 200, 50, 'OPTIONS', self.sound_player, "option_button")
+		self.quit_button = Button(0, 0, 200, 50, 'QUIT', self.sound_player, "quit_button")
 
 	def start(self):
 		self.running = True

@@ -91,6 +91,7 @@ player_assets_path = os.path.join(assets_path, "player")
 background_assets_path = os.path.join(assets_path, "background")
 bullet_sprite_path = os.path.join(assets_path, "bullets","bullet1.png")
 sound_path = os.path.join(assets_path, "..", "music")
+isolaproduction_path = os.path.join(sound_path, "isolaproduction")
 
 ####################
 
@@ -154,7 +155,7 @@ bullet_cooldown = 20
 global_music_volume = 0.3
 global_sound_volume = 0.05
 italian_sound_volume = 0.5
-pause_menu_music = "Razihel-LoveU.mp3"
+pause_menu_music = "ThemeTry1.mp3"
 background_music = {
 	1: "Not_far_enough.wav",
 	2: "Trying_to_go_home.wav"
@@ -167,7 +168,11 @@ sounds = {
 	"meteor_impact_2": os.path.join(sound_path, "Meteor_2.wav"),
 	"meteor_impact_3": os.path.join(sound_path, "Meteor_3.wav"),
 	"meteor_impact_4": os.path.join(sound_path, "Meteor_4.wav"),
-	"meteor_impact_5": os.path.join(sound_path, "Meteor_5.wav")
+	"meteor_impact_5": os.path.join(sound_path, "Meteor_5.wav"),
+	"play_button": os.path.join(isolaproduction_path, "1-Play_button.wav"),
+	"option_button": os.path.join(isolaproduction_path, "2-Option_button.wav"),
+    "quit_button": os.path.join(isolaproduction_path, "3-Quit_button.wav"),
+    "click_button": os.path.join(isolaproduction_path, "4-Click_confirm.wav")
 }
 sounds_volume = {
 	'shooting': global_sound_volume,
@@ -176,7 +181,11 @@ sounds_volume = {
 	'meteor_impact_2': italian_sound_volume,
 	'meteor_impact_3': italian_sound_volume,
 	'meteor_impact_4': italian_sound_volume,
-	'meteor_impact_5': italian_sound_volume
+	'meteor_impact_5': italian_sound_volume,
+    "play_button": italian_sound_volume,
+    "option_button": italian_sound_volume,
+    "quit_button": italian_sound_volume,
+    "click_button": italian_sound_volume
 }
 
 ####################
