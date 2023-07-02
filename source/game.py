@@ -122,6 +122,13 @@ class Level:
 							if pygame.sprite.collide_circle(player, spaceship):
 								player.enter_spaceship(spaceship, playerID)
 								break
+			
+			# Check for upgrade key
+			if keys[pygame.K_u]: # Assuming 'u' is the upgrade key
+				self.spaceship_one.upgrade(variables.spaceship_one_asset_upgrade)
+				self.spaceship_two.upgrade(variables.spaceship_two_asset_upgrade)
+					# for bullet in player.in_spaceship.bullets:
+					# 	bullet.upgrade('path_to_new_bullet_sprite')  # Use the correct path to the new bullet sprite
 
 			for meteor in self.meteors:
 				meteor.update()
