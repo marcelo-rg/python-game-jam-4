@@ -45,9 +45,6 @@ player_controls = {
 		"Upgrade": {
 			"Use": pygame.K_f
 		},
-		"Repair": {
-			"Use": pygame.K_r
-		},
 		"Fire": {
 			"Use": pygame.K_SPACE
 		},
@@ -67,9 +64,6 @@ player_controls = {
 		},
 		"Upgrade": {
 			"Use": pygame.K_k
-		},
-		"Repair": {
-			"Use": pygame.K_u
 		},
 		"Fire": {
 			"Use": pygame.K_l
@@ -173,8 +167,9 @@ italian_sound_volume = 0.5
 main_menu_music = "ThemeTRY1.mp3"
 pause_menu_music = "ThemeTRY2.mp3"
 background_music = {
+    0: "Trying_to_go_home.wav",
 	1: "Not_far_enough.wav",
-	2: "Trying_to_go_home.wav"
+	2: "Is_not_over.wav"
 }
 
 sounds = {

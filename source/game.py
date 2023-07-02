@@ -8,6 +8,79 @@ from sounds import SoundManager
 import variables
 from player import Player
 import random
+from pauseMenu import PauseMenu
+
+class Slider:
+	def __init__(self, x, y, w, h, text='', sound_manager=None, value=0, slider_type=''):
+		self.rect = pygame.Rect(x, y, w, h)
+		self.color = variables.DARK_GREEN
+		self.txt_color = variables.WHITE
+		self.fill_color = variables.LIGHT_GREEN  # New fill color
+		#self.fill_color = variables.ANOTHER_GREEN  # New fill color
+		self.border_color = variables.BLACK  # New border color
+		self.text = text
+		self.value = value
+		self.sound_manager = sound_manager
+		self.slider_type = slider_type  # Added slider type
+		self.border_width = 2  # New border width
+
+	def draw(self, screen):
+		# Draw the border
+		pygame.draw.rect(screen, self.border_color, self.rect, self.border_width)
+		
+		# Draw the fill bar
+		fill_rect = pygame.Rect(self.rect.x + self.border_width, self.rect.y + self.border_width,
+								(self.rect.w - 2 * self.border_width) * self.value,
+								self.rect.h - 2 * self.border_width)
+		pygame.draw.rect(screen, self.fill_color, fill_rect)
+
+		# Draw the text
+		font_size = min(int(self.rect.height * 0.9), int(self.rect.width * 0.80))
+		font = pygame.font.Font(None, font_size)
+		text = font.render(self.text + ": " + str(int(self.value * 100)), True, self.txt_color)
+		screen.blit(text, (
+			self.rect.x + (self.rect.w / 2 - text.get_width() / 2),
+			self.rect.y + (self.rect.h / 2 - text.get_height() / 2)
+		))
+
+	def handle_event(self, event, pos):
+		if event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(pos):
+			old_value = self.value
+			self.value = max(0, min((pos[0] - (self.rect.x + self.border_width)) / (self.rect.w - 2 * self.border_width), 1))
+			if self.slider_type == 'music' and old_value != self.value:  # Check if slider type is music and the value has changed
+				#print("Music volume was changed to: " + str(self.value))
+				variables.saved_game_data["music_slider"] = self.value
+				self.sound_manager.setMusicVolume(variables.saved_game_data["music_slider"], variables.global_music_volume)
+			elif self.slider_type == 'sfx' and old_value != self.value:  # Check if slider type is sfx and the value has changed
+				#print("SFX volume was changed to: " + str(self.value))
+				variables.saved_game_data["sound_effect_slider"] = self.value
+			return True
+		return False
+
+
+class UI:
+	def __init__(self, screen):
+		self.screen = screen
+
+		# Initialize sliders
+		self.slider_p1 = Slider(0, 100, step, position)
+		self.slider_p2 = Slider(0, 100, step, position)
+		self.slider_planet = Slider(0, 600, step, position)
+		self.slider_xp = Slider(start_value, end_value, step, position)
+
+	def draw(self):
+		# Draw each slider on the screen
+		self.slider_p1.draw(self.screen)
+		self.slider_p2.draw(self.screen)
+		self.slider_planet.draw(self.screen)
+		self.slider_xp.draw(self.screen)
+
+	def update(self, p1_hp, p2_hp, planet_hp, xp):
+		# Update slider values based on the current game state
+		self.slider_p1.set_value(p1_hp)
+		self.slider_p2.set_value(p2_hp)
+		self.slider_planet.set_value(planet_hp)
+		self.slider_xp.set_value(xp)
 
 class Level:
 	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps):
@@ -27,8 +100,6 @@ class Level:
 
 		# Music
 		self.sound_player = SoundManager(variables.sounds)
-		self.sound_player.loadBackgroundMusic(1,variables.background_music)
-		self.sound_player.playBackgroundMusic()
 
 		# Set up the game window
 		self.screen = pygame.display.set_mode((screen_width, screen_height))
@@ -74,6 +145,10 @@ class Level:
 		self.spaceship_one = Spaceship(1,0,variables.spaceship_speed, variables.spaceship_one_asset, screen_width=screen_width, screen_height=screen_height, sound_manager= self.sound_player, planet_radius=self.planet.radius)
 		self.spaceship_two = Spaceship(1,1,variables.spaceship_speed, variables.spaceship_two_asset, screen_width=screen_width, screen_height=screen_height, sound_manager= self.sound_player, planet_radius=self.planet.radius)
 
+		# Pause Menu
+		self.pause_menu = PauseMenu(self.screen, screen_width, screen_height)
+
+
 	def handle_events(self):
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -81,14 +156,20 @@ class Level:
 				pygame.quit()
 				sys.exit()
 			elif event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_q:
-					self.running = False
-					pygame.quit()
-					sys.exit()
+				if (event.key == variables.player_controls["Player1"]["Menu"]["Use"] or 
+					event.key ==  variables.player_controls["Player2"]["Menu"]["Use"]):
+					#print("Game is paused")
+					if not self.paused:
+						self.sound_player.unpauseBackgroundMusic()
+						self.pause_menu.fade_in()
+						self.pause()
+					elif self.paused:
+						self.sound_player.pauseBackgroundMusic()
+						self.pause_menu.fade_out()
+						self.pause()
 
 	def start(self):
 		self.running = True
-		self.game_loop()
 
 	def pause(self):
 		self.paused = not self.paused
@@ -108,10 +189,12 @@ class Level:
 	def game_loop(self):
 		while self.running:
 			self.handle_events()
-			self.update_game_logic()
-			self.render()
+			if not self.paused:
+				self.update_game_logic()
+				self.render()
+			else:
+				self.pause_menu.draw_menu()
 			self.clock.tick(self.fps)
-
 
 class TutorialLevel(Level):
 	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, level=None):
@@ -124,6 +207,14 @@ class TutorialLevel(Level):
 		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
 
 		# Other Tutorial Level specific initialization...
+		self.music_player = SoundManager(variables.sounds)
+		self.music_player.loadBackgroundMusic(0,variables.background_music)
+
+	def start(self):
+		super().start()
+		print("Tutorial Level Initialized")
+		self.music_player.playBackgroundMusic()
+		self.game_loop()
 
 	def handle_events(self):
 		super().handle_events()
@@ -194,6 +285,13 @@ class LevelOne(Level):
 		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
 
 		# Other Level 1 specific initialization...
+		self.sound_player.loadBackgroundMusic(1,variables.background_music)
+
+	def start(self):
+		super().start()
+		print("Level 1 Initialized")
+		self.sound_player.playBackgroundMusic()
+		self.game_loop()
 
 	def handle_events(self):
 		super().handle_events()
@@ -264,6 +362,13 @@ class LevelTwo(Level):
 		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
 
 		# Other Level 2 specific initialization...
+		self.sound_player.loadBackgroundMusic(2,variables.background_music)
+
+	def start(self):
+		super().start()
+		print("Level 2 Initialized")
+		self.sound_player.playBackgroundMusic()
+		self.game_loop()
 
 	def handle_events(self):
 		super().handle_events()
@@ -325,41 +430,21 @@ class LevelTwo(Level):
 
 class Game:
 	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, level="None"):
-		self.levels = [TutorialLevel(screen_width, screen_height, fps, level), 
-		 				LevelOne(screen_width, screen_height, fps, level), 
-						LevelTwo(screen_width, screen_height, fps, level)
-						]
 		self.current_level = level
-
-	def start(self):
 		if self.current_level == "None":
 			#print("Tutorial level started")
-			self.current_level = self.levels[0]  # Starts with Tutorial Level
+			self.current_level = TutorialLevel(screen_width, screen_height, fps, level)  # Starts with Tutorial Level
 		elif self.current_level == "One":
-			self.current_level = self.levels[1]  # Starts with Level One
+			self.current_level = LevelOne(screen_width, screen_height, fps, level)  # Starts with Level One
 		elif self.current_level == "Two":
-			self.current_level = self.levels[2]  # Starts with Level Two
+			self.current_level = LevelTwo(screen_width, screen_height, fps, level)  # Starts with Level Two
 		else:
 			print("Invalid level name")
 			pygame.quit()
 			sys.exit()
 
-		self.current_level.running = True
-		self.current_level.game_loop()
-
-	def next_level(self):
-		current_level_index = self.levels.index(self.current_level)
-
-		if current_level_index < len(self.levels) - 1:
-			self.current_level = self.levels[current_level_index + 1]
-			self.current_level.game_loop()
-		else:
-			print("Game completed!")
-			pygame.quit()
-			sys.exit()
-
-	def restart_level(self):
-		self.current_level.restart()
+	def start(self):
+		self.current_level.start()
 
 #if __name__ == "__main__":
 	# Create a game instance and start it
