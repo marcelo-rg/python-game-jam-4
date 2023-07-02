@@ -90,7 +90,6 @@ class Button:
 		self.current_color = self.color
 		self.hovered = False
 
-
 class MainMenu:
 	def __init__(self, fps=variables.fps):
 		# Create a screen object
