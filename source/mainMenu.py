@@ -5,6 +5,7 @@ from game import Game
 import variables
 import time
 from sounds import SoundManager
+from saveGame import SaveGame  # Import the SaveGame class
 
 # Class for the Button
 class Button:
@@ -105,7 +106,7 @@ class MainMenu:
 
 		# Music
 		self.sound_player = SoundManager(variables.sounds)
-		self.sound_player.loadMenuBackgroundMusic(variables.pause_menu_music)
+		self.sound_player.loadMenuBackgroundMusic(variables.main_menu_music)
 		self.sound_player.playBackgroundMusic()
 
 		# Define your buttons as instance variables here
@@ -162,7 +163,7 @@ class MainMenu:
 
 				if self.menu_state == "main":
 					if self.play_button.handle_event(event, pos):
-						print('Play button clicked')
+						#print('Play button clicked')
 						self.fade_transition()
 						game = Game(variables.screen_width, variables.screen_height, variables.fps)
 						game.start()
@@ -170,12 +171,12 @@ class MainMenu:
 						return
 
 					if self.options_button.handle_event(event, pos):
-						print('Options button clicked')
+						#print('Options button clicked')
 						self.menu_state = "options"
 						self.options_menu.reset_buttons()  # Reset the buttons in the options menu
 					
 					if self.quit_button.handle_event(event, pos):
-						print('Quit button clicked')
+						#print('Quit button clicked')
 						self.running = False
 						return
 
@@ -226,8 +227,8 @@ class Slider:
 		self.rect = pygame.Rect(x, y, w, h)
 		self.color = variables.DARK_GREEN
 		self.txt_color = variables.WHITE
-		#self.fill_color = variables.LIGHT_GREEN  # New fill color
-		self.fill_color = variables.ANOTHER_GREEN  # New fill color
+		self.fill_color = variables.LIGHT_GREEN  # New fill color
+		#self.fill_color = variables.ANOTHER_GREEN  # New fill color
 		self.border_color = variables.BLACK  # New border color
 		self.text = text
 		self.value = value
@@ -260,11 +261,11 @@ class Slider:
 			self.value = max(0, min((pos[0] - (self.rect.x + self.border_width)) / (self.rect.w - 2 * self.border_width), 1))
 			if self.slider_type == 'music' and old_value != self.value:  # Check if slider type is music and the value has changed
 				print("Music volume was changed to: " + str(self.value))
-				variables.music_slider = self.value
-				self.sound_manager.setMusicVolume(variables.music_slider, variables.global_music_volume)
+				variables.saved_game_data["music_slider"] = self.value
+				self.sound_manager.setMusicVolume(variables.saved_game_data["music_slider"], variables.global_music_volume)
 			elif self.slider_type == 'sfx' and old_value != self.value:  # Check if slider type is sfx and the value has changed
 				print("SFX volume was changed to: " + str(self.value))
-				variables.sound_effect_slider = self.value
+				variables.saved_game_data["sound_effect_slider"] = self.value
 			return True
 		return False
 
@@ -273,8 +274,8 @@ class OptionsMenu:
 		self.display = display
 		self.sound_player = sound_player
 		self.back_button = Button(0, 0, 200, 50, 'BACK', sound_player, "option_button")
-		self.music_slider = Slider(0, 0, 400, 50, 'Music Volume', sound_player, variables.music_slider, 'music')
-		self.sfx_slider = Slider(0, 0, 400, 50, 'SFX Volume', sound_player, variables.sound_effect_slider, 'sfx')
+		self.music_slider = Slider(0, 0, 400, 50, 'Music Volume', sound_player, variables.saved_game_data["music_slider"], 'music')
+		self.sfx_slider = Slider(0, 0, 400, 50, 'SFX Volume', sound_player, variables.saved_game_data["sound_effect_slider"], 'sfx')
 		self.back_callback = back_callback
 		
 		# Set the positions of the buttons and sliders before drawing them.
@@ -297,6 +298,9 @@ class OptionsMenu:
 		if self.back_button.handle_event(event, pos):
 			self.back_callback()
 			self.reset_buttons()  # Reset the buttons in the options menu
+			print(variables.saved_game_data)
+			saveObject = SaveGame()
+			saveObject.save(variables.saved_game_data, variables.player_file)
 			return True
 		self.music_slider.handle_event(event, pos)
 		self.sfx_slider.handle_event(event, pos)
