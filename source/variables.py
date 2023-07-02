@@ -30,6 +30,23 @@ saved_game_data = {
 player_speed = 1
 spaceship_speed = 3
 
+spaceship_one_hp = {
+	"current": 100,
+	"max": 100
+}
+spaceship_two_hp = {
+	"current": 100,
+	"max": 100
+}
+planet_hp = {
+	"current": 500,
+	"max": 500
+}
+initial_xp = {
+	"current": 0,
+	"max": 1000
+}
+
 # Player Bindings
 player_controls = { 
 	"Player1": {

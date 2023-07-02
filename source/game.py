@@ -11,7 +11,7 @@ import random
 from pauseMenu import PauseMenu
 
 class Slider:
-	def __init__(self, x, y, w, h, text='', sound_manager=None, value=0, slider_type=''):
+	def __init__(self, x, y, w, h, text='', value=0):
 		self.rect = pygame.Rect(x, y, w, h)
 		self.color = variables.DARK_GREEN
 		self.txt_color = variables.WHITE
@@ -19,15 +19,14 @@ class Slider:
 		#self.fill_color = variables.ANOTHER_GREEN  # New fill color
 		self.border_color = variables.BLACK  # New border color
 		self.text = text
-		self.value = value
-		self.sound_manager = sound_manager
-		self.slider_type = slider_type  # Added slider type
+		self.value = value["current"]/value["max"]  # New value
+		self.value_current = value["current"]  # New value
 		self.border_width = 2  # New border width
 
 	def draw(self, screen):
 		# Draw the border
 		pygame.draw.rect(screen, self.border_color, self.rect, self.border_width)
-		
+
 		# Draw the fill bar
 		fill_rect = pygame.Rect(self.rect.x + self.border_width, self.rect.y + self.border_width,
 								(self.rect.w - 2 * self.border_width) * self.value,
@@ -37,36 +36,22 @@ class Slider:
 		# Draw the text
 		font_size = min(int(self.rect.height * 0.9), int(self.rect.width * 0.80))
 		font = pygame.font.Font(None, font_size)
-		text = font.render(self.text + ": " + str(int(self.value * 100)), True, self.txt_color)
+		text = font.render(self.text + ": " + str(int(self.value_current)), True, self.txt_color)
 		screen.blit(text, (
 			self.rect.x + (self.rect.w / 2 - text.get_width() / 2),
 			self.rect.y + (self.rect.h / 2 - text.get_height() / 2)
 		))
-
-	def handle_event(self, event, pos):
-		if event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(pos):
-			old_value = self.value
-			self.value = max(0, min((pos[0] - (self.rect.x + self.border_width)) / (self.rect.w - 2 * self.border_width), 1))
-			if self.slider_type == 'music' and old_value != self.value:  # Check if slider type is music and the value has changed
-				#print("Music volume was changed to: " + str(self.value))
-				variables.saved_game_data["music_slider"] = self.value
-				self.sound_manager.setMusicVolume(variables.saved_game_data["music_slider"], variables.global_music_volume)
-			elif self.slider_type == 'sfx' and old_value != self.value:  # Check if slider type is sfx and the value has changed
-				#print("SFX volume was changed to: " + str(self.value))
-				variables.saved_game_data["sound_effect_slider"] = self.value
-			return True
-		return False
 
 
 class UI:
 	def __init__(self, screen):
 		self.screen = screen
 
-		# Initialize sliders
-		self.slider_p1 = Slider(0, 100, step, position)
-		self.slider_p2 = Slider(0, 100, step, position)
-		self.slider_planet = Slider(0, 600, step, position)
-		self.slider_xp = Slider(start_value, end_value, step, position)
+		# Initialize sliders with x, y, width, height
+		self.slider_p1 = Slider(50, 50, 200, 20, "Player 1 HP", variables.spaceship_one_hp)
+		self.slider_p2 = Slider(50, 100, 200, 20, "Player 2 HP", variables.spaceship_two_hp)
+		self.slider_planet = Slider(50, 150, 200, 20, "Planet HP", variables.planet_hp)
+		self.slider_xp = Slider(50, 200, 200, 20, "XP", variables.initial_xp)
 
 	def draw(self):
 		# Draw each slider on the screen
@@ -76,11 +61,11 @@ class UI:
 		self.slider_xp.draw(self.screen)
 
 	def update(self, p1_hp, p2_hp, planet_hp, xp):
-		# Update slider values based on the current game state
-		self.slider_p1.set_value(p1_hp)
-		self.slider_p2.set_value(p2_hp)
-		self.slider_planet.set_value(planet_hp)
-		self.slider_xp.set_value(xp)
+		# Update slider values
+		self.slider_p1.value = p1_hp
+		self.slider_p2.value = p2_hp
+		self.slider_planet.value = planet_hp
+		self.slider_xp.value = xp
 
 class Level:
 	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps):
@@ -148,6 +133,10 @@ class Level:
 		# Pause Menu
 		self.pause_menu = PauseMenu(self.screen, screen_width, screen_height)
 
+		# Initialize UI
+		self.ui = UI(self.screen)
+		# Draw UI
+		self.ui.draw()
 
 	def handle_events(self):
 		for event in pygame.event.get():
@@ -180,11 +169,15 @@ class Level:
 		self.start()
 	
 	def update_game_logic(self):
-		pass
-
+		# Update UI
+		self.ui.update(self.ui.slider_p1.value, self.ui.slider_p2.value, self.ui.slider_planet.value, self.ui.slider_xp.value)
+		
 	def render(self):
 		# Blit the background image to the screen
 		self.screen.blit(self.background_image, (0, 0))
+		
+		# Draw UI
+		self.ui.draw()
 
 	def game_loop(self):
 		while self.running:
