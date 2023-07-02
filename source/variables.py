@@ -45,12 +45,14 @@ planet_hp = {
 }
 initial_xp = {
 	"current": 0,
-	"max": 1000
+	"max": 1000,
+    "xp_per_hit": 100
 }
 
 asteroid_hp = {
 	"current": 100,
-	"max": 100
+	"max": 100,
+    "damage_per_hit": 10
 }
 
 # Player Bindings
@@ -105,6 +107,7 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+YELLOW = (200, 200, 0)
 LIGHT_GREEN = (80, 200, 120)
 ANOTHER_GREEN = (46, 139, 87)
 DARK_GREEN_v1 = (21, 71, 52)
