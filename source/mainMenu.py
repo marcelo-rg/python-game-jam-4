@@ -109,7 +109,7 @@ class MainMenu:
 		self.sound_player.loadMenuBackgroundMusic(variables.main_menu_music)
 		self.sound_player.playBackgroundMusic()
 
-		# Define your buttons as instance variables here
+		# Define the buttons as instance variables
 		self.play_button = Button(0, 0, 200, 50, 'PLAY', self.sound_player, "play_button")
 		self.options_button = Button(0, 0, 200, 50, 'OPTIONS', self.sound_player, "option_button")
 		self.quit_button = Button(0, 0, 200, 50, 'QUIT', self.sound_player, "quit_button")
@@ -117,10 +117,9 @@ class MainMenu:
 		# Initialize menu state
 		self.menu_state = "main"
 		self.options_menu = OptionsMenu(self.display, self.sound_player, self.back_to_main_menu)
+		self.level_selection_menu = LevelSelectionMenu(self.display, self.sound_player, self.back_to_main_menu)
 
 	def start(self):
-		self.running = True
-
 		# Load the background image
 		background_image = pygame.image.load(variables.menu_background_image)
 		self.scaled_background = pygame.transform.scale(background_image, (self.screen_width, self.screen_height))
@@ -158,17 +157,13 @@ class MainMenu:
 			
 			for event in pygame.event.get():
 				if event.type == QUIT:
-					self.running = False
 					return
 
 				if self.menu_state == "main":
 					if self.play_button.handle_event(event, pos):
 						#print('Play button clicked')
-						self.fade_transition()
-						game = Game(variables.screen_width, variables.screen_height, variables.fps)
-						game.start()
-						self.running = False
-						return
+						self.menu_state = "level_selection"
+						self.level_selection_menu.reset_buttons()  # Reset the buttons in the level selection menu
 
 					if self.options_button.handle_event(event, pos):
 						#print('Options button clicked')
@@ -177,11 +172,17 @@ class MainMenu:
 					
 					if self.quit_button.handle_event(event, pos):
 						#print('Quit button clicked')
-						self.running = False
 						return
 
 				elif self.menu_state == "options":
 					if self.options_menu.handle_event(event, pos):  # If back button is clicked in options menu
+						self.menu_state = "main"
+						self.play_button.reset()   # Reset the buttons in the main menu
+						self.options_button.reset()
+						self.quit_button.reset()
+
+				elif self.menu_state == "level_selection":
+					if self.level_selection_menu.handle_event(event, pos):  # If back button is clicked in level selection menu
 						self.menu_state = "main"
 						self.play_button.reset()   # Reset the buttons in the main menu
 						self.options_button.reset()
@@ -199,6 +200,11 @@ class MainMenu:
 			elif self.menu_state == "options":
 				self.render_title(variables.options_menu_name, 125, variables.TITLE_COLOR, 100)
 				self.options_menu.draw()
+			# Render the level selection menu when in level selection state
+			elif self.menu_state == "level_selection":
+				self.render_title(variables.level_selection_menu_name, 125, variables.TITLE_COLOR, 100)
+				self.render_title(variables.level_selection_info, 65, variables.WHITE, 200)
+				self.level_selection_menu.draw()
 
 			pygame.display.update()
 
@@ -260,11 +266,11 @@ class Slider:
 			old_value = self.value
 			self.value = max(0, min((pos[0] - (self.rect.x + self.border_width)) / (self.rect.w - 2 * self.border_width), 1))
 			if self.slider_type == 'music' and old_value != self.value:  # Check if slider type is music and the value has changed
-				print("Music volume was changed to: " + str(self.value))
+				#print("Music volume was changed to: " + str(self.value))
 				variables.saved_game_data["music_slider"] = self.value
 				self.sound_manager.setMusicVolume(variables.saved_game_data["music_slider"], variables.global_music_volume)
 			elif self.slider_type == 'sfx' and old_value != self.value:  # Check if slider type is sfx and the value has changed
-				print("SFX volume was changed to: " + str(self.value))
+				#print("SFX volume was changed to: " + str(self.value))
 				variables.saved_game_data["sound_effect_slider"] = self.value
 			return True
 		return False
@@ -278,7 +284,7 @@ class OptionsMenu:
 		self.sfx_slider = Slider(0, 0, 400, 50, 'SFX Volume', sound_player, variables.saved_game_data["sound_effect_slider"], 'sfx')
 		self.back_callback = back_callback
 		
-		# Set the positions of the buttons and sliders before drawing them.
+		# Set the positions of the buttons and sliders before drawing them
 		screen_width, screen_height = self.display.get_size()
 		self.slider_x = (screen_width - self.music_slider.rect.width) // 2
 		self.button_y = (screen_height - (self.back_button.rect.height + self.music_slider.rect.height + self.sfx_slider.rect.height + 20)) // 2
@@ -298,7 +304,7 @@ class OptionsMenu:
 		if self.back_button.handle_event(event, pos):
 			self.back_callback()
 			self.reset_buttons()  # Reset the buttons in the options menu
-			print(variables.saved_game_data)
+			#print(variables.saved_game_data)
 			saveObject = SaveGame()
 			saveObject.save(variables.saved_game_data, variables.player_file)
 			return True
@@ -308,3 +314,99 @@ class OptionsMenu:
 
 	def reset_buttons(self):
 		self.back_button.reset()
+
+class LevelSelectionMenu:
+	def __init__(self, display, sound_player, back_callback):
+		self.display = display
+		self.screen_rect = self.display.get_rect()
+		self.sound_player = sound_player
+		# Define the new buttons as instance variables
+		self.tutorial_button = Button(0, 0, 200, 50, 'TUTORIAL', sound_player, "play_button")
+		self.level1_button = Button(0, 0, 200, 50, 'LEVEL 1', sound_player, "option_button")
+		self.level2_button = Button(0, 0, 200, 50, 'LEVEL 2', sound_player, "quit_button")
+		self.back_button = Button(0, 0, 200, 50, 'BACK', sound_player, "play_button")
+				
+		# Only the tutorial button is active by default
+		self.tutorial_button.active = True
+		self.level1_button.active = False
+		self.level2_button.active = False
+
+		if variables.saved_game_data["last_completed_level"] == "One":
+			self.level1_button.active = True
+			self.level1_button.color = variables.LIGHT_GREEN
+			self.level2_button.color = variables.BLACK
+		elif variables.saved_game_data["last_completed_level"] == "Two":
+			self.level1_button.active = True
+			self.level2_button.active = True
+			self.level1_button.color = variables.LIGHT_GREEN
+			self.level2_button.color = variables.LIGHT_GREEN
+		else:
+			self.level1_button.color = variables.BLACK
+			self.level2_button.color = variables.BLACK
+		
+		self.back_callback = back_callback
+		
+		# Set positions of buttons before drawing them
+		self.tutorial_button.rect.centerx = self.screen_rect.centerx
+		self.tutorial_button.rect.centery = self.screen_rect.centery - 100
+
+		self.level1_button.rect.centerx = self.screen_rect.centerx - 200  # Increased from 100 to 200
+		self.level1_button.rect.centery = self.screen_rect.centery - 25
+
+		self.level2_button.rect.centerx = self.screen_rect.centerx + 200  # Increased from 100 to 200
+		self.level2_button.rect.centery = self.screen_rect.centery - 25
+
+		self.back_button.rect.centerx = self.screen_rect.centerx
+		self.back_button.rect.centery = self.screen_rect.centery + 75
+		
+	def draw(self):
+		# Draw buttons
+		self.tutorial_button.draw(self.display)
+		self.level1_button.draw(self.display)
+		self.level2_button.draw(self.display)
+		self.back_button.draw(self.display)
+		
+	def handle_event(self, event, pos):
+		# Handle button clicks
+		if self.tutorial_button.active and self.tutorial_button.handle_event(event, pos):
+			self.fade_transition()
+			game = Game(variables.screen_width, variables.screen_height, variables.fps, level=variables.saved_game_data["last_completed_level"])
+			game.start()
+			#self.reset_buttons()  # Reset the buttons in the level selection menu
+			return True
+		if self.level1_button.active and self.level1_button.handle_event(event, pos):
+			self.fade_transition()
+			# Replace the following line with the code to start level 1
+			game = Game(variables.screen_width, variables.screen_height, variables.fps, level=variables.saved_game_data["last_completed_level"])
+			game.start()
+			#self.reset_buttons()  # Reset the buttons in the level selection menu
+			return True
+		if self.level2_button.active and self.level2_button.handle_event(event, pos):
+			self.fade_transition()
+			# Replace the following line with the code to start level 2
+			game = Game(variables.screen_width, variables.screen_height, variables.fps, level=variables.saved_game_data["last_completed_level"])
+			game.start()
+			#self.reset_buttons()  # Reset the buttons in the level selection menu
+			return True
+		if self.back_button.handle_event(event, pos):
+			self.back_callback()
+			self.reset_buttons()  # Reset the buttons in the options menu
+			return True
+		return False
+
+		
+	def reset_buttons(self):
+		self.tutorial_button.reset()
+		self.level1_button.reset()
+		self.level2_button.reset()
+		self.back_button.reset()
+	
+	def fade_transition(self):
+		fade_surface = pygame.Surface((variables.screen_width, variables.screen_height))
+		fade_surface.fill((0, 0, 0))
+
+		for alpha in range(0, 255, 10):
+			fade_surface.set_alpha(alpha)
+			self.display.blit(fade_surface, (0, 0))
+			pygame.display.update()
+			time.sleep(0.05)
