@@ -13,6 +13,15 @@ screen_height = 600
 fps = 60
 options_menu_name = "Options Menu"
 
+# Save Variables
+key_file = "player.key"
+player_file = "player.data"
+saved_game_data = {
+    'music_slider': 1,
+    'sound_effect_slider': 1,
+    'last_completed_level': "NONE"
+}
+
 ####################
 
 # Player Variables
@@ -155,15 +164,12 @@ bullet_cooldown = 20
 
 ####################
 
-# Slider Variables
-music_slider = 1
-sound_effect_slider = 1
-
 # Sound Variables
 global_music_volume = 0.3
 global_sound_volume = 0.05
 italian_sound_volume = 0.5
-pause_menu_music = "ThemeTry1.mp3"
+main_menu_music = "ThemeTRY1.mp3"
+pause_menu_music = "ThemeTRY2.mp3"
 background_music = {
 	1: "Not_far_enough.wav",
 	2: "Trying_to_go_home.wav"

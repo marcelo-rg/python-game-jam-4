@@ -7,8 +7,8 @@ class SoundManager:
 	def __init__(self, sounds):
 		pygame.mixer.init()
 		self.sounds = {name: pygame.mixer.Sound(path) for name, path in sounds.items()}
-		self.music_volume = variables.global_music_volume * variables.music_slider
-		self.sound_volume = variables.global_sound_volume * variables.sound_effect_slider
+		self.music_volume = variables.global_music_volume * variables.saved_game_data["music_slider"]
+		self.sound_volume = variables.global_sound_volume * variables.saved_game_data["sound_effect_slider"]
 
 	def loadBackgroundMusic(self, level, music_dict):
 		# Generate a random number between 1 and the size of the dictionary
@@ -39,6 +39,6 @@ class SoundManager:
 		self.sound_volume = variables.global_sound_volume
 		if name in self.sounds:
 			self.sounds[name].play()
-			self.sounds[name].set_volume(variables.sounds_volume[name] * variables.sound_effect_slider)
+			self.sounds[name].set_volume(variables.sounds_volume[name] * variables.saved_game_data["sound_effect_slider"])
 		else:
 			print(f"Sound {name} not found!")
