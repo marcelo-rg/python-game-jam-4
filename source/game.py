@@ -219,7 +219,7 @@ class LevelOne(Level):
 					if pygame.sprite.collide_circle(meteor, bullet):
 						meteor.respawn()
 						self.sound_player.playSoundEffect("meteor_blast")
-						bullet.remove() # You will need to implement a remove() method in the Bullet class
+						bullet.remove() 
 					if pygame.sprite.collide_circle(self.planet, bullet) or pygame.sprite.collide_circle(self.asteroid, bullet):
 						bullet.remove()
 
@@ -231,11 +231,28 @@ class LevelOne(Level):
 			if pygame.sprite.collide_circle(self.spaceship_two, self.asteroid):
 				self.spaceship_two.reposition() 
 
+			# Check collisions for both spaceships
+			for spaceship in [self.spaceship_one, self.spaceship_two]:
+				for player, playerID in [(self.player_one, "Player1"), (self.player_two, "Player2")]:
+					if pygame.sprite.collide_circle(player, spaceship):
+						keys = pygame.key.get_pressed()
+						if keys[variables.player_controls[playerID]["Interact"]["Use"]]: 
+							player.enter_spaceship(spaceship, playerID)
+			
+			# Enter spaceship without collision detection while there is a bug
+			# for spaceship in [self.spaceship_one, self.spaceship_two]:
+			# 	for player, playerID in [(self.player_one, "Player1"), (self.player_two, "Player2")]:
+			# 		keys = pygame.key.get_pressed()
+			# 		if keys[variables.player_controls[playerID]["Interact"]["Use"]]: 
+			# 			player.enter_spaceship(self.spaceship_one, playerID)
+			
+
 			self.spaceship_one.update()
 			self.spaceship_two.update()
 
 			self.player_one.update("Player1")
 			self.player_two.update("Player2")
+
 
 	def render(self):
 		super().render()
