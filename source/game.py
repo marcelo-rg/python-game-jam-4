@@ -11,11 +11,11 @@ import random
 from pauseMenu import PauseMenu
 
 class Slider:
-	def __init__(self, x, y, w, h, text='', value=0):
+	def __init__(self, x, y, w, h, text='', value=0, color = variables.LIGHT_GREEN):
 		self.rect = pygame.Rect(x, y, w, h)
-		self.color = variables.DARK_GREEN
+		self.color = variables.DARK_GREEN  # New color for the bar
 		self.txt_color = variables.WHITE
-		self.fill_color = variables.LIGHT_GREEN  # New fill color
+		self.fill_color = color  # New fill color
 		#self.fill_color = variables.ANOTHER_GREEN  # New fill color
 		self.border_color = variables.BLACK  # New border color
 		self.text = text
@@ -52,6 +52,7 @@ class UI:
 		self.slider_p2 = Slider(50, 100, 200, 20, "Player 2 HP", variables.spaceship_two_hp)
 		self.slider_planet = Slider(50, 150, 200, 20, "Planet HP", variables.planet_hp)
 		self.slider_xp = Slider(50, 200, 200, 20, "XP", variables.initial_xp)
+		self.slider_asteroid = Slider(50, 250, 200, 20, "Asteroid HP", variables.asteroid_hp, color = variables.RED)
 
 	def draw(self):
 		# Draw each slider on the screen
@@ -59,13 +60,28 @@ class UI:
 		self.slider_p2.draw(self.screen)
 		self.slider_planet.draw(self.screen)
 		self.slider_xp.draw(self.screen)
+		self.slider_asteroid.draw(self.screen)
 
-	def update(self, p1_hp, p2_hp, planet_hp, xp):
-		# Update slider values
-		self.slider_p1.value = p1_hp
-		self.slider_p2.value = p2_hp
-		self.slider_planet.value = planet_hp
-		self.slider_xp.value = xp
+	# def update(self, p1_hp, p2_hp, planet_hp, xp, asteroid_hp):
+	# 	# Update slider values
+	# 	self.slider_p1.value = p1_hp
+	# 	self.slider_p2.value = p2_hp
+	# 	self.slider_planet.value = planet_hp
+	# 	self.slider_xp.value = xp
+	# 	self.slider_asteroid.value = asteroid_hp
+
+	def update(self):
+		self.slider_p1.value = variables.spaceship_one_hp["current"]/variables.spaceship_one_hp["max"]  # New value
+		self.slider_p1.value_current = variables.spaceship_one_hp["current"]  # New value
+		self.slider_p2.value = variables.spaceship_two_hp["current"]/variables.spaceship_two_hp["max"]  # New value
+		self.slider_p2.value_current = variables.spaceship_two_hp["current"]  # New value
+		self.slider_planet.value = variables.planet_hp["current"]/variables.planet_hp["max"]  # New value
+		self.slider_planet.value_current = variables.planet_hp["current"]  # New value
+		self.slider_xp.value = variables.initial_xp["current"]/variables.initial_xp["max"]  # New value
+		self.slider_xp.value_current = variables.initial_xp["current"]  # New value
+		self.slider_asteroid.value = variables.asteroid_hp["current"]/variables.asteroid_hp["max"]  # New value
+		self.slider_asteroid.value_current = variables.asteroid_hp["current"]  # New value
+
 
 class Level:
 	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps):
@@ -140,7 +156,9 @@ class Level:
 
 	def handle_events(self):
 		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
+			# if event.type == pygame.QUIT:
+			# if one presses q key, the game quits
+			if event.type == pygame.KEYDOWN and event.key == pygame.K_q:
 				self.running = False
 				pygame.quit()
 				sys.exit()
@@ -179,7 +197,10 @@ class Level:
 			self.player_two.update("Player2")
 			
 			# Update UI
-			self.ui.update(self.ui.slider_p1.value, self.ui.slider_p2.value, self.ui.slider_planet.value, self.ui.slider_xp.value)
+			self.ui.update()
+			# self.ui.update(self.ui.slider_p1.value, self.ui.slider_p2.value, self.ui.slider_planet.value, self.ui.slider_xp.value, self.ui.slider_asteroid.value)
+			# update game ui with current values
+			# self.ui.update(variables.spaceship_one_hp['current'], variables.spaceship_two_hp['current'], variables.planet_hp['current'], variables.initial_xp['current'], variables.asteroid_hp['current'])
 
 			# Check for collisions between players and spaceships, and handle interaction key presses
 			for player, playerID in [(self.player_one, "Player1"), (self.player_two, "Player2")]:
@@ -197,7 +218,7 @@ class Level:
 								break
 			
 			# Check for upgrade key
-			if keys[pygame.K_u]: # Assuming 'u' is the upgrade key
+			if variables.initial_xp['current']>= variables.initial_xp['max']: # Assuming 'u' is the upgrade key
 				self.spaceship_one.upgrade(variables.spaceship_one_asset_upgrade)
 				self.spaceship_two.upgrade(variables.spaceship_two_asset_upgrade)
 					# for bullet in player.in_spaceship.bullets:
@@ -209,6 +230,7 @@ class Level:
 				if pygame.sprite.collide_circle(meteor, self.planet):
 					self.sound_player.playSoundEffect("meteor_impact_" + str(random.randint(1, 5)))
 					meteor.respawn()
+					variables.planet_hp['current'] -= variables.planet_hp['damage_per_hit']
 
 				# Check for collisions between bullets and meteors/planet/asteroid
 				for spaceship in [self.spaceship_one, self.spaceship_two]:
@@ -227,6 +249,10 @@ class Level:
 				spaceship.update()
 				if pygame.sprite.collide_circle(spaceship, self.asteroid):
 					spaceship.reposition()
+					if spaceship == self.spaceship_one:
+						variables.spaceship_one_hp['current'] = 0
+					elif spaceship == self.spaceship_two:
+						variables.spaceship_two_hp['current'] = 0
 
 	def render(self):
 		# Blit the background image to the screen

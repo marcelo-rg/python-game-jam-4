@@ -32,7 +32,7 @@ spaceship_speed = 3
 
 spaceship_one_hp = {
 	"current": 100,
-	"max": 100
+	"max": 100,
 }
 spaceship_two_hp = {
 	"current": 100,
@@ -40,11 +40,17 @@ spaceship_two_hp = {
 }
 planet_hp = {
 	"current": 500,
-	"max": 500
+	"max": 500,
+    "damage_per_hit": 30
 }
 initial_xp = {
 	"current": 0,
 	"max": 1000
+}
+
+asteroid_hp = {
+	"current": 100,
+	"max": 100
 }
 
 # Player Bindings
@@ -98,6 +104,7 @@ player_controls = {
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
+RED = (255, 0, 0)
 LIGHT_GREEN = (80, 200, 120)
 ANOTHER_GREEN = (46, 139, 87)
 DARK_GREEN_v1 = (21, 71, 52)
