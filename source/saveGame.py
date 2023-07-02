@@ -26,8 +26,9 @@ class SaveGame:
 		file_path = os.path.join(cwd, filename)
 		if not os.path.exists(file_path):
 			print("No save file found!")
-		with open(file_path, 'rb') as file:
-			encrypted_data = file.read()
-			decrypted_data = self.cipher_suite.decrypt(encrypted_data)
-			#print(pickle.loads(decrypted_data))
-			variables.saved_game_data = pickle.loads(decrypted_data)
+		else:
+			with open(file_path, 'rb') as file:
+				encrypted_data = file.read()
+				decrypted_data = self.cipher_suite.decrypt(encrypted_data)
+				#print(pickle.loads(decrypted_data))
+				variables.saved_game_data = pickle.loads(decrypted_data)

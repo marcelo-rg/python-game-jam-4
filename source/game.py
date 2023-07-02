@@ -1,5 +1,6 @@
 import pygame
-import os 
+import os
+import sys
 cwd = os.getcwd()
 
 from objects import Planet, Asteroid, Meteor, Spaceship
@@ -8,21 +9,21 @@ import variables
 from player import Player
 import random
 
-class Game:
-	def __init__(self, screen_width = None, screen_height = None, fps= variables.fps):
+class Level:
+	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps):
 		# Initialize Pygame
 		pygame.init()
 
+		# Common screen dimensions setup
 		if screen_width is None or screen_height is None:
 			# Get the screen size
 			screen_info = pygame.display.Info()
 			screen_width = screen_info.current_w
 			screen_height = screen_info.current_h
-			
+
 			# Set the variables module screen size
 			variables.screen_width = screen_width
 			variables.screen_height = screen_height
-			print("Screen size: {} x {}".format(variables.screen_width, variables.screen_height)) # Debugging
 
 		# Music
 		self.sound_player = SoundManager(variables.sounds)
@@ -37,14 +38,13 @@ class Game:
 		self.clock = pygame.time.Clock()
 		self.fps = fps
 
-		# Game state
 		self.running = False 
 		self.paused = False
 
-		# Load the background image
+		# Background
 		self.background_image = pygame.image.load(variables.background_image).convert()
 		self.background_image = pygame.transform.scale(self.background_image, (screen_width, screen_height))
-	
+
 		# Add game elements here
 		ast_sprite = pygame.image.load(os.path.join(cwd, variables.asteroid_asset))
 		self.asteroid = Asteroid(ast_sprite, screen_width // 2, screen_height // 2)
@@ -74,6 +74,18 @@ class Game:
 		self.spaceship_one = Spaceship(1,0,variables.spaceship_speed, variables.spaceship_one_asset, screen_width=screen_width, screen_height=screen_height, sound_manager= self.sound_player, planet_radius=self.planet.radius)
 		self.spaceship_two = Spaceship(1,1,variables.spaceship_speed, variables.spaceship_two_asset, screen_width=screen_width, screen_height=screen_height, sound_manager= self.sound_player, planet_radius=self.planet.radius)
 
+	def handle_events(self):
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				self.running = False
+				pygame.quit()
+				sys.exit()
+			elif event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_q:
+					self.running = False
+					pygame.quit()
+					sys.exit()
+
 	def start(self):
 		self.running = True
 		self.game_loop()
@@ -85,28 +97,41 @@ class Game:
 		self.running = False
 		self.paused = False
 		self.start()
+	
+	def update_game_logic(self):
+		pass
+
+	def render(self):
+		# Blit the background image to the screen
+		self.screen.blit(self.background_image, (0, 0))
+
+	def game_loop(self):
+		while self.running:
+			self.handle_events()
+			self.update_game_logic()
+			self.render()
+			self.clock.tick(self.fps)
+
+
+class TutorialLevel(Level):
+	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, level=None):
+		super().__init__(screen_width, screen_height, fps)
+
+		ast_sprite = pygame.image.load(os.path.join(cwd, variables.asteroid_asset))
+		self.asteroid = Asteroid(ast_sprite, screen_width // 2, screen_height // 2)
+
+		planet_sprite = pygame.image.load(os.path.join(cwd, variables.planet_asset))
+		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
+
+		# Other Level 1 specific initialization...
 
 	def handle_events(self):
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				self.running = False
-			elif event.type == pygame.KEYDOWN:
-				#if event.key == pygame.K_p:
-				#	self.pause()
-				#elif event.key == pygame.K_r:
-				#	self.restart()
-				#elif event.key == pygame.K_w:
-				#	print("Move the character forwards")
-				#elif event.key == pygame.K_s:
-				#	print("Move the character backwards")
-				#elif event.key == pygame.K_a:
-				#	print("Move the character left")
-				#elif event.key == pygame.K_d:
-				#	print("Move the character right")
-				if event.key == pygame.K_q:
-					self.running = False
+		super().handle_events()
+		# Level 1 specific event handling...
 
 	def update_game_logic(self):
+		super().update_game_logic()
+
 		if not self.paused:
 			# Update game stated
 			self.asteroid.update()
@@ -142,16 +167,8 @@ class Game:
 			self.player_one.update("Player1")
 			self.player_two.update("Player2")
 
-
-
-
 	def render(self):
-		# Render the game elements
-	# Set the screen to black
-		#self.screen.fill((0, 0, 0))  # Example background fill
-
-		 # Blit the background image to the screen
-		self.screen.blit(self.background_image, (0, 0))
+		super().render()
 
 		# Add your rendering code here
 		self.asteroid.render(self.screen)
@@ -166,16 +183,107 @@ class Game:
 		# Update the screen
 		pygame.display.flip()
 
-	def game_loop(self):
-		while self.running:
-			self.handle_events()
-			self.update_game_logic()
-			self.render()
-			self.clock.tick(self.fps)
+class LevelOne(Level):
+	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, level=None):
+		super().__init__(screen_width, screen_height, fps)
 
-		pygame.quit()
+		ast_sprite = pygame.image.load(os.path.join(cwd, variables.asteroid_asset))
+		self.asteroid = Asteroid(ast_sprite, screen_width // 2, screen_height // 2)
 
-if __name__ == "__main__":
+		planet_sprite = pygame.image.load(os.path.join(cwd, variables.planet_asset))
+		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
+
+		# Other Level 1 specific initialization...
+
+	def handle_events(self):
+		super().handle_events()
+		# Level 1 specific event handling...
+
+	def update_game_logic(self):
+		super().update_game_logic()
+
+		if not self.paused:
+			self.asteroid.update()
+			self.planet.update()
+			# Other Level 1 specific game logic...
+
+	def render(self):
+		super().render()
+
+		self.asteroid.render(self.screen)
+		self.planet.render(self.screen)
+		# Other Level 1 specific render...
+
+class LevelTwo(Level):
+	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, level=None):
+		super().__init__(screen_width, screen_height, fps)
+
+		ast_sprite = pygame.image.load(os.path.join(cwd, variables.asteroid_asset))
+		self.asteroid = Asteroid(ast_sprite, screen_width // 2, screen_height // 2)
+
+		planet_sprite = pygame.image.load(os.path.join(cwd, variables.planet_asset))
+		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
+
+		# Other Level 1 specific initialization...
+
+	def handle_events(self):
+		super().handle_events()
+		# Level 1 specific event handling...
+
+	def update_game_logic(self):
+		super().update_game_logic()
+
+		if not self.paused:
+			self.asteroid.update()
+			self.planet.update()
+			# Other Level 1 specific game logic...
+
+	def render(self):
+		super().render()
+
+		self.asteroid.render(self.screen)
+		self.planet.render(self.screen)
+		# Other Level 1 specific render...
+
+class Game:
+	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, level="None"):
+		self.levels = [TutorialLevel(screen_width, screen_height, fps, level), 
+		 				LevelOne(screen_width, screen_height, fps, level), 
+						LevelTwo(screen_width, screen_height, fps, level)
+						]
+		self.current_level = level
+
+	def start(self):
+		if self.current_level == "None":
+			#print("Tutorial level started")
+			self.current_level = self.levels[0]  # Starts with Tutorial Level
+		elif self.current_level == "One":
+			self.current_level = self.levels[1]  # Starts with Level One
+		elif self.current_level == "Two":
+			self.current_level = self.levels[2]  # Starts with Level Two
+		else:
+			print("Invalid level name")
+			pygame.quit()
+			sys.exit()
+
+		self.current_level.running = True
+		self.current_level.game_loop()
+
+	def next_level(self):
+		current_level_index = self.levels.index(self.current_level)
+
+		if current_level_index < len(self.levels) - 1:
+			self.current_level = self.levels[current_level_index + 1]
+			self.current_level.game_loop()
+		else:
+			print("Game completed!")
+			pygame.quit()
+			sys.exit()
+
+	def restart_level(self):
+		self.current_level.restart()
+
+#if __name__ == "__main__":
 	# Create a game instance and start it
-	game = Game(fps = variables.fps)
-	game.start()
+#	game = Game(fps = variables.fps)
+#	game.start()

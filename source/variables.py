@@ -12,6 +12,8 @@ screen_width = 800
 screen_height = 600
 fps = 60
 options_menu_name = "Options Menu"
+level_selection_menu_name = "Select Level"
+level_selection_info = "Complete one Level to unlock the next"
 
 # Save Variables
 key_file = "player.key"
@@ -19,7 +21,7 @@ player_file = "player.data"
 saved_game_data = {
     'music_slider': 1,
     'sound_effect_slider': 1,
-    'last_completed_level': "NONE"
+    'last_completed_level': "None"
 }
 
 ####################
