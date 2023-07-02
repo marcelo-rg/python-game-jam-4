@@ -21,7 +21,7 @@ player_file = "player.data"
 saved_game_data = {
     'music_slider': 1,
     'sound_effect_slider': 1,
-    'last_completed_level': "None"
+    'last_completed_level': "One"
 }
 
 ####################
@@ -53,7 +53,8 @@ player_controls = {
 		},
 		"Menu": {
 			"Use": pygame.K_ESCAPE
-		}
+		},
+	
 	},
 	"Player2": {
 		"Move": {
@@ -147,8 +148,8 @@ spaceship_sprite_size  = {
 	"upgrade_one": [(56, 38), (56, 38)]
 }
 player_assets_size = {
-	"Player1": {"x": 32, "y": 32},
-	"Player2": {"x": 32, "y": 32}
+	"Player1": {"x": 42, "y": 42},
+	"Player2": {"x": 42, "y": 42}
 }
 
 # This dictionary above has sprite size for both spaceships
