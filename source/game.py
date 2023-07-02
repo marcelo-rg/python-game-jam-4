@@ -177,9 +177,9 @@ class Level:
 			# Update both players
 			self.player_one.update("Player1")
 			self.player_two.update("Player2")
-      
-      # Update UI
-		  self.ui.update(self.ui.slider_p1.value, self.ui.slider_p2.value, self.ui.slider_planet.value, self.ui.slider_xp.value)
+			
+			# Update UI
+			self.ui.update(self.ui.slider_p1.value, self.ui.slider_p2.value, self.ui.slider_planet.value, self.ui.slider_xp.value)
 
 			# Check for collisions between players and spaceships, and handle interaction key presses
 			for player, playerID in [(self.player_one, "Player1"), (self.player_two, "Player2")]:
