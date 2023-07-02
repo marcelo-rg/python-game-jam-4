@@ -169,9 +169,65 @@ class Level:
 		self.start()
 	
 	def update_game_logic(self):
-		# Update UI
-		self.ui.update(self.ui.slider_p1.value, self.ui.slider_p2.value, self.ui.slider_planet.value, self.ui.slider_xp.value)
-		
+		if not self.paused:
+			# Update game stated
+			self.asteroid.update()
+			self.planet.update()
+
+			# Update both players
+			self.player_one.update("Player1")
+			self.player_two.update("Player2")
+      
+      # Update UI
+		  self.ui.update(self.ui.slider_p1.value, self.ui.slider_p2.value, self.ui.slider_planet.value, self.ui.slider_xp.value)
+
+			# Check for collisions between players and spaceships, and handle interaction key presses
+			for player, playerID in [(self.player_one, "Player1"), (self.player_two, "Player2")]:
+				keys = pygame.key.get_pressed()
+				if keys[variables.player_controls[playerID]["Interact"]["Use"]]:
+					if player.in_spaceship is not None: # Player is in a spaceship and wants to leave
+						if not any(pygame.sprite.collide_circle(player, spaceship) for spaceship in [self.spaceship_one, self.spaceship_two]):
+							# Only allow the player to leave the spaceship if they're not currently colliding with another one
+							player.leave_spaceship() 
+							player.respawn() 
+					else: # Player is not in a spaceship and wants to enter
+						for spaceship in [self.spaceship_one, self.spaceship_two]:
+							if pygame.sprite.collide_circle(player, spaceship):
+								player.enter_spaceship(spaceship, playerID)
+								break
+			
+			# Check for upgrade key
+			if keys[pygame.K_u]: # Assuming 'u' is the upgrade key
+				self.spaceship_one.upgrade(variables.spaceship_one_asset_upgrade)
+				self.spaceship_two.upgrade(variables.spaceship_two_asset_upgrade)
+					# for bullet in player.in_spaceship.bullets:
+					# 	bullet.upgrade('path_to_new_bullet_sprite')  # Use the correct path to the new bullet sprite
+
+			for meteor in self.meteors:
+				meteor.update()
+				# Check for collisions with the planet
+				if pygame.sprite.collide_circle(meteor, self.planet):
+					self.sound_player.playSoundEffect("meteor_impact_" + str(random.randint(1, 5)))
+					meteor.respawn()
+
+				# Check for collisions between bullets and meteors/planet/asteroid
+				for spaceship in [self.spaceship_one, self.spaceship_two]:
+					for bullet in spaceship.bullets:
+						if pygame.sprite.collide_circle(meteor, bullet) or \
+						pygame.sprite.collide_circle(self.planet, bullet) or \
+						pygame.sprite.collide_circle(self.asteroid, bullet):
+							bullet.remove()
+							if pygame.sprite.collide_circle(meteor, bullet):
+								self.sound_player.playSoundEffect("meteor_blast")
+								meteor.respawn()
+							break
+
+			# Update both spaceships and check for collisions with the asteroid
+			for spaceship in [self.spaceship_one, self.spaceship_two]:
+				spaceship.update()
+				if pygame.sprite.collide_circle(spaceship, self.asteroid):
+					spaceship.reposition()
+
 	def render(self):
 		# Blit the background image to the screen
 		self.screen.blit(self.background_image, (0, 0))
@@ -293,40 +349,6 @@ class LevelOne(Level):
 	def update_game_logic(self):
 		super().update_game_logic()
 
-		if not self.paused:
-			# Update game stated
-			self.asteroid.update()
-			self.planet.update()
-
-			for meteor in self.meteors:
-				# Check for collisions
-				if pygame.sprite.collide_circle(meteor, self.planet):
-					random_number = random.randint(1, 5)
-					self.sound_player.playSoundEffect("meteor_impact_"+random_number.__str__())
-					meteor.respawn()
-
-				# Check for collisions between bullets and meteors
-				for bullet in self.spaceship_one.bullets + self.spaceship_two.bullets:
-					if pygame.sprite.collide_circle(meteor, bullet):
-						meteor.respawn()
-						self.sound_player.playSoundEffect("meteor_blast")
-						bullet.remove() # You will need to implement a remove() method in the Bullet class
-					if pygame.sprite.collide_circle(self.planet, bullet) or pygame.sprite.collide_circle(self.asteroid, bullet):
-						bullet.remove()
-
-				meteor.update()
-
-			# check for collisions between spaceships and asteroid
-			if pygame.sprite.collide_circle(self.spaceship_one, self.asteroid):
-				self.spaceship_one.reposition()  
-			if pygame.sprite.collide_circle(self.spaceship_two, self.asteroid):
-				self.spaceship_two.reposition() 
-
-			self.spaceship_one.update()
-			self.spaceship_two.update()
-
-			self.player_one.update("Player1")
-			self.player_two.update("Player2")
 
 	def render(self):
 		super().render()
@@ -334,15 +356,21 @@ class LevelOne(Level):
 		# Add your rendering code here
 		self.asteroid.render(self.screen)
 		self.planet.render(self.screen)
-		self.player_one.render(self.screen)
-		self.player_two.render(self.screen)
 		self.spaceship_one.render(self.screen)
 		self.spaceship_two.render(self.screen)
+		
+		# Only render players when they are not inside a spaceship
+		if self.player_one.in_spaceship is None:
+			self.player_one.render(self.screen)
+		if self.player_two.in_spaceship is None:
+			self.player_two.render(self.screen)
+		
 		for meteor in self.meteors:
 			meteor.render(self.screen)
 
 		# Update the screen
 		pygame.display.flip()
+
 
 class LevelTwo(Level):
 	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, level=None):
@@ -370,40 +398,6 @@ class LevelTwo(Level):
 	def update_game_logic(self):
 		super().update_game_logic()
 
-		if not self.paused:
-			# Update game stated
-			self.asteroid.update()
-			self.planet.update()
-
-			for meteor in self.meteors:
-				# Check for collisions
-				if pygame.sprite.collide_circle(meteor, self.planet):
-					random_number = random.randint(1, 5)
-					self.sound_player.playSoundEffect("meteor_impact_"+random_number.__str__())
-					meteor.respawn()
-
-				# Check for collisions between bullets and meteors
-				for bullet in self.spaceship_one.bullets + self.spaceship_two.bullets:
-					if pygame.sprite.collide_circle(meteor, bullet):
-						meteor.respawn()
-						self.sound_player.playSoundEffect("meteor_blast")
-						bullet.remove() # You will need to implement a remove() method in the Bullet class
-					if pygame.sprite.collide_circle(self.planet, bullet) or pygame.sprite.collide_circle(self.asteroid, bullet):
-						bullet.remove()
-
-				meteor.update()
-
-			# check for collisions between spaceships and asteroid
-			if pygame.sprite.collide_circle(self.spaceship_one, self.asteroid):
-				self.spaceship_one.reposition()  
-			if pygame.sprite.collide_circle(self.spaceship_two, self.asteroid):
-				self.spaceship_two.reposition() 
-
-			self.spaceship_one.update()
-			self.spaceship_two.update()
-
-			self.player_one.update("Player1")
-			self.player_two.update("Player2")
 
 	def render(self):
 		super().render()

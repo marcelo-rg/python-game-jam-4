@@ -21,7 +21,7 @@ player_file = "player.data"
 saved_game_data = {
     'music_slider': 1,
     'sound_effect_slider': 1,
-    'last_completed_level': "None"
+    'last_completed_level': "One"
 }
 
 ####################
@@ -67,7 +67,8 @@ player_controls = {
 		},
 		"Menu": {
 			"Use": pygame.K_ESCAPE
-		}
+		},
+	
 	},
 	"Player2": {
 		"Move": {
@@ -116,6 +117,7 @@ spaceships_assets_path = os.path.join(assets_path, "spaceships")
 player_assets_path = os.path.join(assets_path, "player")
 background_assets_path = os.path.join(assets_path, "background")
 bullet_sprite_path = os.path.join(assets_path, "bullets","bullet1.png")
+bullet_sprite_path_upgraded = os.path.join(assets_path, "bullets","bullet2.png")
 sound_path = os.path.join(assets_path, "..", "music")
 isolaproduction_path = os.path.join(sound_path, "isolaproduction")
 
@@ -141,6 +143,8 @@ planet_asset = os.path.join(planet_assets_path, "14.png")
 meteor_big_asset = os.path.join(meteors_assets_path,"meteorBrown_big")
 spaceship_one_asset = os.path.join(spaceships_assets_path,"playerShip2_blue.png")
 spaceship_two_asset = os.path.join(spaceships_assets_path,"playerShip2_green.png")
+spaceship_one_asset_upgrade = os.path.join(spaceships_assets_path,"playerShip3_blue.png")
+spaceship_two_asset_upgrade = os.path.join(spaceships_assets_path,"playerShip3_green.png")
 player_assets = {
 	"Player1": os.path.join(player_assets_path, "player1.png"),
 	"Player2": os.path.join(player_assets_path, "player2.png")
@@ -158,8 +162,8 @@ spaceship_sprite_size  = {
 	"upgrade_one": [(56, 38), (56, 38)]
 }
 player_assets_size = {
-	"Player1": {"x": 32, "y": 32},
-	"Player2": {"x": 32, "y": 32}
+	"Player1": {"x": 42, "y": 42},
+	"Player2": {"x": 42, "y": 42}
 }
 
 # This dictionary above has sprite size for both spaceships

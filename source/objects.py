@@ -157,6 +157,9 @@ class Meteor(Sprite):
 class Spaceship(Sprite):
 	def __init__(self, level, spaceship_number, speed, sprite_path, screen_width, screen_height, sound_manager, planet_radius):
 		super().__init__()
+		self.upgraded = False
+		self.controlled = False
+		self.playerID = None
 		self.planet_radius = planet_radius
 		self.level = level
 		self.screen_width = screen_width
@@ -183,6 +186,19 @@ class Spaceship(Sprite):
 		self.shoot_cooldown = 0  # Cool down timer for shooting
 		self.shoot_delay = variables.bullet_cooldown  # Delay between shots
 		self.sound_manager = sound_manager
+	
+	def upgrade(self, new_spaceship_sprite_path):
+		"""Upgrades the spaceship sprite and other properties."""
+		self.upgraded = True
+		# Load the new sprite
+		self.original_sprite = pygame.image.load(new_spaceship_sprite_path)
+		self.original_sprite_scaled = pygame.transform.scale(self.original_sprite, self.scale)
+
+		# You may want to update the current image as well, if it's being used elsewhere
+		self.image = pygame.transform.rotate(self.original_sprite_scaled, self.angle)
+
+		# Change other properties as desired...
+
 
 	def reposition(self):
 		"""Reposition the spaceship to its original location in case of collision."""
@@ -194,6 +210,7 @@ class Spaceship(Sprite):
 		self.y = platet_center_y + (self.planet_radius +self.radius)* math.sin(self.initial_angle)
 		self.angle = self.initial_angle
 		self.image = pygame.transform.rotate(self.original_sprite_scaled, self.initial_angle)
+		# self.radius = max(self.rect.width // 2, self.rect.height // 2) # radius for collision detection
 
 		# Apply the position to the spaceship rect
 		self.rect.center = (self.x, self.y)
@@ -210,7 +227,11 @@ class Spaceship(Sprite):
 		bullet_y = self.y + offset_y
 
 		# Create a new bullet and add it to the bullets list
-		bullet = Bullet(bullet_x, bullet_y, self.angle, variables.bullet_speed, variables.bullet_sprite_path, variables.bullet_sprite_size, self.screen_width, self.screen_height)
+		if self.upgraded:
+			asset_path = variables.bullet_sprite_path_upgraded
+		else:
+			asset_path = variables.bullet_sprite_path
+		bullet = Bullet(bullet_x, bullet_y, self.angle, variables.bullet_speed, asset_path, variables.bullet_sprite_size, self.screen_width, self.screen_height)
 		self.bullets.append(bullet)
 
 
@@ -260,19 +281,21 @@ class Spaceship(Sprite):
 		self.bullets = [bullet for bullet in self.bullets if bullet.is_alive]
 
 	def update(self):
-		keys = pygame.key.get_pressed()
-		if keys[pygame.K_a]: # A key
-			self.rotate_left()
-		if keys[pygame.K_d]: # D key
-			self.rotate_right()
-		if keys[pygame.K_w]: # W key
-			self.move_forward()
-		if keys[pygame.K_s]: # S key
-			self.move_backward()
-		if keys[variables.player_controls['Player1']['Fire']['Use']] and self.shoot_cooldown <= 0: # change 'Player1' to a player id variable
-			self.shoot()
-			self.sound_manager.playSoundEffect('shooting')
-			self.shoot_cooldown = self.shoot_delay # Reset the cooldown 
+		# Only accept control input if the spaceship is controlled by the player
+		if self.controlled:
+			keys = pygame.key.get_pressed()
+			if keys[variables.player_controls[self.playerID]["Move"]["Left"]]: # A key
+				self.rotate_left()
+			if keys[variables.player_controls[self.playerID]["Move"]["Right"]]: # D key
+				self.rotate_right()
+			if keys[variables.player_controls[self.playerID]["Move"]["Up"]]: # W key
+				self.move_forward()
+			if keys[variables.player_controls[self.playerID]["Move"]["Down"]]: # S key
+				self.move_backward()
+			if keys[variables.player_controls[self.playerID]['Fire']['Use']] and self.shoot_cooldown <= 0: 
+				self.shoot()
+				self.sound_manager.playSoundEffect('shooting')
+				self.shoot_cooldown = self.shoot_delay # Reset the cooldown 
 		
 		# Reduce the cooldown over time
 		if self.shoot_cooldown > 0:
@@ -310,6 +333,16 @@ class Bullet(Sprite):
 
 			self.rect = self.image.get_rect(center=(self.x, self.y))
 			self.radius = max(self.rect.width // 2, self.rect.height // 2) # radius for collision detection
+
+	def upgrade(self, new_bullet_sprite_path):
+		"""Upgrades the bullet sprite."""
+		# Load the new sprite
+		self.original_sprite = pygame.image.load(new_bullet_sprite_path)
+		self.original_sprite_scaled = pygame.transform.scale(self.original_sprite, self.original_sprite_scaled.get_size())
+
+		# Rotate the new sprite to match the spaceship's angle
+		self.image = pygame.transform.rotate(self.original_sprite_scaled, -self.angle)
+
 
 	def remove(self):
 		"""Mark the bullet as 'dead' so it can be removed."""
