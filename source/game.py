@@ -123,11 +123,11 @@ class TutorialLevel(Level):
 		planet_sprite = pygame.image.load(os.path.join(cwd, variables.planet_asset))
 		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
 
-		# Other Level 1 specific initialization...
+		# Other Tutorial Level specific initialization...
 
 	def handle_events(self):
 		super().handle_events()
-		# Level 1 specific event handling...
+		# Tutorial Level specific event handling...
 
 	def update_game_logic(self):
 		super().update_game_logic()
@@ -203,16 +203,55 @@ class LevelOne(Level):
 		super().update_game_logic()
 
 		if not self.paused:
+			# Update game stated
 			self.asteroid.update()
 			self.planet.update()
-			# Other Level 1 specific game logic...
+
+			for meteor in self.meteors:
+				# Check for collisions
+				if pygame.sprite.collide_circle(meteor, self.planet):
+					random_number = random.randint(1, 5)
+					self.sound_player.playSoundEffect("meteor_impact_"+random_number.__str__())
+					meteor.respawn()
+
+				# Check for collisions between bullets and meteors
+				for bullet in self.spaceship_one.bullets + self.spaceship_two.bullets:
+					if pygame.sprite.collide_circle(meteor, bullet):
+						meteor.respawn()
+						self.sound_player.playSoundEffect("meteor_blast")
+						bullet.remove() # You will need to implement a remove() method in the Bullet class
+					if pygame.sprite.collide_circle(self.planet, bullet) or pygame.sprite.collide_circle(self.asteroid, bullet):
+						bullet.remove()
+
+				meteor.update()
+
+			# check for collisions between spaceships and asteroid
+			if pygame.sprite.collide_circle(self.spaceship_one, self.asteroid):
+				self.spaceship_one.reposition()  
+			if pygame.sprite.collide_circle(self.spaceship_two, self.asteroid):
+				self.spaceship_two.reposition() 
+
+			self.spaceship_one.update()
+			self.spaceship_two.update()
+
+			self.player_one.update("Player1")
+			self.player_two.update("Player2")
 
 	def render(self):
 		super().render()
 
+		# Add your rendering code here
 		self.asteroid.render(self.screen)
 		self.planet.render(self.screen)
-		# Other Level 1 specific render...
+		self.player_one.render(self.screen)
+		self.player_two.render(self.screen)
+		self.spaceship_one.render(self.screen)
+		self.spaceship_two.render(self.screen)
+		for meteor in self.meteors:
+			meteor.render(self.screen)
+
+		# Update the screen
+		pygame.display.flip()
 
 class LevelTwo(Level):
 	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, level=None):
@@ -224,26 +263,65 @@ class LevelTwo(Level):
 		planet_sprite = pygame.image.load(os.path.join(cwd, variables.planet_asset))
 		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
 
-		# Other Level 1 specific initialization...
+		# Other Level 2 specific initialization...
 
 	def handle_events(self):
 		super().handle_events()
-		# Level 1 specific event handling...
+		# Level 2 specific event handling...
 
 	def update_game_logic(self):
 		super().update_game_logic()
 
 		if not self.paused:
+			# Update game stated
 			self.asteroid.update()
 			self.planet.update()
-			# Other Level 1 specific game logic...
+
+			for meteor in self.meteors:
+				# Check for collisions
+				if pygame.sprite.collide_circle(meteor, self.planet):
+					random_number = random.randint(1, 5)
+					self.sound_player.playSoundEffect("meteor_impact_"+random_number.__str__())
+					meteor.respawn()
+
+				# Check for collisions between bullets and meteors
+				for bullet in self.spaceship_one.bullets + self.spaceship_two.bullets:
+					if pygame.sprite.collide_circle(meteor, bullet):
+						meteor.respawn()
+						self.sound_player.playSoundEffect("meteor_blast")
+						bullet.remove() # You will need to implement a remove() method in the Bullet class
+					if pygame.sprite.collide_circle(self.planet, bullet) or pygame.sprite.collide_circle(self.asteroid, bullet):
+						bullet.remove()
+
+				meteor.update()
+
+			# check for collisions between spaceships and asteroid
+			if pygame.sprite.collide_circle(self.spaceship_one, self.asteroid):
+				self.spaceship_one.reposition()  
+			if pygame.sprite.collide_circle(self.spaceship_two, self.asteroid):
+				self.spaceship_two.reposition() 
+
+			self.spaceship_one.update()
+			self.spaceship_two.update()
+
+			self.player_one.update("Player1")
+			self.player_two.update("Player2")
 
 	def render(self):
 		super().render()
 
+		# Add your rendering code here
 		self.asteroid.render(self.screen)
 		self.planet.render(self.screen)
-		# Other Level 1 specific render...
+		self.player_one.render(self.screen)
+		self.player_two.render(self.screen)
+		self.spaceship_one.render(self.screen)
+		self.spaceship_two.render(self.screen)
+		for meteor in self.meteors:
+			meteor.render(self.screen)
+
+		# Update the screen
+		pygame.display.flip()
 
 class Game:
 	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, level="None"):
