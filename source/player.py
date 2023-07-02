@@ -24,6 +24,12 @@ class Player(Sprite):
 		self.x, self.y = self.calculate_position(self.angle)
 		self.rect.center = (self.x, self.y)
 
+	def respawn(self):
+		# Set angle and position to initial state
+		self.angle = random.uniform(0, 2*math.pi)  # Initial angle - random between 0 and 2π
+		self.x, self.y = self.calculate_position(self.angle)  # Calculate position based on the angle
+		self.rect.center = (self.x, self.y)  # Move the player to the new position
+
 	def calculate_position(self, angle):
 		x = self.planet_center[0] + self.planet_radius * math.cos(angle)
 		y = self.planet_center[1] + self.planet_radius * math.sin(angle)
@@ -47,6 +53,8 @@ class Player(Sprite):
 		if self.in_spaceship is not None:
 			self.in_spaceship.controlled = False
 			self.in_spaceship.playerID = None
+			self.in_spaceship.reposition()  # Make the spaceship respawn
+			self.respawn()  # Make the player respawn
 			self.in_spaceship = None
 		
 

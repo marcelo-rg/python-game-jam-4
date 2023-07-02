@@ -207,63 +207,60 @@ class LevelOne(Level):
 			self.asteroid.update()
 			self.planet.update()
 
-			for meteor in self.meteors:
-				# Check for collisions
-				if pygame.sprite.collide_circle(meteor, self.planet):
-					random_number = random.randint(1, 5)
-					self.sound_player.playSoundEffect("meteor_impact_"+random_number.__str__())
-					meteor.respawn()
-
-				# Check for collisions between bullets and meteors
-				for bullet in self.spaceship_one.bullets + self.spaceship_two.bullets:
-					if pygame.sprite.collide_circle(meteor, bullet):
-						meteor.respawn()
-						self.sound_player.playSoundEffect("meteor_blast")
-						bullet.remove() 
-					if pygame.sprite.collide_circle(self.planet, bullet) or pygame.sprite.collide_circle(self.asteroid, bullet):
-						bullet.remove()
-
-				meteor.update()
-
-			# check for collisions between spaceships and asteroid
-			if pygame.sprite.collide_circle(self.spaceship_one, self.asteroid):
-				self.spaceship_one.reposition()  
-			if pygame.sprite.collide_circle(self.spaceship_two, self.asteroid):
-				self.spaceship_two.reposition() 
-
-			# Check collisions for both spaceships
-			for spaceship in [self.spaceship_one, self.spaceship_two]:
-				for player, playerID in [(self.player_one, "Player1"), (self.player_two, "Player2")]:
-					if pygame.sprite.collide_circle(player, spaceship):
-						keys = pygame.key.get_pressed()
-						if keys[variables.player_controls[playerID]["Interact"]["Use"]]: 
-							player.enter_spaceship(spaceship, playerID)
-			
-			# Enter spaceship without collision detection while there is a bug
-			# for spaceship in [self.spaceship_one, self.spaceship_two]:
-			# 	for player, playerID in [(self.player_one, "Player1"), (self.player_two, "Player2")]:
-			# 		keys = pygame.key.get_pressed()
-			# 		if keys[variables.player_controls[playerID]["Interact"]["Use"]]: 
-			# 			player.enter_spaceship(self.spaceship_one, playerID)
-			
-
-			self.spaceship_one.update()
-			self.spaceship_two.update()
-
+			# Update both players
 			self.player_one.update("Player1")
 			self.player_two.update("Player2")
+
+			# Check for collisions between players and spaceships, and handle interaction key presses
+			for player, playerID in [(self.player_one, "Player1"), (self.player_two, "Player2")]:
+				keys = pygame.key.get_pressed()
+				if keys[variables.player_controls[playerID]["Interact"]["Use"]]:
+					if player.in_spaceship is not None: # Player is in a spaceship and wants to leave
+						if not any(pygame.sprite.collide_circle(player, spaceship) for spaceship in [self.spaceship_one, self.spaceship_two]):
+							# Only allow the player to leave the spaceship if they're not currently colliding with another one
+							player.leave_spaceship() 
+							player.respawn() 
+					else: # Player is not in a spaceship and wants to enter
+						for spaceship in [self.spaceship_one, self.spaceship_two]:
+							if pygame.sprite.collide_circle(player, spaceship):
+								player.enter_spaceship(spaceship, playerID)
+								break
+
+			for meteor in self.meteors:
+				meteor.update()
+				# Check for collisions with the planet
+				if pygame.sprite.collide_circle(meteor, self.planet):
+					self.sound_player.playSoundEffect("meteor_impact_" + str(random.randint(1, 5)))
+					meteor.respawn()
+
+				# Check for collisions between bullets and meteors/planet/asteroid
+				for spaceship in [self.spaceship_one, self.spaceship_two]:
+					for bullet in spaceship.bullets:
+						if pygame.sprite.collide_circle(meteor, bullet) or \
+						pygame.sprite.collide_circle(self.planet, bullet) or \
+						pygame.sprite.collide_circle(self.asteroid, bullet):
+							bullet.remove()
+							if pygame.sprite.collide_circle(meteor, bullet):
+								self.sound_player.playSoundEffect("meteor_blast")
+								meteor.respawn()
+							break
+
+			# Update both spaceships and check for collisions with the asteroid
+			for spaceship in [self.spaceship_one, self.spaceship_two]:
+				spaceship.update()
+				if pygame.sprite.collide_circle(spaceship, self.asteroid):
+					spaceship.reposition()
+
 
 
 	def render(self):
 		super().render()
-
-		# Add your rendering code here
 		self.asteroid.render(self.screen)
 		self.planet.render(self.screen)
-		self.player_one.render(self.screen)
-		self.player_two.render(self.screen)
 		self.spaceship_one.render(self.screen)
 		self.spaceship_two.render(self.screen)
+		self.player_one.render(self.screen)
+		self.player_two.render(self.screen)
 		for meteor in self.meteors:
 			meteor.render(self.screen)
 
