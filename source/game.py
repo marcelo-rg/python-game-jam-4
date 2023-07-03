@@ -201,9 +201,6 @@ class Level:
 			self.player_one.update("Player1")
 			self.player_two.update("Player2")
 			
-			# Update UI
-			self.ui.update()
-
 			# Check for collisions between players and spaceships, and handle interaction key presses
 			for player, playerID in [(self.player_one, "Player1"), (self.player_two, "Player2")]:
 				keys = pygame.key.get_pressed()
@@ -263,21 +260,23 @@ class Level:
 								if variables.asteroid_hp['current'] <= 0:
 									pass  # self.asteroid.destroy() # Assuming you have a destroy method for asteroid
 
-
-
-
-
 			# Update both spaceships and check for collisions with the asteroid
 			for spaceship in [self.spaceship_one, self.spaceship_two]:
 				spaceship.update()
 				if pygame.sprite.collide_circle(spaceship, self.asteroid):
 					spaceship.reposition()
+					if(spaceship.playerID) == "Player1":
+						self.player_one.leave_spaceship()
+					elif(spaceship.playerID) == "Player2":
+						self.player_two.leave_spaceship()
 					if spaceship == self.spaceship_one:
 						variables.spaceship_one_hp['current'] = 0
 					elif spaceship == self.spaceship_two:
 						variables.spaceship_two_hp['current'] = 0
 			
+			# Update UI
 			self.ui.update()
+
 
 	def render(self):
 		# Blit the background image to the screen
