@@ -236,22 +236,34 @@ class Level:
 
 				# Check for collisions between bullets and meteors/planet/asteroid
 				for spaceship in [self.spaceship_one, self.spaceship_two]:
-					for bullet in spaceship.bullets:
-						if pygame.sprite.collide_circle(meteor, bullet) or \
-						pygame.sprite.collide_circle(self.planet, bullet):
-							bullet.remove()
+					for bullet in spaceship.bullets.copy():  # create a copy for iteration
+						bullet_collided = False  # To keep track if bullet collided with any sprite
+
+						# Check collision with each meteor
+						for meteor in self.meteors:  # Assuming 'meteors' is a list of all meteors
 							if pygame.sprite.collide_circle(meteor, bullet):
 								self.sound_player.playSoundEffect("meteor_blast")
+								bullet.remove()
 								meteor.respawn()
 								variables.initial_xp['current'] +=  variables.initial_xp['xp_per_hit']
-						# If spaceship is upgraded and bullet hits asteroid, deal damage
-						if spaceship.upgraded and pygame.sprite.collide_circle(self.asteroid, bullet):
+								bullet_collided = True
+								break  # Stop checking other meteors for this bullet
+
+						# If bullet has not collided with any meteor, check for planet collision
+						if not bullet_collided and pygame.sprite.collide_circle(self.planet, bullet):
 							bullet.remove()
-							variables.asteroid_hp['current'] -= variables.asteroid_hp['damage_per_hit']
-							if variables.asteroid_hp['current'] <= 0:
-								# self.asteroid.destroy() # Assuming you have a destroy method for asteroid
-								pass
-						break
+							bullet_collided = True
+
+						# Check for asteroid collision, deal damage if spaceship is upgraded
+						if not bullet_collided and pygame.sprite.collide_circle(self.asteroid, bullet):
+							bullet.remove()
+							bullet_collided = True
+							if spaceship.upgraded:
+								variables.asteroid_hp['current'] -= variables.asteroid_hp['damage_per_hit']
+								if variables.asteroid_hp['current'] <= 0:
+									pass  # self.asteroid.destroy() # Assuming you have a destroy method for asteroid
+
+
 
 
 
@@ -314,7 +326,7 @@ class TutorialLevel(Level):
 		
 
 	def render(self):
-		super().render()
+		# super().render()
 
 		# Add your rendering code here
 		self.asteroid.render(self.screen)
@@ -439,7 +451,3 @@ class Game:
 	def start(self):
 		self.current_level.start()
 
-#if __name__ == "__main__":
-	# Create a game instance and start it
-#	game = Game(fps = variables.fps)
-#	game.start()
