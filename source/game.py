@@ -62,14 +62,6 @@ class UI:
 		self.slider_xp.draw(self.screen)
 		self.slider_asteroid.draw(self.screen)
 
-	# def update(self, p1_hp, p2_hp, planet_hp, xp, asteroid_hp):
-	# 	# Update slider values
-	# 	self.slider_p1.value = p1_hp
-	# 	self.slider_p2.value = p2_hp
-	# 	self.slider_planet.value = planet_hp
-	# 	self.slider_xp.value = xp
-	# 	self.slider_asteroid.value = asteroid_hp
-
 	def update(self):
 		self.slider_p1.value = min(variables.spaceship_one_hp["current"], variables.spaceship_one_hp["max"])/variables.spaceship_one_hp["max"]
 		self.slider_p1.value_current = min(variables.spaceship_one_hp["current"], variables.spaceship_one_hp["max"])
@@ -201,9 +193,6 @@ class Level:
 			self.player_one.update("Player1")
 			self.player_two.update("Player2")
 			
-			# Update UI
-			self.ui.update()
-
 			# Check for collisions between players and spaceships, and handle interaction key presses
 			for player, playerID in [(self.player_one, "Player1"), (self.player_two, "Player2")]:
 				keys = pygame.key.get_pressed()
@@ -236,36 +225,50 @@ class Level:
 
 				# Check for collisions between bullets and meteors/planet/asteroid
 				for spaceship in [self.spaceship_one, self.spaceship_two]:
-					for bullet in spaceship.bullets:
-						if pygame.sprite.collide_circle(meteor, bullet) or \
-						pygame.sprite.collide_circle(self.planet, bullet):
-							bullet.remove()
+					for bullet in spaceship.bullets.copy():  # create a copy for iteration
+						bullet_collided = False  # To keep track if bullet collided with any sprite
+
+						# Check collision with each meteor
+						for meteor in self.meteors:  # Assuming 'meteors' is a list of all meteors
 							if pygame.sprite.collide_circle(meteor, bullet):
 								self.sound_player.playSoundEffect("meteor_blast")
+								bullet.remove()
 								meteor.respawn()
 								variables.initial_xp['current'] +=  variables.initial_xp['xp_per_hit']
-						# If spaceship is upgraded and bullet hits asteroid, deal damage
-						if spaceship.upgraded and pygame.sprite.collide_circle(self.asteroid, bullet):
+								bullet_collided = True
+								break  # Stop checking other meteors for this bullet
+
+						# If bullet has not collided with any meteor, check for planet collision
+						if not bullet_collided and pygame.sprite.collide_circle(self.planet, bullet):
 							bullet.remove()
-							variables.asteroid_hp['current'] -= variables.asteroid_hp['damage_per_hit']
-							if variables.asteroid_hp['current'] <= 0:
-								# self.asteroid.destroy() # Assuming you have a destroy method for asteroid
-								pass
-						break
+							bullet_collided = True
 
-
+						# Check for asteroid collision, deal damage if spaceship is upgraded
+						if not bullet_collided and pygame.sprite.collide_circle(self.asteroid, bullet):
+							bullet.remove()
+							bullet_collided = True
+							if spaceship.upgraded:
+								variables.asteroid_hp['current'] -= variables.asteroid_hp['damage_per_hit']
+								if variables.asteroid_hp['current'] <= 0:
+									pass  # self.asteroid.destroy() # Assuming you have a destroy method for asteroid
 
 			# Update both spaceships and check for collisions with the asteroid
 			for spaceship in [self.spaceship_one, self.spaceship_two]:
 				spaceship.update()
 				if pygame.sprite.collide_circle(spaceship, self.asteroid):
 					spaceship.reposition()
+					if(spaceship.playerID) == "Player1":
+						self.player_one.leave_spaceship()
+					elif(spaceship.playerID) == "Player2":
+						self.player_two.leave_spaceship()
 					if spaceship == self.spaceship_one:
 						variables.spaceship_one_hp['current'] = 0
 					elif spaceship == self.spaceship_two:
 						variables.spaceship_two_hp['current'] = 0
 			
+			# Update UI
 			self.ui.update()
+
 
 	def render(self):
 		# Blit the background image to the screen
@@ -314,7 +317,7 @@ class TutorialLevel(Level):
 		
 
 	def render(self):
-		super().render()
+		# super().render()
 
 		# Add your rendering code here
 		self.asteroid.render(self.screen)
@@ -439,7 +442,3 @@ class Game:
 	def start(self):
 		self.current_level.start()
 
-#if __name__ == "__main__":
-	# Create a game instance and start it
-#	game = Game(fps = variables.fps)
-#	game.start()
