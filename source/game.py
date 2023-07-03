@@ -62,14 +62,6 @@ class UI:
 		self.slider_xp.draw(self.screen)
 		self.slider_asteroid.draw(self.screen)
 
-	# def update(self, p1_hp, p2_hp, planet_hp, xp, asteroid_hp):
-	# 	# Update slider values
-	# 	self.slider_p1.value = p1_hp
-	# 	self.slider_p2.value = p2_hp
-	# 	self.slider_planet.value = planet_hp
-	# 	self.slider_xp.value = xp
-	# 	self.slider_asteroid.value = asteroid_hp
-
 	def update(self):
 		self.slider_p1.value = min(variables.spaceship_one_hp["current"], variables.spaceship_one_hp["max"])/variables.spaceship_one_hp["max"]
 		self.slider_p1.value_current = min(variables.spaceship_one_hp["current"], variables.spaceship_one_hp["max"])
