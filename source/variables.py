@@ -89,7 +89,7 @@ player_controls = {
 			"Use": pygame.K_j
 		},
 		"Upgrade": {
-			"Use": pygame.K_k
+			"Use": pygame.K_i
 		},
 		"Fire": {
 			"Use": pygame.K_l
