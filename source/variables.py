@@ -21,7 +21,7 @@ player_file = "player.data"
 saved_game_data = {
     'music_slider': 1,
     'sound_effect_slider': 1,
-    'last_completed_level': "One"
+    'last_completed_level': "None"
 }
 
 ####################
@@ -237,4 +237,3 @@ jpg_extension = ".jpg"
 png_extension = ".png"
 
 ####################
-

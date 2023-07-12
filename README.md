@@ -11,10 +11,11 @@
 
 # How to Install & Run
 - pip3 install pygame
-- pip3 install pyfiglet
-- pip3 install cx_Freeze
 - pip3 install cryptography
 - python3 main.py
+
+# Only for Devs
+- pip3 install cx_Freeze
 
 # How to Create the Executable
 - python3 ExeCreator.py build
