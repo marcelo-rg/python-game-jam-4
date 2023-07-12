@@ -328,7 +328,7 @@ class LevelSelectionMenu:
 		# Only the tutorial button is active by default
 		self.tutorial_button.active = True
 		self.tutorial_button.color = variables.LIGHT_GREEN
-		self.level1_button.active = False
+		self.level1_button.active = True # Marcelo alterou para testar
 		self.level2_button.active = False
 
 		if variables.saved_game_data["last_completed_level"] == "Tutorial":

@@ -31,11 +31,11 @@ player_speed = 1
 spaceship_speed = 3
 
 spaceship_one_hp = {
-	"current": 100,
+	"current": 0,
 	"max": 100,
 }
 spaceship_two_hp = {
-	"current": 100,
+	"current": 0,
 	"max": 100
 }
 planet_hp = {
@@ -188,6 +188,7 @@ spiral_decay_rate = 0.005
 spaceship_rotation_speed = 2.0
 bullet_speed = 6
 bullet_cooldown = 20
+spaceship_repair_cooldown = 600
 
 ####################
 

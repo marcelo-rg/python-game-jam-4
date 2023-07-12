@@ -180,12 +180,37 @@ class Spaceship(Sprite):
 		self.speed = speed
 		self.angle = self.initial_angle
 		self.rot_speed = variables.spaceship_rotation_speed
+		self.repair_cooldown_frames = variables.spaceship_repair_cooldown  
+		self.repair_frame_counter = 0  # counter to track the number of frames since the repair process started
 
 
 		self.bullets = []  # List to store bullets
 		self.shoot_cooldown = 0  # Cool down timer for shooting
 		self.shoot_delay = variables.bullet_cooldown  # Delay between shots
 		self.sound_manager = sound_manager
+
+	def start_repair(self):
+		self.repair_frame_counter = 0  # reset the frame counter
+
+	def repair(self):
+		if self.repair_frame_counter < self.repair_cooldown_frames:
+			# Calculate the amount of HP to recover in this frame
+			hp_recovery_per_frame = variables.spaceship_one_hp['max'] / self.repair_cooldown_frames
+			# print(hp_recovery_per_frame) 
+			# exit()
+			if self.playerID == "Player1":
+				variables.spaceship_one_hp['current'] += hp_recovery_per_frame
+				# Make sure the HP doesn't exceed the maximum
+				variables.spaceship_one_hp['current'] = min(variables.spaceship_one_hp['current'], variables.spaceship_one_hp['max'])
+			elif self.playerID == "Player2":
+				variables.spaceship_two_hp['current'] += hp_recovery_per_frame
+				# Make sure the HP doesn't exceed the maximum
+				variables.spaceship_two_hp['current'] = min(variables.spaceship_two_hp['current'], variables.spaceship_two_hp['max'])
+
+			self.repair_frame_counter += 1
+		else:
+			return True  # Repair process is complete
+		return False  # Repair process is ongoing
 	
 	def upgrade(self, new_spaceship_sprite_path):
 		"""Upgrades the spaceship sprite and other properties."""

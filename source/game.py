@@ -217,8 +217,9 @@ class Level:
 					else: # Player is not in a spaceship and wants to enter
 						for spaceship in [self.spaceship_one, self.spaceship_two]:
 							if pygame.sprite.collide_circle(player, spaceship):
-								player.enter_spaceship(spaceship, playerID)
-								break
+								if not spaceship.repair():
+									player.enter_spaceship(spaceship, playerID)
+									break
 			
 			# Check for upgrade key
 			if variables.initial_xp['current']>= variables.initial_xp['max']: # Assuming 'u' is the upgrade key
@@ -285,7 +286,7 @@ class Level:
 				self.victory()
 				self.saveLevelResult()
 				return
-				# self.asteroid.destroy() # Assuming you have a destroy method for asteroid
+				# self.asteroid.destroy() # Assuming there is a destroy method for asteroid
 
 	def render(self):
 		# Blit the background image to the screen
