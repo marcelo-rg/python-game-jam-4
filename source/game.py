@@ -9,6 +9,8 @@ import variables
 from player import Player
 import random
 from pauseMenu import PauseMenu
+import time
+from saveGame import SaveGame  # Import the SaveGame class
 
 class Slider:
 	def __init__(self, x, y, w, h, text='', value=0, color = variables.LIGHT_GREEN):
@@ -151,6 +153,16 @@ class Level:
 		# Draw UI
 		self.ui.draw()
 
+		self.font = pygame.font.Font(None, 120)
+
+	def resetLevel(self):
+		variables.spaceship_one_hp["current"] = variables.spaceship_one_hp["max"]
+		variables.spaceship_two_hp["current"] = variables.spaceship_two_hp["max"]
+		variables.planet_hp["current"] = variables.planet_hp["max"]
+		variables.initial_xp["current"] = 0
+		variables.asteroid_hp["current"] = variables.asteroid_hp["max"]
+
+
 	def handle_events(self):
 		for event in pygame.event.get():
 			# if event.type == pygame.QUIT:
@@ -201,7 +213,7 @@ class Level:
 						if not any(pygame.sprite.collide_circle(player, spaceship) for spaceship in [self.spaceship_one, self.spaceship_two]):
 							# Only allow the player to leave the spaceship if they're not currently colliding with another one
 							player.leave_spaceship() 
-							player.respawn() 
+							player.respawn()
 					else: # Player is not in a spaceship and wants to enter
 						for spaceship in [self.spaceship_one, self.spaceship_two]:
 							if pygame.sprite.collide_circle(player, spaceship):
@@ -249,8 +261,7 @@ class Level:
 							bullet_collided = True
 							if spaceship.upgraded:
 								variables.asteroid_hp['current'] -= variables.asteroid_hp['damage_per_hit']
-								if variables.asteroid_hp['current'] <= 0:
-									pass  # self.asteroid.destroy() # Assuming you have a destroy method for asteroid
+								
 
 			# Update both spaceships and check for collisions with the asteroid
 			for spaceship in [self.spaceship_one, self.spaceship_two]:
@@ -269,6 +280,12 @@ class Level:
 			# Update UI
 			self.ui.update()
 
+			# Win Condition
+			if variables.asteroid_hp['current'] <= 0:
+				self.victory()
+				self.saveLevelResult()
+				return
+				# self.asteroid.destroy() # Assuming you have a destroy method for asteroid
 
 	def render(self):
 		# Blit the background image to the screen
@@ -276,6 +293,21 @@ class Level:
 		
 		# Draw UI
 		self.ui.draw()
+
+	def saveLevelResult(self):
+		saveObject = SaveGame()
+		if variables.saved_game_data["last_completed_level"] == "None":
+			variables.saved_game_data["last_completed_level"] = "Tutorial"
+		elif variables.saved_game_data["last_completed_level"] == "Tutorial":
+			variables.saved_game_data["last_completed_level"] = "One"
+		elif variables.saved_game_data["last_completed_level"] == "One":
+			variables.saved_game_data["last_completed_level"] = "Two"
+		else:
+			print("ERROR while saving the game in saveLevelResult!")
+		saveObject.save(variables.saved_game_data, variables.player_file)
+		#saveObject.load(variables.player_file)
+		self.running = False
+		self.resetLevel()
 
 	def game_loop(self):
 		while self.running:
@@ -287,8 +319,56 @@ class Level:
 				self.pause_menu.draw_menu()
 			self.clock.tick(self.fps)
 
+	def fade_in(self):
+		fade_surface = pygame.Surface((variables.screen_width, variables.screen_height))  # Create new surface
+		fade_surface.fill(variables.BLACK)  # Fill the surface with the desired color
+
+		for alpha in range(0, 255, 25):  # Loop over alpha values, stepping by 25
+			fade_surface.set_alpha(alpha)  # Set the alpha value
+			self.render()  # Render your normal scene
+			self.screen.blit(fade_surface, (0, 0))  # Blit the fade surface onto the screen
+			pygame.display.update()  # Update the display
+			pygame.time.delay(1)  # Pause for 1 millisecond to control the speed of the fade
+
+	def game_over(self):
+		self.fade_in()
+		self.screen.fill(variables.BLACK)
+		new_font = pygame.font.Font(None, 80)
+		text = self.font.render("Game Over", True, variables.RED)
+		text_continue = new_font.render("Press any Key to Continue!", True, variables.WHITE)
+		text_rect = text.get_rect(center=(variables.screen_width/2, variables.screen_height/2))
+		text_continue_rect = text_continue.get_rect(center=(variables.screen_width/2 +20, variables.screen_height/2 +20))
+		self.screen.blit(text, text_rect)
+		self.screen.blit(text_continue, text_continue_rect)
+		pygame.display.update()
+		self.wait_for_key()
+
+	def victory(self):
+		self.fade_in()
+		self.screen.fill(variables.BLACK)
+		new_font = pygame.font.Font(None, 80)
+		text = self.font.render("Victory!", True, variables.LIGHT_GREEN)
+		text_continue = new_font.render("Press any Key to Continue!", True, variables.WHITE)
+		text_rect = text.get_rect(center=(variables.screen_width/2, variables.screen_height/2))
+		text_continue_rect = text_continue.get_rect(center=(variables.screen_width/2, variables.screen_height/2 +80))
+		self.screen.blit(text, text_rect)
+		self.screen.blit(text_continue, text_continue_rect)
+		pygame.display.update()
+		self.wait_for_key()
+
+	def wait_for_key(self):
+		pygame.event.wait()  # wait for any event
+		while True:
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					pygame.quit()
+					sys.exit()
+				if event.type == pygame.KEYUP:
+					time.sleep(1)  # add delay
+					return
+
 class TutorialLevel(Level):
-	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, level=None):
+	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps):
 		super().__init__(screen_width, screen_height, fps)
 
 		ast_sprite = pygame.image.load(os.path.join(cwd, variables.asteroid_asset))
@@ -314,8 +394,6 @@ class TutorialLevel(Level):
 	def update_game_logic(self):
 		super().update_game_logic()
 
-		
-
 	def render(self):
 		# super().render()
 
@@ -333,7 +411,7 @@ class TutorialLevel(Level):
 		pygame.display.flip()
 
 class LevelOne(Level):
-	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, level=None):
+	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps):
 		super().__init__(screen_width, screen_height, fps)
 
 		ast_sprite = pygame.image.load(os.path.join(cwd, variables.asteroid_asset))
@@ -382,7 +460,7 @@ class LevelOne(Level):
 
 
 class LevelTwo(Level):
-	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, level=None):
+	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps):
 		super().__init__(screen_width, screen_height, fps)
 
 		ast_sprite = pygame.image.load(os.path.join(cwd, variables.asteroid_asset))
@@ -425,15 +503,15 @@ class LevelTwo(Level):
 		pygame.display.flip()
 
 class Game:
-	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, level="None"):
-		self.current_level = level
-		if self.current_level == "None":
+	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, button=None):
+		self.current_level = button
+		if self.current_level == "Tutorial":
 			#print("Tutorial level started")
-			self.current_level = TutorialLevel(screen_width, screen_height, fps, level)  # Starts with Tutorial Level
+			self.current_level = TutorialLevel(screen_width, screen_height, fps)  # Starts Tutorial Level
 		elif self.current_level == "One":
-			self.current_level = LevelOne(screen_width, screen_height, fps, level)  # Starts with Level One
+			self.current_level = LevelOne(screen_width, screen_height, fps)  # Starts Level One
 		elif self.current_level == "Two":
-			self.current_level = LevelTwo(screen_width, screen_height, fps, level)  # Starts with Level Two
+			self.current_level = LevelTwo(screen_width, screen_height, fps)  # Starts Level Two
 		else:
 			print("Invalid level name")
 			pygame.quit()
@@ -441,4 +519,3 @@ class Game:
 
 	def start(self):
 		self.current_level.start()
-
