@@ -327,16 +327,17 @@ class LevelSelectionMenu:
 				
 		# Only the tutorial button is active by default
 		self.tutorial_button.active = True
+		self.tutorial_button.color = variables.LIGHT_GREEN
 		self.level1_button.active = False
 		self.level2_button.active = False
 
-		if variables.saved_game_data["last_completed_level"] == "One":
+		if variables.saved_game_data["last_completed_level"] == "Tutorial":
 			self.level1_button.active = True
 			self.level1_button.color = variables.LIGHT_GREEN
 			self.level2_button.color = variables.BLACK
-			self.tutorial_button.active = False
-			self.tutorial_button.color = variables.BLACK
-		elif variables.saved_game_data["last_completed_level"] == "Two":
+			#self.tutorial_button.active = False
+			#self.tutorial_button.color = variables.BLACK
+		elif variables.saved_game_data["last_completed_level"] == "One":
 			self.level1_button.active = True
 			self.level2_button.active = True
 			self.level1_button.color = variables.LIGHT_GREEN
@@ -371,21 +372,21 @@ class LevelSelectionMenu:
 		# Handle button clicks
 		if self.tutorial_button.active and self.tutorial_button.handle_event(event, pos):
 			self.fade_transition()
-			game = Game(variables.screen_width, variables.screen_height, variables.fps, level=variables.saved_game_data["last_completed_level"])
+			game = Game(variables.screen_width, variables.screen_height, variables.fps, button="Tutorial")
 			game.start()
 			#self.reset_buttons()  # Reset the buttons in the level selection menu
 			return True
 		if self.level1_button.active and self.level1_button.handle_event(event, pos):
 			self.fade_transition()
 			# Replace the following line with the code to start level 1
-			game = Game(variables.screen_width, variables.screen_height, variables.fps, level=variables.saved_game_data["last_completed_level"])
+			game = Game(variables.screen_width, variables.screen_height, variables.fps, button="One")
 			game.start()
 			#self.reset_buttons()  # Reset the buttons in the level selection menu
 			return True
 		if self.level2_button.active and self.level2_button.handle_event(event, pos):
 			self.fade_transition()
 			# Replace the following line with the code to start level 2
-			game = Game(variables.screen_width, variables.screen_height, variables.fps, level=variables.saved_game_data["last_completed_level"])
+			game = Game(variables.screen_width, variables.screen_height, variables.fps, button="Two")
 			game.start()
 			#self.reset_buttons()  # Reset the buttons in the level selection menu
 			return True
