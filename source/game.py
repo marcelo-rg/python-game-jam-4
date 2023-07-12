@@ -204,6 +204,8 @@ class Level:
 			# Update both players
 			self.player_one.update("Player1")
 			self.player_two.update("Player2")
+
+
 			
 			# Check for collisions between players and spaceships, and handle interaction key presses
 			for player, playerID in [(self.player_one, "Player1"), (self.player_two, "Player2")]:
@@ -217,9 +219,15 @@ class Level:
 					else: # Player is not in a spaceship and wants to enter
 						for spaceship in [self.spaceship_one, self.spaceship_two]:
 							if pygame.sprite.collide_circle(player, spaceship):
-								if not spaceship.repair():
+								if spaceship.hp == variables.spaceship_one_hp["max"]:
 									player.enter_spaceship(spaceship, playerID)
-									break
+								else:
+									spaceship.repair()
+									if spaceship == self.spaceship_one:
+										variables.spaceship_one_hp["current"] = spaceship.hp
+									elif spaceship == self.spaceship_two:
+										variables.spaceship_two_hp["current"] = spaceship.hp
+								break
 			
 			# Check for upgrade key
 			if variables.initial_xp['current']>= variables.initial_xp['max']: # Assuming 'u' is the upgrade key
@@ -275,8 +283,10 @@ class Level:
 						self.player_two.leave_spaceship()
 					if spaceship == self.spaceship_one:
 						variables.spaceship_one_hp['current'] = 0
+						spaceship.hp = 0
 					elif spaceship == self.spaceship_two:
 						variables.spaceship_two_hp['current'] = 0
+						spaceship.hp = 0
 			
 			# Update UI
 			self.ui.update()

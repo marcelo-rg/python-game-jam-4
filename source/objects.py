@@ -182,6 +182,8 @@ class Spaceship(Sprite):
 		self.rot_speed = variables.spaceship_rotation_speed
 		self.repair_cooldown_frames = variables.spaceship_repair_cooldown  
 		self.repair_frame_counter = 0  # counter to track the number of frames since the repair process started
+		self.repairing = False  # flag to indicate if the spaceship is currently being repaired
+		self.hp = variables.spaceship_one_hp['max']
 
 
 		self.bullets = []  # List to store bullets
@@ -195,18 +197,10 @@ class Spaceship(Sprite):
 	def repair(self):
 		if self.repair_frame_counter < self.repair_cooldown_frames:
 			# Calculate the amount of HP to recover in this frame
-			hp_recovery_per_frame = variables.spaceship_one_hp['max'] / self.repair_cooldown_frames
-			# print(hp_recovery_per_frame) 
-			# exit()
-			if self.playerID == "Player1":
-				variables.spaceship_one_hp['current'] += hp_recovery_per_frame
-				# Make sure the HP doesn't exceed the maximum
-				variables.spaceship_one_hp['current'] = min(variables.spaceship_one_hp['current'], variables.spaceship_one_hp['max'])
-			elif self.playerID == "Player2":
-				variables.spaceship_two_hp['current'] += hp_recovery_per_frame
-				# Make sure the HP doesn't exceed the maximum
-				variables.spaceship_two_hp['current'] = min(variables.spaceship_two_hp['current'], variables.spaceship_two_hp['max'])
-
+			hp_recovery_per_frame = variables.spaceship_one_hp["max"] / self.repair_cooldown_frames
+			self.hp += hp_recovery_per_frame
+			# Make sure the HP doesn't exceed the maximum
+			self.hp = min(self.hp, variables.spaceship_one_hp["max"])
 			self.repair_frame_counter += 1
 		else:
 			return True  # Repair process is complete
