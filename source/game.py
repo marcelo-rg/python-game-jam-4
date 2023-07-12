@@ -492,10 +492,15 @@ class LevelTwo(Level):
 		# Add your rendering code here
 		self.asteroid.render(self.screen)
 		self.planet.render(self.screen)
-		self.player_one.render(self.screen)
-		self.player_two.render(self.screen)
 		self.spaceship_one.render(self.screen)
 		self.spaceship_two.render(self.screen)
+		
+		# Only render players when they are not inside a spaceship
+		if self.player_one.in_spaceship is None:
+			self.player_one.render(self.screen)
+		if self.player_two.in_spaceship is None:
+			self.player_two.render(self.screen)
+		
 		for meteor in self.meteors:
 			meteor.render(self.screen)
 
