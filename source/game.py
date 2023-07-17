@@ -204,6 +204,8 @@ class Level:
 			# Update both players
 			self.player_one.update("Player1")
 			self.player_two.update("Player2")
+
+
 			
 			# Check for collisions between players and spaceships, and handle interaction key presses
 			for player, playerID in [(self.player_one, "Player1"), (self.player_two, "Player2")]:
@@ -217,7 +219,14 @@ class Level:
 					else: # Player is not in a spaceship and wants to enter
 						for spaceship in [self.spaceship_one, self.spaceship_two]:
 							if pygame.sprite.collide_circle(player, spaceship):
-								player.enter_spaceship(spaceship, playerID)
+								if spaceship.hp == variables.spaceship_one_hp["max"]:
+									player.enter_spaceship(spaceship, playerID)
+								else:
+									spaceship.repair()
+									if spaceship == self.spaceship_one:
+										variables.spaceship_one_hp["current"] = spaceship.hp
+									elif spaceship == self.spaceship_two:
+										variables.spaceship_two_hp["current"] = spaceship.hp
 								break
 			
 			# Check for upgrade key
@@ -274,8 +283,10 @@ class Level:
 						self.player_two.leave_spaceship()
 					if spaceship == self.spaceship_one:
 						variables.spaceship_one_hp['current'] = 0
+						spaceship.hp = 0
 					elif spaceship == self.spaceship_two:
 						variables.spaceship_two_hp['current'] = 0
+						spaceship.hp = 0
 			
 			# Update UI
 			self.ui.update()
@@ -285,7 +296,13 @@ class Level:
 				self.victory()
 				self.saveLevelResult()
 				return
-				# self.asteroid.destroy() # Assuming you have a destroy method for asteroid
+				# self.asteroid.destroy() # Assuming there is a destroy method for asteroid
+
+			# Lose Condition
+			if variables.planet_hp['current'] <= 0:
+				self.game_over()
+				self.saveLevelResult()
+				return
 
 	def render(self):
 		# Blit the background image to the screen
@@ -348,6 +365,19 @@ class Level:
 		self.screen.fill(variables.BLACK)
 		new_font = pygame.font.Font(None, 80)
 		text = self.font.render("Victory!", True, variables.LIGHT_GREEN)
+		text_continue = new_font.render("Press any Key to Continue!", True, variables.WHITE)
+		text_rect = text.get_rect(center=(variables.screen_width/2, variables.screen_height/2))
+		text_continue_rect = text_continue.get_rect(center=(variables.screen_width/2, variables.screen_height/2 +80))
+		self.screen.blit(text, text_rect)
+		self.screen.blit(text_continue, text_continue_rect)
+		pygame.display.update()
+		self.wait_for_key()
+
+	def game_over(self):
+		self.fade_in()
+		self.screen.fill(variables.BLACK)
+		new_font = pygame.font.Font(None, 80)
+		text = self.font.render("Game Over!", True, variables.RED)
 		text_continue = new_font.render("Press any Key to Continue!", True, variables.WHITE)
 		text_rect = text.get_rect(center=(variables.screen_width/2, variables.screen_height/2))
 		text_continue_rect = text_continue.get_rect(center=(variables.screen_width/2, variables.screen_height/2 +80))

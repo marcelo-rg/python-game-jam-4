@@ -185,9 +185,11 @@ player_assets_size = {
 spiral_radius = 400
 spiral_speed = 0.005
 spiral_decay_rate = 0.005
+meteor_speed = 1.0
 spaceship_rotation_speed = 2.0
 bullet_speed = 6
 bullet_cooldown = 20
+spaceship_repair_cooldown = 100
 
 ####################
 
