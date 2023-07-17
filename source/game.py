@@ -298,6 +298,12 @@ class Level:
 				return
 				# self.asteroid.destroy() # Assuming there is a destroy method for asteroid
 
+			# Lose Condition
+			if variables.planet_hp['current'] <= 0:
+				self.game_over()
+				self.saveLevelResult()
+				return
+
 	def render(self):
 		# Blit the background image to the screen
 		self.screen.blit(self.background_image, (0, 0))
@@ -359,6 +365,19 @@ class Level:
 		self.screen.fill(variables.BLACK)
 		new_font = pygame.font.Font(None, 80)
 		text = self.font.render("Victory!", True, variables.LIGHT_GREEN)
+		text_continue = new_font.render("Press any Key to Continue!", True, variables.WHITE)
+		text_rect = text.get_rect(center=(variables.screen_width/2, variables.screen_height/2))
+		text_continue_rect = text_continue.get_rect(center=(variables.screen_width/2, variables.screen_height/2 +80))
+		self.screen.blit(text, text_rect)
+		self.screen.blit(text_continue, text_continue_rect)
+		pygame.display.update()
+		self.wait_for_key()
+
+	def game_over(self):
+		self.fade_in()
+		self.screen.fill(variables.BLACK)
+		new_font = pygame.font.Font(None, 80)
+		text = self.font.render("Game Over!", True, variables.RED)
 		text_continue = new_font.render("Press any Key to Continue!", True, variables.WHITE)
 		text_rect = text.get_rect(center=(variables.screen_width/2, variables.screen_height/2))
 		text_continue_rect = text_continue.get_rect(center=(variables.screen_width/2, variables.screen_height/2 +80))
