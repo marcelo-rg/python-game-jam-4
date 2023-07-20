@@ -323,21 +323,24 @@ class LevelSelectionMenu:
 		self.tutorial_button = Button(0, 0, 200, 50, 'TUTORIAL', sound_player, "play_button")
 		self.level1_button = Button(0, 0, 200, 50, 'LEVEL 1', sound_player, "option_button")
 		self.level2_button = Button(0, 0, 200, 50, 'LEVEL 2', sound_player, "quit_button")
-		self.back_button = Button(0, 0, 200, 50, 'BACK', sound_player, "play_button")
+		self.back_button = Button(0, 0, 200, 50, 'BACK', sound_player, "option_button")
 				
 		# Only the tutorial button is active by default
 		self.tutorial_button.active = True
 		self.tutorial_button.color = variables.LIGHT_GREEN
-		self.level1_button.active = True # Marcelo alterou para testar
+		self.level1_button.active = False
 		self.level2_button.active = False
 
 		if variables.saved_game_data["last_completed_level"] == "Tutorial":
 			self.level1_button.active = True
 			self.level1_button.color = variables.LIGHT_GREEN
 			self.level2_button.color = variables.BLACK
-			#self.tutorial_button.active = False
-			#self.tutorial_button.color = variables.BLACK
 		elif variables.saved_game_data["last_completed_level"] == "One":
+			self.level1_button.active = True
+			self.level2_button.active = True
+			self.level1_button.color = variables.LIGHT_GREEN
+			self.level2_button.color = variables.LIGHT_GREEN
+		elif variables.saved_game_data["last_completed_level"] == "Two":
 			self.level1_button.active = True
 			self.level2_button.active = True
 			self.level1_button.color = variables.LIGHT_GREEN
@@ -352,10 +355,10 @@ class LevelSelectionMenu:
 		self.tutorial_button.rect.centerx = self.screen_rect.centerx
 		self.tutorial_button.rect.centery = self.screen_rect.centery - 100
 
-		self.level1_button.rect.centerx = self.screen_rect.centerx - 200  # Increased from 100 to 200
+		self.level1_button.rect.centerx = self.screen_rect.centerx - 150
 		self.level1_button.rect.centery = self.screen_rect.centery - 25
 
-		self.level2_button.rect.centerx = self.screen_rect.centerx + 200  # Increased from 100 to 200
+		self.level2_button.rect.centerx = self.screen_rect.centerx + 150
 		self.level2_button.rect.centery = self.screen_rect.centery - 25
 
 		self.back_button.rect.centerx = self.screen_rect.centerx
