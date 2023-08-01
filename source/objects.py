@@ -182,7 +182,7 @@ class Spaceship(Sprite):
 		self.rot_speed = variables.spaceship_rotation_speed
 		self.repair_cooldown_frames = variables.spaceship_repair_cooldown  
 		self.repair_frame_counter = 0  # counter to track the number of frames since the repair process started
-		self.repairing = False  # flag to indicate if the spaceship is currently being repaired
+		# self.repairing = False  # flag to indicate if the spaceship is currently being repaired
 		self.hp = variables.spaceship_one_hp['max']
 
 
@@ -191,7 +191,7 @@ class Spaceship(Sprite):
 		self.shoot_delay = variables.bullet_cooldown  # Delay between shots
 		self.sound_manager = sound_manager
 
-	def start_repair(self):
+	def reset_repair_counter(self):
 		self.repair_frame_counter = 0  # reset the frame counter
 
 	def repair(self):

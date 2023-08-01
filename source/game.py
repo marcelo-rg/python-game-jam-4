@@ -82,7 +82,7 @@ class UI:
 
 
 
-class Level:
+class Level():
 	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps):
 		# Initialize Pygame
 		pygame.init()
@@ -221,8 +221,13 @@ class Level:
 							if pygame.sprite.collide_circle(player, spaceship):
 								if spaceship.hp == variables.spaceship_one_hp["max"]:
 									player.enter_spaceship(spaceship, playerID)
+									spaceship.reset_repair_counter()
+
 								else:
 									spaceship.repair()
+									print("spaceship hp: ", spaceship.hp)
+									# print("current hp one: ", variables.spaceship_one_hp["current"])
+									# print("current hp two: ", variables.spaceship_two_hp["current"])
 									if spaceship == self.spaceship_one:
 										variables.spaceship_one_hp["current"] = spaceship.hp
 									elif spaceship == self.spaceship_two:
