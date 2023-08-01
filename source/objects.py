@@ -182,7 +182,7 @@ class Spaceship(Sprite):
 		self.rot_speed = variables.spaceship_rotation_speed
 		self.repair_cooldown_frames = variables.spaceship_repair_cooldown  
 		self.repair_frame_counter = 0  # counter to track the number of frames since the repair process started
-		self.repairing = False  # flag to indicate if the spaceship is currently being repaired
+		# self.repairing = False  # flag to indicate if the spaceship is currently being repaired
 		self.hp = variables.spaceship_one_hp['max']
 
 
@@ -191,7 +191,7 @@ class Spaceship(Sprite):
 		self.shoot_delay = variables.bullet_cooldown  # Delay between shots
 		self.sound_manager = sound_manager
 
-	def start_repair(self):
+	def reset_repair_counter(self):
 		self.repair_frame_counter = 0  # reset the frame counter
 
 	def repair(self):
@@ -224,11 +224,11 @@ class Spaceship(Sprite):
 		# Load the original position from variables
 		# self.x = variables.spaceship_positions[self.level][self.spaceship_number-1][0]
 		# self.y = variables.spaceship_positions[self.level][self.spaceship_number-1][1]
+		self.angle = self.initial_angle
+		self.image = pygame.transform.rotate(self.original_sprite_scaled, self.initial_angle)
 		platet_center_x, platet_center_y = (self.screen_width//2, self.screen_height//2)
 		self.x = platet_center_x + (self.planet_radius +self.radius)* math.cos(self.initial_angle)
 		self.y = platet_center_y + (self.planet_radius +self.radius)* math.sin(self.initial_angle)
-		self.angle = self.initial_angle
-		self.image = pygame.transform.rotate(self.original_sprite_scaled, self.initial_angle)
 		# self.radius = max(self.rect.width // 2, self.rect.height // 2) # radius for collision detection
 
 		# Apply the position to the spaceship rect
