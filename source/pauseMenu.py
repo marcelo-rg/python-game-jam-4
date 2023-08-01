@@ -120,13 +120,16 @@ class PauseMenu:
 		pos = pygame.mouse.get_pos()
 		if self.resume_button.handle_event(event, pos):
 			# Resume game
-			pass
+			self.fade_out()  # Hide the pause menu
+			# Continue the game loop here
 		elif self.restart_button.handle_event(event, pos):
 			# Restart game
-			pass
+			self.fade_out()  # Hide the pause menu
+			# Reset the game state and start the game loop here
 		elif self.main_menu_button.handle_event(event, pos):
 			# Go to main menu
-			pass
+			self.fade_out()  # Hide the pause menu
+			# Load the main menu here
 		elif self.quit_button.handle_event(event, pos):
 			# Quit game
 			pygame.quit()

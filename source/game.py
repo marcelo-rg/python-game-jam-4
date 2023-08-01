@@ -179,22 +179,10 @@ class Level():
 		for event in pygame.event.get():
 			# if event.type == pygame.QUIT:
 			# if one presses q key, the game quits
-			if event.type == pygame.KEYDOWN and event.key == pygame.K_q:
-				self.running = False
-				pygame.quit()
-				sys.exit()
-			elif event.type == pygame.KEYDOWN:
-				if (event.key == variables.player_controls["Player1"]["Menu"]["Use"] or 
-					event.key ==  variables.player_controls["Player2"]["Menu"]["Use"]):
-					#print("Game is paused")
-					if not self.paused:
-						self.sound_player.unpauseBackgroundMusic()
-						self.pause_menu.fade_in()
-						self.pause()
-					elif self.paused:
-						self.sound_player.pauseBackgroundMusic()
-						self.pause_menu.fade_out()
-						self.pause()
+			#if event.type == pygame.KEYDOWN and event.key == pygame.K_q:
+			#	self.running = False
+			#	pygame.quit()
+			#	sys.exit()
 
 	def start(self):
 		self.running = True
@@ -359,14 +347,48 @@ class Level():
 		self.running = False
 		self.resetLevel()
 
+	#def game_loop(self):
+	#	while self.running:
+	#		self.handle_events()
+	#		if not self.paused:
+	#			self.update_game_logic()
+	#			self.render()
+	#		else:
+	#			self.pause_menu.draw_menu()
+	#		self.clock.tick(self.fps)
+
 	def game_loop(self):
 		while self.running:
-			self.handle_events()
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					self.running = False
+					pygame.quit()
+					sys.exit()
+					
+				if event.type == pygame.KEYDOWN:
+					if (event.key == variables.player_controls["Player1"]["Menu"]["Use"] or 
+						event.key ==  variables.player_controls["Player2"]["Menu"]["Use"]):
+						if not self.paused:
+							self.sound_player.unpauseBackgroundMusic()
+							self.pause_menu.fade_in()
+							self.pause()
+						elif self.paused:
+							self.sound_player.pauseBackgroundMusic()
+							self.pause_menu.fade_out()
+							self.pause()
+
+				if self.paused:
+					self.pause_menu.handle_event(event)
+				else:
+					self.handle_events()
+			
 			if not self.paused:
 				self.update_game_logic()
 				self.render()
 			else:
 				self.pause_menu.draw_menu()
+			
+			pygame.display.update()
 			self.clock.tick(self.fps)
 
 	def fade_in(self):
