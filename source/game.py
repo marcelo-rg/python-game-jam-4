@@ -225,9 +225,6 @@ class Level():
 
 								else:
 									spaceship.repair()
-									print("spaceship hp: ", spaceship.hp)
-									# print("current hp one: ", variables.spaceship_one_hp["current"])
-									# print("current hp two: ", variables.spaceship_two_hp["current"])
 									if spaceship == self.spaceship_one:
 										variables.spaceship_one_hp["current"] = spaceship.hp
 									elif spaceship == self.spaceship_two:
