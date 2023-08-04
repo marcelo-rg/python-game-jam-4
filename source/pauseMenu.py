@@ -101,7 +101,6 @@ class PauseMenu:
 
 		# Music
 		self.sound_player = SoundManager(variables.sounds)
-		self.sound_player.loadMenuBackgroundMusic(variables.pause_menu_music)
 
 		# Define the buttons as instance variables
 		self.resume_button = ButtonPM(self.width // 2 - button_width // 2, self.height * 1 // 5, button_width, button_height, "Resume", self.sound_player, "play_button")
@@ -118,18 +117,27 @@ class PauseMenu:
 
 	def handle_event(self, event):
 		pos = pygame.mouse.get_pos()
+
+		# Check if music is playing, if not, start it
+		if not pygame.mixer.music.get_busy():
+			self.sound_player.loadMenuBackgroundMusic(variables.pause_menu_music)
+			self.sound_player.playBackgroundMusic()
+
 		if self.resume_button.handle_event(event, pos):
 			# Resume game
+			self.sound_player.stopBackgroundMusic()  # Stop the pause menu music
 			self.fade_out()  # Hide the pause menu
 			return 1
 			# Continue the game loop here
 		elif self.restart_button.handle_event(event, pos):
 			# Restart game
+			self.sound_player.stopBackgroundMusic()  # Stop the pause menu music
 			self.fade_out()  # Hide the pause menu
 			return 2
 			# Reset the game state and start the game loop here
 		elif self.main_menu_button.handle_event(event, pos):
 			# Go to main menu
+			self.sound_player.stopBackgroundMusic()  # Stop the pause menu music
 			self.fade_out()  # Hide the pause menu
 			return 3
 			# Load the main menu here
@@ -140,7 +148,6 @@ class PauseMenu:
 		return 0  # No action was performed
 
 	def fade_in(self):
-		self.sound_player.playBackgroundMusic()
 		fade = pygame.Surface((self.width, self.height))
 		fade.fill((0, 0, 0))
 		for alpha in range(0, 128, 10):
@@ -150,7 +157,6 @@ class PauseMenu:
 			pygame.display.update()
 
 	def fade_out(self):
-		self.sound_player.stopBackgroundMusic()
 		fade = pygame.Surface((self.width, self.height))
 		fade.fill((0, 0, 0))
 		for alpha in range(120, -1, -10):

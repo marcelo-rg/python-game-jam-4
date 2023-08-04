@@ -194,6 +194,10 @@ class Level():
 	def restart(self):
 		self.running = False
 		self.paused = False
+		#Variables Reset
+		self.resetLevel()
+		#Init the Level
+		self.__init__(variables.screen_width, variables.screen_height, variables.fps, variables.current_level)
 		self.start()
 	
 	def update_game_logic(self):
@@ -345,16 +349,6 @@ class Level():
 		self.running = False
 		self.resetLevel()
 
-	#def game_loop(self):
-	#	while self.running:
-	#		self.handle_events()
-	#		if not self.paused:
-	#			self.update_game_logic()
-	#			self.render()
-	#		else:
-	#			self.pause_menu.draw_menu()
-	#		self.clock.tick(self.fps)
-
 	def game_loop(self):
 		while self.running:
 			for event in pygame.event.get():
@@ -367,26 +361,31 @@ class Level():
 					if (event.key == variables.player_controls["Player1"]["Menu"]["Use"] or 
 						event.key ==  variables.player_controls["Player2"]["Menu"]["Use"]):
 						if not self.paused:
-							self.sound_player.unpauseBackgroundMusic()
+							self.sound_player.pauseBackgroundMusic()  # Pause the current background music
+							#self.pause_menu.sound_player.playBackgroundMusic()  # Start the pause menu music
 							self.pause_menu.fade_in()
-							self.pause()
+							self.paused = True  # Update the pause state
 						elif self.paused:
-							self.sound_player.pauseBackgroundMusic()
+							#self.pause_menu.sound_player.stopBackgroundMusic()  # Stop the pause menu music
+							self.sound_player.unpauseBackgroundMusic()  # Resume the original background music
 							self.pause_menu.fade_out()
-							self.pause()
-
+							self.paused = False  # Update the pause state
+				
 				if self.paused:
 					pause_menu_action = self.pause_menu.handle_event(event)
 					if pause_menu_action == 1:
 						# Resume game
 						self.paused = False
+						self.sound_player.unpauseBackgroundMusic()  # Resume the original background music
 					elif pause_menu_action == 2:
 						# Restart game
 						#self.reset_game()  # Function to reset your game
 						self.paused = False
+						self.restart()  # Restart the level
 					elif pause_menu_action == 3:
 						# Go to main menu
-						#self.load_main_menu()  # Function to load the main menu
+						self.sound_player.stopBackgroundMusic()  # Stop the background music
+						#print("Going to main menu")
 						return
 					continue
 				else:
@@ -414,6 +413,7 @@ class Level():
 
 	def victory(self):
 		self.fade_in()
+		self.sound_player.stopBackgroundMusic()  # Stop the current background music
 		self.screen.fill(variables.BLACK)
 		new_font = pygame.font.Font(None, 80)
 		text = self.font.render("Victory!", True, variables.LIGHT_GREEN)
@@ -427,6 +427,7 @@ class Level():
 
 	def game_over(self):
 		self.fade_in()
+		self.sound_player.stopBackgroundMusic()  # Stop the current background music
 		self.screen.fill(variables.BLACK)
 		new_font = pygame.font.Font(None, 80)
 		text = self.font.render("Game Over!", True, variables.RED)
@@ -553,8 +554,10 @@ class Game:
 	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, button=None):
 		self.current_level = button
 		if self.current_level == "One":
+			variables.current_level = "One"
 			self.current_level = LevelOne(screen_width, screen_height, fps, button_level=self.current_level)  # Starts Level One
 		elif self.current_level == "Two":
+			variables.current_level = "Two"
 			self.current_level = LevelTwo(screen_width, screen_height, fps, button_level=self.current_level)  # Starts Level Two
 		else:
 			print("Invalid level name")

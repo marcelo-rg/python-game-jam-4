@@ -153,7 +153,12 @@ class MainMenu:
 		while True:
 			#pygame.time.delay(100)
 			pos = pygame.mouse.get_pos()
-			
+
+			# Check if music is playing, if not, start it
+			if not pygame.mixer.music.get_busy():
+				self.sound_player.loadMenuBackgroundMusic(variables.main_menu_music)
+				self.sound_player.playBackgroundMusic()
+
 			for event in pygame.event.get():
 				if event.type == QUIT:
 					return

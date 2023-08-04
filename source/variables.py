@@ -14,7 +14,7 @@ fps = 60
 options_menu_name = "Options Menu"
 level_selection_menu_name = "Select Level"
 level_selection_info = "Complete one Level to unlock the next"
-current_level = "One"
+current_level = "None"
 
 # Save Variables
 key_file = "player.key"
@@ -204,11 +204,11 @@ global_music_volume = 0.3
 global_sound_volume = 0.05
 italian_sound_volume = 0.5
 main_menu_music = "ThemeTRY1.mp3"
-pause_menu_music = "ThemeTRY2.mp3"
+#pause_menu_music = "ThemeTRY2.mp3"
+pause_menu_music = "Is_not_over.wav"
 background_music = {
-    0: "Trying_to_go_home.wav",
-	1: "Not_far_enough.wav",
-	2: "Is_not_over.wav"
+	1: "Trying_to_go_home.wav",
+	2: "Not_far_enough.wav"
 }
 
 sounds = {

@@ -32,6 +32,9 @@ class SoundManager:
 		self.music_volume = volume_slider * music_volume
 		pygame.mixer.music.set_volume(self.music_volume)
 
+	def isPlaying(self):
+		return pygame.mixer.music.get_busy()
+
 	def stopBackgroundMusic(self):
 		pygame.mixer.music.stop()
 
