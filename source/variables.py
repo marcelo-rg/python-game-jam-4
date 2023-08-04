@@ -33,57 +33,26 @@ spaceship_speed = 3
 
 game_data = {
     "One": {
-        "spaceship_one_hp": {
-            "current": 100,
-            "max": 100,
-        },
-        "spaceship_two_hp": {
-            "current": 100,
-            "max": 100,
-        },
-        "planet_hp": {
-            "current": 500,
-            "max": 500,
-            "damage_per_hit": 30
-        },
-        "initial_xp": {
-            "current": 0,
-            "max": 1000,
-            "xp_per_hit": 100
-        },
-        "asteroid_hp": {
-            "current": 100,
-            "max": 100,
-            "damage_per_hit": 10
-        }
+        "spaceship_one_hp": {"current": 100, "max": 100},
+        "spaceship_two_hp": {"current": 100, "max": 100},
+        "planet_hp": {"current": 500, "max": 500, "damage_per_hit": 30},
+        "initial_xp": {"current": 0, "max": 1000, "xp_per_hit": 100},
+        "asteroid_hp": {"current": 100, "max": 100, "damage_per_hit": 10},
+        "num_meteors": 3,
+        "meteor_speed": 1.0,
+        "spaceship_repair_cooldown": 100,
     },
     "Two": {
-        "spaceship_one_hp": {
-            "current": 100,
-            "max": 100,
-        },
-        "spaceship_two_hp": {
-            "current": 100,
-            "max": 100,
-        },
-        "planet_hp": {
-            "current": 500,
-            "max": 500,
-            "damage_per_hit": 30
-        },
-        "initial_xp": {
-            "current": 0,
-            "max": 1000,
-            "xp_per_hit": 100
-        },
-        "asteroid_hp": {
-            "current": 100,
-            "max": 100,
-            "damage_per_hit": 10
-        }
+        "spaceship_one_hp": {"current": 100, "max": 100},
+        "spaceship_two_hp": {"current": 100, "max": 100},
+        "planet_hp": {"current": 500, "max": 500, "damage_per_hit": 30},
+        "initial_xp": {"current": 0, "max": 1000, "xp_per_hit": 100},
+        "asteroid_hp": {"current": 100, "max": 100, "damage_per_hit": 10},
+        "num_meteors": 4,  # Increased difficulty for level two
+        "meteor_speed": 1.5,  # Increased difficulty for level two
+        "spaceship_repair_cooldown": 150,  # Increased difficulty for level two
     }
 }
-
 
 
 # Player Bindings
@@ -220,10 +189,10 @@ bullet_speed = 6
 bullet_cooldown = 20
 spiral_decay_rate = 0.005
 
-# Level difficulty variables
-num_meteors = 3
-meteor_speed = 1.0
-spaceship_repair_cooldown = 100
+# Level difficulty variables -> transfered to game_data
+# num_meteors = 3
+# meteor_speed = 1.0
+# spaceship_repair_cooldown = 100
 
 ####################
 

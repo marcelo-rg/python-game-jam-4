@@ -126,7 +126,7 @@ class Meteor(Sprite):
 		self.calculate_direction()
 
 
-	def update(self, speed = variables.meteor_speed):
+	def update(self, speed = variables.game_data[variables.current_level]["meteor_speed"]):
 		# Update the rotation angle
 		self.rotation_angle += 0.5  # Adjust the rotation speed as needed
 
@@ -180,7 +180,7 @@ class Spaceship(Sprite):
 		self.speed = speed
 		self.angle = self.initial_angle
 		self.rot_speed = variables.spaceship_rotation_speed
-		self.repair_cooldown_frames = variables.spaceship_repair_cooldown  
+		self.repair_cooldown_frames = variables.game_data[variables.current_level]["spaceship_repair_cooldown"]  
 		self.repair_frame_counter = 0  # counter to track the number of frames since the repair process started
 		# self.repairing = False  # flag to indicate if the spaceship is currently being repaired
 		self.hp = variables.game_data[variables.current_level]["spaceship_one_hp"]["max"]

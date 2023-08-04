@@ -127,7 +127,7 @@ class Level():
 
 		meteors_sprite_list = [pygame.image.load(
 			os.path.join(variables.meteor_big_asset + str(random.randint(1, 3)) + variables.png_extension)
-		) for _ in range(variables.num_meteors)]  # Assuming 'meteor_big_asset' is the path to the meteor sprite
+		) for _ in range(variables.game_data[variables.current_level]["num_meteors"])]  # Assuming 'meteor_big_asset' is the path to the meteor sprite
 		self.meteors = [Meteor(meteors_sprite_list[iterable], screen_width, screen_height, self.planet.rect.centerx, self.planet.rect.centery) \
 		  		for iterable in range(len(meteors_sprite_list))]		
 
