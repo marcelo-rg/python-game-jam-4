@@ -14,6 +14,7 @@ fps = 60
 options_menu_name = "Options Menu"
 level_selection_menu_name = "Select Level"
 level_selection_info = "Complete one Level to unlock the next"
+current_level = "One"
 
 # Save Variables
 key_file = "player.key"
@@ -30,30 +31,29 @@ saved_game_data = {
 player_speed = 1
 spaceship_speed = 3
 
-spaceship_one_hp = {
-	"current": 100,
-	"max": 100,
-}
-spaceship_two_hp = {
-	"current": 100,
-	"max": 100
-}
-planet_hp = {
-	"current": 500,
-	"max": 500,
-    "damage_per_hit": 30
-}
-initial_xp = {
-	"current": 0,
-	"max": 1000,
-    "xp_per_hit": 100
+game_data = {
+    "One": {
+        "spaceship_one_hp": {"current": 100, "max": 100},
+        "spaceship_two_hp": {"current": 100, "max": 100},
+        "planet_hp": {"current": 500, "max": 500, "damage_per_hit": 30},
+        "initial_xp": {"current": 0, "max": 1000, "xp_per_hit": 100},
+        "asteroid_hp": {"current": 100, "max": 100, "damage_per_hit": 10},
+        "num_meteors": 3,
+        "meteor_speed": 1.0,
+        "spaceship_repair_cooldown": 100,
+    },
+    "Two": {
+        "spaceship_one_hp": {"current": 100, "max": 100},
+        "spaceship_two_hp": {"current": 100, "max": 100},
+        "planet_hp": {"current": 500, "max": 500, "damage_per_hit": 30},
+        "initial_xp": {"current": 0, "max": 1000, "xp_per_hit": 100},
+        "asteroid_hp": {"current": 100, "max": 100, "damage_per_hit": 10},
+        "num_meteors": 4,  # Increased difficulty for level two
+        "meteor_speed": 1.5,  # Increased difficulty for level two
+        "spaceship_repair_cooldown": 150,  # Increased difficulty for level two
+    }
 }
 
-asteroid_hp = {
-	"current": 100,
-	"max": 100,
-    "damage_per_hit": 10
-}
 
 # Player Bindings
 player_controls = { 
@@ -184,12 +184,15 @@ player_assets_size = {
 # Game Object Variables
 spiral_radius = 400
 spiral_speed = 0.005
-spiral_decay_rate = 0.005
-meteor_speed = 1.0
 spaceship_rotation_speed = 2.0
 bullet_speed = 6
 bullet_cooldown = 20
-spaceship_repair_cooldown = 100
+spiral_decay_rate = 0.005
+
+# Level difficulty variables -> transfered to game_data
+# num_meteors = 3
+# meteor_speed = 1.0
+# spaceship_repair_cooldown = 100
 
 ####################
 
