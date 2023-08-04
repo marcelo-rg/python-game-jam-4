@@ -197,10 +197,10 @@ class Spaceship(Sprite):
 	def repair(self):
 		if self.repair_frame_counter < self.repair_cooldown_frames:
 			# Calculate the amount of HP to recover in this frame
-			hp_recovery_per_frame = variables.game_data["spaceship_one_hp"]["max"] / self.repair_cooldown_frames
+			hp_recovery_per_frame = variables.game_data[variables.current_level]["spaceship_one_hp"]["max"] / self.repair_cooldown_frames
 			self.hp += hp_recovery_per_frame
 			# Make sure the HP doesn't exceed the maximum
-			self.hp = min(self.hp, variables.game_data["spaceship_one_hp"]["max"])
+			self.hp = min(self.hp, variables.game_data[variables.current_level]["spaceship_one_hp"]["max"])
 			self.repair_frame_counter += 1
 		else:
 			return True  # Repair process is complete
