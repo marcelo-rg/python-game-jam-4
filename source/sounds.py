@@ -33,7 +33,10 @@ class SoundManager:
 		pygame.mixer.music.set_volume(self.music_volume)
 
 	def stopBackgroundMusic(self):
-		pygame.mixer.music.stop()
+		pygame.mixer.music.stop()  # Stop the current music
+
+	def isMusicPlaying(self):
+		return self.is_playing  # Return the current playing state
 
 	def pauseBackgroundMusic(self):
 		pygame.mixer.music.pause()

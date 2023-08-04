@@ -13,17 +13,17 @@ import time
 from saveGame import SaveGame  # Import the SaveGame class
 
 class Slider:
-	def __init__(self, x, y, w, h, text='', value=0, color = variables.LIGHT_GREEN):
+	def __init__(self, x, y, w, h, text='', value=0, color=variables.LIGHT_GREEN, apply_gradient=False):
 		self.rect = pygame.Rect(x, y, w, h)
 		self.color = variables.DARK_GREEN  # New color for the bar
 		self.txt_color = variables.WHITE
-		self.fill_color = color  # New fill color
-		#self.fill_color = variables.ANOTHER_GREEN  # New fill color
 		self.border_color = variables.BLACK  # New border color
 		self.text = text
 		self.value = value["current"]/value["max"]  # New value
 		self.value_current = value["current"]  # New value
 		self.border_width = 2  # New border width
+		self.fill_color = color
+		self.apply_gradient = apply_gradient
 
 	def draw(self, screen):
 		# Draw the border
@@ -33,6 +33,15 @@ class Slider:
 		fill_rect = pygame.Rect(self.rect.x + self.border_width, self.rect.y + self.border_width,
 								(self.rect.w - 2 * self.border_width) * self.value,
 								self.rect.h - 2 * self.border_width)
+
+		if self.apply_gradient:
+			if self.value <= 0.33:
+				self.fill_color = variables.RED
+			elif self.value <= 0.67:
+				self.fill_color = variables.YELLOW
+			else:
+				self.fill_color = variables.LIGHT_GREEN
+
 		pygame.draw.rect(screen, self.fill_color, fill_rect)
 
 		# Draw the text
@@ -43,7 +52,6 @@ class Slider:
 			self.rect.x + (self.rect.w / 2 - text.get_width() / 2),
 			self.rect.y + (self.rect.h / 2 - text.get_height() / 2)
 		))
-
 
 class UI:
 	def __init__(self, screen):
@@ -80,13 +88,11 @@ class UI:
 		self.slider_asteroid.value = min(variables.game_data[variables.current_level]["asteroid_hp"]["current"], variables.game_data[variables.current_level]["asteroid_hp"]["max"])/variables.game_data[variables.current_level]["asteroid_hp"]["max"]
 		self.slider_asteroid.value_current = min(variables.game_data[variables.current_level]["asteroid_hp"]["current"], variables.game_data[variables.current_level]["asteroid_hp"]["max"])
 
-
-
-
 class Level():
-	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps):
+	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, button_level=None):
 		# Initialize Pygame
 		pygame.init()
+		self.button_level = button_level
 
 		# Common screen dimensions setup
 		if screen_width is None or screen_height is None:
@@ -123,7 +129,6 @@ class Level():
 
 		planet_sprite = pygame.image.load(os.path.join(cwd, variables.planet_asset))
 		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
-
 
 		meteors_sprite_list = [pygame.image.load(
 			os.path.join(variables.meteor_big_asset + str(random.randint(1, 3)) + variables.png_extension)
@@ -165,28 +170,15 @@ class Level():
 		variables.game_data[current_level]["initial_xp"]["current"] = 0
 		variables.game_data[current_level]["asteroid_hp"]["current"] = variables.game_data[current_level]["asteroid_hp"]["max"]
 
-
-
 	def handle_events(self):
-		for event in pygame.event.get():
+		pass
+		#for event in pygame.event.get():
 			# if event.type == pygame.QUIT:
 			# if one presses q key, the game quits
-			if event.type == pygame.KEYDOWN and event.key == pygame.K_q:
-				self.running = False
-				pygame.quit()
-				sys.exit()
-			elif event.type == pygame.KEYDOWN:
-				if (event.key == variables.player_controls["Player1"]["Menu"]["Use"] or 
-					event.key ==  variables.player_controls["Player2"]["Menu"]["Use"]):
-					#print("Game is paused")
-					if not self.paused:
-						self.sound_player.unpauseBackgroundMusic()
-						self.pause_menu.fade_in()
-						self.pause()
-					elif self.paused:
-						self.sound_player.pauseBackgroundMusic()
-						self.pause_menu.fade_out()
-						self.pause()
+			#if event.type == pygame.KEYDOWN and event.key == pygame.K_q:
+			#	self.running = False
+			#	pygame.quit()
+			#	sys.exit()
 
 	def start(self):
 		self.running = True
@@ -197,6 +189,10 @@ class Level():
 	def restart(self):
 		self.running = False
 		self.paused = False
+		#Variables Reset
+		self.resetLevel()
+		#Init the Level
+		self.__init__(variables.screen_width, variables.screen_height, variables.fps, variables.current_level)
 		self.start()
 	
 	def update_game_logic(self):
@@ -222,10 +218,12 @@ class Level():
 				keys = pygame.key.get_pressed()
 				if keys[variables.player_controls[playerID]["Interact"]["Use"]]:
 					if player.in_spaceship is not None: # Player is in a spaceship and wants to leave
+						aux_iterator = 0
 						if not any(pygame.sprite.collide_circle(player, spaceship) for spaceship in [self.spaceship_one, self.spaceship_two]):
 							# Only allow the player to leave the spaceship if they're not currently colliding with another one
-							player.leave_spaceship() 
+							player.leave_spaceship(aux_iterator)
 							player.respawn()
+							aux_iterator = aux_iterator + 1
 					else: # Player is not in a spaceship and wants to enter
 						for spaceship in [self.spaceship_one, self.spaceship_two]:
 							if pygame.sprite.collide_circle(player, spaceship):
@@ -249,7 +247,7 @@ class Level():
 					# 	bullet.upgrade('path_to_new_bullet_sprite')  # Use the correct path to the new bullet sprite
 
 			for meteor in self.meteors:
-				meteor.update()
+				meteor.update(speed=variables.game_data[variables.current_level]["meteor_speed"])
 				# Check for collisions with the planet
 				if pygame.sprite.collide_circle(meteor, self.planet):
 					self.sound_player.playSoundEffect("meteor_impact_" + str(random.randint(1, 5)))
@@ -285,20 +283,22 @@ class Level():
 
 			# Update both spaceships and check for collisions with the asteroid
 			for spaceship in [self.spaceship_one, self.spaceship_two]:
+				aux_iterator = 0
 				spaceship.update()
 				if pygame.sprite.collide_circle(spaceship, self.asteroid):
-					spaceship.reposition()
+					spaceship.reposition(aux_iterator)
 					if(spaceship.playerID) == "Player1":
-						self.player_one.leave_spaceship()
+						self.player_one.leave_spaceship(0)
 					elif(spaceship.playerID) == "Player2":
-						self.player_two.leave_spaceship()
+						self.player_two.leave_spaceship(1)
 					if spaceship == self.spaceship_one:
 						variables.game_data[current_level]["spaceship_one_hp"]['current'] = 0
 						spaceship.hp = 0
 					elif spaceship == self.spaceship_two:
 						variables.game_data[current_level]["spaceship_two_hp"]['current'] = 0
 						spaceship.hp = 0
-
+				aux_iterator = aux_iterator + 1
+			
 			# Update UI
 			self.ui.update()
 
@@ -323,28 +323,91 @@ class Level():
 		self.ui.draw()
 
 	def saveLevelResult(self):
-		saveObject = SaveGame()
-		if variables.saved_game_data["last_completed_level"] == "None":
-			variables.saved_game_data["last_completed_level"] = "Tutorial"
-		elif variables.saved_game_data["last_completed_level"] == "Tutorial":
+		saveObject = SaveGame()			
+		if variables.saved_game_data["last_completed_level"] == "None" \
+			and self.button_level == "One":
 			variables.saved_game_data["last_completed_level"] = "One"
-		elif variables.saved_game_data["last_completed_level"] == "One":
+			saveObject.save(variables.saved_game_data, variables.player_file)
+			print("Game Saved! Level 2 unlocked!")
+
+		elif variables.saved_game_data["last_completed_level"] == "One" \
+			and self.button_level == "Two":
 			variables.saved_game_data["last_completed_level"] = "Two"
+			saveObject.save(variables.saved_game_data, variables.player_file)
+			print("Game Saved! You completed the game! Thanks for playing!")
+
+		elif variables.saved_game_data["last_completed_level"] == "Two":
+			pass
 		else:
-			print("ERROR while saving the game in saveLevelResult!")
-		saveObject.save(variables.saved_game_data, variables.player_file)
-		#saveObject.load(variables.player_file)
+			print("Game Saved! No new level was unlocked!")
+		
 		self.running = False
 		self.resetLevel()
 
 	def game_loop(self):
 		while self.running:
-			self.handle_events()
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					self.running = False
+					pygame.quit()
+					sys.exit()
+					
+				if event.type == pygame.KEYDOWN:
+					if (event.key == variables.player_controls["Player1"]["Menu"]["Use"] or 
+						event.key ==  variables.player_controls["Player2"]["Menu"]["Use"]):
+						if not self.paused:
+							#self.sound_player.pauseBackgroundMusic()  # Pause the current background music
+							self.sound_player.stopBackgroundMusic()  # Stop the current background music
+							self.pause_menu.sound_player.loadMenuBackgroundMusic(variables.pause_menu_music)
+							self.pause_menu.sound_player.playBackgroundMusic()  # Start the pause menu music
+							self.pause_menu.fade_in()
+							self.paused = True  # Update the pause state
+						elif self.paused:
+							self.pause_menu.sound_player.stopBackgroundMusic()  # Stop the pause menu music
+							if variables.current_level == "One":
+								self.sound_player.loadBackgroundMusic(1, variables.background_music)
+							elif variables.current_level == "Two":
+								self.sound_player.loadBackgroundMusic(2, variables.background_music)
+							else:
+								print("Error: There was a problem loading the background music for the current level")
+							#self.sound_player.unpauseBackgroundMusic()  # Resume the original background music
+							self.sound_player.playBackgroundMusic()  # Start the pause menu music
+							self.pause_menu.fade_out()
+							self.paused = False  # Update the pause state
+				
+				if self.paused:
+					pause_menu_action = self.pause_menu.handle_event(event)
+					if pause_menu_action in [1, 2, 3]:  # If any action is performed, stop the pause menu music
+						self.pause_menu.sound_player.stopBackgroundMusic()
+					if pause_menu_action == 1:
+						# Resume game
+						self.paused = False
+						if variables.current_level == "One":
+							self.sound_player.loadBackgroundMusic(1, variables.background_music)
+						elif variables.current_level == "Two":
+							self.sound_player.loadBackgroundMusic(2, variables.background_music)
+						else:
+							print("Error: There was a problem loading the background music for the current level")
+						#self.sound_player.unpauseBackgroundMusic()  # Resume the original background music
+						self.sound_player.playBackgroundMusic()  # Start the pause menu music
+					elif pause_menu_action == 2:
+						# Restart game
+						self.paused = False
+						self.restart()  # Restart the level
+					elif pause_menu_action == 3:
+						# Go to main menu
+						return
+					continue
+				else:
+					self.handle_events()
+			
 			if not self.paused:
 				self.update_game_logic()
 				self.render()
 			else:
 				self.pause_menu.draw_menu()
+			
+			pygame.display.update()
 			self.clock.tick(self.fps)
 
 	def fade_in(self):
@@ -358,21 +421,9 @@ class Level():
 			pygame.display.update()  # Update the display
 			pygame.time.delay(1)  # Pause for 1 millisecond to control the speed of the fade
 
-	def game_over(self):
-		self.fade_in()
-		self.screen.fill(variables.BLACK)
-		new_font = pygame.font.Font(None, 80)
-		text = self.font.render("Game Over", True, variables.RED)
-		text_continue = new_font.render("Press any Key to Continue!", True, variables.WHITE)
-		text_rect = text.get_rect(center=(variables.screen_width/2, variables.screen_height/2))
-		text_continue_rect = text_continue.get_rect(center=(variables.screen_width/2 +20, variables.screen_height/2 +20))
-		self.screen.blit(text, text_rect)
-		self.screen.blit(text_continue, text_continue_rect)
-		pygame.display.update()
-		self.wait_for_key()
-
 	def victory(self):
 		self.fade_in()
+		self.sound_player.stopBackgroundMusic()  # Stop the current background music
 		self.screen.fill(variables.BLACK)
 		new_font = pygame.font.Font(None, 80)
 		text = self.font.render("Victory!", True, variables.LIGHT_GREEN)
@@ -386,6 +437,7 @@ class Level():
 
 	def game_over(self):
 		self.fade_in()
+		self.sound_player.stopBackgroundMusic()  # Stop the current background music
 		self.screen.fill(variables.BLACK)
 		new_font = pygame.font.Font(None, 80)
 		text = self.font.render("Game Over!", True, variables.RED)
@@ -408,52 +460,11 @@ class Level():
 					time.sleep(1)  # add delay
 					return
 
-class TutorialLevel(Level):
-	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps):
-		super().__init__(screen_width, screen_height, fps)
-
-		ast_sprite = pygame.image.load(os.path.join(cwd, variables.asteroid_asset))
-		self.asteroid = Asteroid(ast_sprite, screen_width // 2, screen_height // 2)
-
-		planet_sprite = pygame.image.load(os.path.join(cwd, variables.planet_asset))
-		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
-
-		# Other Tutorial Level specific initialization...
-		self.music_player = SoundManager(variables.sounds)
-		self.music_player.loadBackgroundMusic(0,variables.background_music)
-
-	def start(self):
-		super().start()
-		print("Tutorial Level Initialized")
-		self.music_player.playBackgroundMusic()
-		self.game_loop()
-
-	def handle_events(self):
-		super().handle_events()
-		# Tutorial Level specific event handling...
-
-	def update_game_logic(self):
-		super().update_game_logic()
-
-	def render(self):
-		# super().render()
-
-		# Add your rendering code here
-		self.asteroid.render(self.screen)
-		self.planet.render(self.screen)
-		self.player_one.render(self.screen)
-		self.player_two.render(self.screen)
-		self.spaceship_one.render(self.screen)
-		self.spaceship_two.render(self.screen)
-		for meteor in self.meteors:
-			meteor.render(self.screen)
-
-		# Update the screen
-		pygame.display.flip()
-
 class LevelOne(Level):
-	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps):
+	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, button_level=None):
 		super().__init__(screen_width, screen_height, fps)
+
+		self.button_level = button_level
 
 		ast_sprite = pygame.image.load(os.path.join(cwd, variables.asteroid_asset))
 		self.asteroid = Asteroid(ast_sprite, screen_width // 2, screen_height // 2)
@@ -499,10 +510,11 @@ class LevelOne(Level):
 		# Update the screen
 		pygame.display.flip()
 
-
 class LevelTwo(Level):
-	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps):
+	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, button_level=None):
 		super().__init__(screen_width, screen_height, fps)
+
+		self.button_level = button_level
 
 		ast_sprite = pygame.image.load(os.path.join(cwd, variables.asteroid_asset))
 		self.asteroid = Asteroid(ast_sprite, screen_width // 2, screen_height // 2)
@@ -549,18 +561,18 @@ class LevelTwo(Level):
 		pygame.display.flip()
 
 class Game:
-    def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, button=None):
-        self.current_level = button
-        if self.current_level == "One":
-            variables.current_level = "One"
-            self.current_level = LevelOne(screen_width, screen_height, fps)  # Starts Level One
-        elif self.current_level == "Two":
-            variables.current_level = "Two"
-            self.current_level = LevelTwo(screen_width, screen_height, fps)  # Starts Level Two
-        else:
-            print("Invalid level name")
-            pygame.quit()
-            sys.exit()
+	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, button=None):
+		self.current_level = button
+		if self.current_level == "One":
+			variables.current_level = "One"
+			self.current_level = LevelOne(screen_width, screen_height, fps, button_level=self.current_level)  # Starts Level One
+		elif self.current_level == "Two":
+			variables.current_level = "Two"
+			self.current_level = LevelTwo(screen_width, screen_height, fps, button_level=self.current_level)  # Starts Level Two
+		else:
+			print("Invalid level name")
+			pygame.quit()
+			sys.exit()
 
-    def start(self):
-        self.current_level.start()
+	def start(self):
+		self.current_level.start()

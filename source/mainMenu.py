@@ -153,7 +153,12 @@ class MainMenu:
 		while True:
 			#pygame.time.delay(100)
 			pos = pygame.mouse.get_pos()
-			
+
+			# Check if music is playing, if not, start it
+			if not pygame.mixer.music.get_busy():
+				self.sound_player.loadMenuBackgroundMusic(variables.main_menu_music)
+				self.sound_player.playBackgroundMusic()
+
 			for event in pygame.event.get():
 				if event.type == QUIT:
 					return
@@ -323,21 +328,19 @@ class LevelSelectionMenu:
 		self.tutorial_button = Button(0, 0, 200, 50, 'TUTORIAL', sound_player, "play_button")
 		self.level1_button = Button(0, 0, 200, 50, 'LEVEL 1', sound_player, "option_button")
 		self.level2_button = Button(0, 0, 200, 50, 'LEVEL 2', sound_player, "quit_button")
-		self.back_button = Button(0, 0, 200, 50, 'BACK', sound_player, "play_button")
+		self.back_button = Button(0, 0, 200, 50, 'BACK', sound_player, "option_button")
 				
 		# Only the tutorial button is active by default
 		self.tutorial_button.active = True
-		self.tutorial_button.color = variables.LIGHT_GREEN
-		self.level1_button.active = True # Marcelo alterou para testar
+		self.tutorial_button.color = variables.AQUAMARINE
+		self.level1_button.active = False
 		self.level2_button.active = False
 
-		if variables.saved_game_data["last_completed_level"] == "Tutorial":
+		if variables.saved_game_data["last_completed_level"] == "None":
 			self.level1_button.active = True
 			self.level1_button.color = variables.LIGHT_GREEN
 			self.level2_button.color = variables.BLACK
-			#self.tutorial_button.active = False
-			#self.tutorial_button.color = variables.BLACK
-		elif variables.saved_game_data["last_completed_level"] == "One":
+		elif variables.saved_game_data["last_completed_level"] == "One" or variables.saved_game_data["last_completed_level"] == "Two":
 			self.level1_button.active = True
 			self.level2_button.active = True
 			self.level1_button.color = variables.LIGHT_GREEN
@@ -352,10 +355,10 @@ class LevelSelectionMenu:
 		self.tutorial_button.rect.centerx = self.screen_rect.centerx
 		self.tutorial_button.rect.centery = self.screen_rect.centery - 100
 
-		self.level1_button.rect.centerx = self.screen_rect.centerx - 200  # Increased from 100 to 200
+		self.level1_button.rect.centerx = self.screen_rect.centerx - 150
 		self.level1_button.rect.centery = self.screen_rect.centery - 25
 
-		self.level2_button.rect.centerx = self.screen_rect.centerx + 200  # Increased from 100 to 200
+		self.level2_button.rect.centerx = self.screen_rect.centerx + 150
 		self.level2_button.rect.centery = self.screen_rect.centery - 25
 
 		self.back_button.rect.centerx = self.screen_rect.centerx
@@ -372,8 +375,9 @@ class LevelSelectionMenu:
 		# Handle button clicks
 		if self.tutorial_button.active and self.tutorial_button.handle_event(event, pos):
 			self.fade_transition()
-			game = Game(variables.screen_width, variables.screen_height, variables.fps, button="Tutorial")
-			game.start()
+			#game = Game(variables.screen_width, variables.screen_height, variables.fps, button="Tutorial")
+			#game.start()
+			print("Tutorial")
 			#self.reset_buttons()  # Reset the buttons in the level selection menu
 			return True
 		if self.level1_button.active and self.level1_button.handle_event(event, pos):

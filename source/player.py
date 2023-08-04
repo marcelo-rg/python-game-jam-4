@@ -49,11 +49,11 @@ class Player(Sprite):
 		spaceship.controlled = True
 		spaceship.playerID = playerID
 
-	def leave_spaceship(self):
+	def leave_spaceship(self, spaceship):
 		if self.in_spaceship is not None:
 			self.in_spaceship.controlled = False
 			self.in_spaceship.playerID = None
-			self.in_spaceship.reposition()  # Make the spaceship respawn
+			self.in_spaceship.reposition(spaceship)  # Make the spaceship respawn
 			self.respawn()  # Make the player respawn
 			self.in_spaceship = None
 		

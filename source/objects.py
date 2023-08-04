@@ -84,7 +84,6 @@ class Meteor(Sprite):
 		self.planet_y = planet_y
 		self.radius = max(self.rect.width // 2, self.rect.height // 2) # radius for collision detection
 
-
 		# Randomly determine the spawn position outside the screen
 		self.respawn()
 
@@ -128,7 +127,7 @@ class Meteor(Sprite):
 		self.calculate_direction()
 
 
-	def update(self, speed = variables.game_data[variables.current_level]["meteor_speed"]):
+	def update(self, speed):
 		# Update the rotation angle
 		self.rotation_angle += 0.5  # Adjust the rotation speed as needed
 
@@ -177,7 +176,7 @@ class Spaceship(Sprite):
 		# self.x = variables.spaceship_positions[level][spaceship_number-1][0]
 		# self.y = variables.spaceship_positions[level][spaceship_number-1][1]
 		self.initial_angle = variables.spaceship_position_angles[level][spaceship_number-1]
-		self.reposition()
+		self.reposition(spaceship_number)
 		self.rect.center = (self.x, self.y)
 		self.speed = speed
 		self.angle = self.initial_angle
@@ -186,7 +185,6 @@ class Spaceship(Sprite):
 		self.repair_frame_counter = 0  # counter to track the number of frames since the repair process started
 		# self.repairing = False  # flag to indicate if the spaceship is currently being repaired
 		self.hp = variables.game_data[variables.current_level]["spaceship_one_hp"]["max"]
-
 
 		self.bullets = []  # List to store bullets
 		self.shoot_cooldown = 0  # Cool down timer for shooting
@@ -221,16 +219,25 @@ class Spaceship(Sprite):
 		# Change other properties as desired...
 
 
-	def reposition(self):
+	def reposition(self, spaceship_number):
 		"""Reposition the spaceship to its original location in case of collision."""
 		# Load the original position from variables
 		# self.x = variables.spaceship_positions[self.level][self.spaceship_number-1][0]
 		# self.y = variables.spaceship_positions[self.level][self.spaceship_number-1][1]
-		self.angle = self.initial_angle
-		self.image = pygame.transform.rotate(self.original_sprite_scaled, self.initial_angle)
-		platet_center_x, platet_center_y = (self.screen_width//2, self.screen_height//2)
-		self.x = platet_center_x + (self.planet_radius +self.radius)* math.cos(self.initial_angle)
-		self.y = platet_center_y + (self.planet_radius +self.radius)* math.sin(self.initial_angle)
+		planet_center_x, planet_center_y = (self.screen_width//2, self.screen_height//2)
+
+		if (spaceship_number == 1):
+			self.x = planet_center_x + (self.planet_radius + self.radius) * math.cos(self.initial_angle)
+			self.y = planet_center_y + (self.planet_radius + self.radius) * math.sin(self.initial_angle)
+			self.angle = self.initial_angle + 180
+			self.image = pygame.transform.rotate(self.original_sprite_scaled, self.angle)
+		else:
+			# Change these lines to reflect the different initial position and angle for spaceship 2
+			self.x = planet_center_x + (self.planet_radius + self.radius) * math.cos(self.initial_angle)
+			self.y = planet_center_y + (self.planet_radius + self.radius) * math.sin(self.initial_angle)
+			self.angle = self.initial_angle
+			self.image = pygame.transform.rotate(self.original_sprite_scaled, self.initial_angle)
+
 		# self.radius = max(self.rect.width // 2, self.rect.height // 2) # radius for collision detection
 
 		# Apply the position to the spaceship rect

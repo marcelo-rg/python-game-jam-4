@@ -1,4 +1,3 @@
-from game import Game
 import variables
 import pygame
 import sys
