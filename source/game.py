@@ -88,9 +88,6 @@ class UI:
 		self.slider_asteroid.value = min(variables.game_data[variables.current_level]["asteroid_hp"]["current"], variables.game_data[variables.current_level]["asteroid_hp"]["max"])/variables.game_data[variables.current_level]["asteroid_hp"]["max"]
 		self.slider_asteroid.value_current = min(variables.game_data[variables.current_level]["asteroid_hp"]["current"], variables.game_data[variables.current_level]["asteroid_hp"]["max"])
 
-
-
-
 class Level():
 	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, button_level=None):
 		# Initialize Pygame
@@ -133,7 +130,6 @@ class Level():
 		planet_sprite = pygame.image.load(os.path.join(cwd, variables.planet_asset))
 		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
 
-
 		meteors_sprite_list = [pygame.image.load(
 			os.path.join(variables.meteor_big_asset + str(random.randint(1, 3)) + variables.png_extension)
 		) for _ in range(variables.game_data[variables.current_level]["num_meteors"])]  # Assuming 'meteor_big_asset' is the path to the meteor sprite
@@ -173,7 +169,6 @@ class Level():
 		variables.game_data[current_level]["planet_hp"]["current"] = variables.game_data[current_level]["planet_hp"]["max"]
 		variables.game_data[current_level]["initial_xp"]["current"] = 0
 		variables.game_data[current_level]["asteroid_hp"]["current"] = variables.game_data[current_level]["asteroid_hp"]["max"]
-
 
 	def handle_events(self):
 		pass
@@ -252,7 +247,7 @@ class Level():
 					# 	bullet.upgrade('path_to_new_bullet_sprite')  # Use the correct path to the new bullet sprite
 
 			for meteor in self.meteors:
-				meteor.update()
+				meteor.update(speed=variables.game_data[variables.current_level]["meteor_speed"])
 				# Check for collisions with the planet
 				if pygame.sprite.collide_circle(meteor, self.planet):
 					self.sound_player.playSoundEffect("meteor_impact_" + str(random.randint(1, 5)))
@@ -564,5 +559,5 @@ class Game:
 			pygame.quit()
 			sys.exit()
 
-    def start(self):
-        self.current_level.start()
+	def start(self):
+		self.current_level.start()

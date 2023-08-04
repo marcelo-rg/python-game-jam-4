@@ -127,7 +127,7 @@ class Meteor(Sprite):
 		self.calculate_direction()
 
 
-	def update(self, speed = variables.game_data[variables.current_level]["meteor_speed"]):
+	def update(self, speed):
 		# Update the rotation angle
 		self.rotation_angle += 0.5  # Adjust the rotation speed as needed
 
