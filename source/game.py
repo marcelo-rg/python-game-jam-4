@@ -176,7 +176,8 @@ class Level():
 
 
 	def handle_events(self):
-		for event in pygame.event.get():
+		pass
+		#for event in pygame.event.get():
 			# if event.type == pygame.QUIT:
 			# if one presses q key, the game quits
 			#if event.type == pygame.KEYDOWN and event.key == pygame.K_q:
