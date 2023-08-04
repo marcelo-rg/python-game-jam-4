@@ -121,19 +121,23 @@ class PauseMenu:
 		if self.resume_button.handle_event(event, pos):
 			# Resume game
 			self.fade_out()  # Hide the pause menu
+			return 1
 			# Continue the game loop here
 		elif self.restart_button.handle_event(event, pos):
 			# Restart game
 			self.fade_out()  # Hide the pause menu
+			return 2
 			# Reset the game state and start the game loop here
 		elif self.main_menu_button.handle_event(event, pos):
 			# Go to main menu
 			self.fade_out()  # Hide the pause menu
+			return 3
 			# Load the main menu here
 		elif self.quit_button.handle_event(event, pos):
 			# Quit game
 			pygame.quit()
 			sys.exit()
+		return 0  # No action was performed
 
 	def fade_in(self):
 		self.sound_player.playBackgroundMusic()

@@ -92,7 +92,7 @@ class UI:
 
 
 class Level():
-	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps):
+	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, button_level=None):
 		# Initialize Pygame
 		pygame.init()
 		self.button_level = button_level
@@ -324,21 +324,18 @@ class Level():
 		self.ui.draw()
 
 	def saveLevelResult(self):
-		saveObject = SaveGame()
+		saveObject = SaveGame()			
 		if variables.saved_game_data["last_completed_level"] == "None" \
-			and self.button_level == "Tutorial":
-			variables.saved_game_data["last_completed_level"] = "Tutorial"
-			saveObject.save(variables.saved_game_data, variables.player_file)
-			
-		elif variables.saved_game_data["last_completed_level"] == "Tutorial" \
 			and self.button_level == "One":
 			variables.saved_game_data["last_completed_level"] = "One"
 			saveObject.save(variables.saved_game_data, variables.player_file)
+			print("Game Saved! Level 2 unlocked!")
 
 		elif variables.saved_game_data["last_completed_level"] == "One" \
 			and self.button_level == "Two":
 			variables.saved_game_data["last_completed_level"] = "Two"
 			saveObject.save(variables.saved_game_data, variables.player_file)
+			print("Game Saved! You completed the game! Thanks for playing!")
 
 		elif variables.saved_game_data["last_completed_level"] == "Two":
 			pass
@@ -379,7 +376,19 @@ class Level():
 							self.pause()
 
 				if self.paused:
-					self.pause_menu.handle_event(event)
+					pause_menu_action = self.pause_menu.handle_event(event)
+					if pause_menu_action == 1:
+						# Resume game
+						self.paused = False
+					elif pause_menu_action == 2:
+						# Restart game
+						#self.reset_game()  # Function to reset your game
+						self.paused = False
+					elif pause_menu_action == 3:
+						# Go to main menu
+						#self.load_main_menu()  # Function to load the main menu
+						return
+					continue
 				else:
 					self.handle_events()
 			
@@ -439,51 +448,6 @@ class Level():
 				if event.type == pygame.KEYUP:
 					time.sleep(1)  # add delay
 					return
-
-class TutorialLevel(Level):
-	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, button_level=None):
-		super().__init__(screen_width, screen_height, fps)
-		
-		self.button_level = button_level
-
-		ast_sprite = pygame.image.load(os.path.join(cwd, variables.asteroid_asset))
-		self.asteroid = Asteroid(ast_sprite, screen_width // 2, screen_height // 2)
-
-		planet_sprite = pygame.image.load(os.path.join(cwd, variables.planet_asset))
-		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
-
-		# Other Tutorial Level specific initialization...
-		self.music_player = SoundManager(variables.sounds)
-		self.music_player.loadBackgroundMusic(0,variables.background_music)
-
-	def start(self):
-		super().start()
-		print("Tutorial Level Initialized")
-		self.music_player.playBackgroundMusic()
-		self.game_loop()
-
-	def handle_events(self):
-		super().handle_events()
-		# Tutorial Level specific event handling...
-
-	def update_game_logic(self):
-		super().update_game_logic()
-
-	def render(self):
-		# super().render()
-
-		# Add your rendering code here
-		self.asteroid.render(self.screen)
-		self.planet.render(self.screen)
-		self.player_one.render(self.screen)
-		self.player_two.render(self.screen)
-		self.spaceship_one.render(self.screen)
-		self.spaceship_two.render(self.screen)
-		for meteor in self.meteors:
-			meteor.render(self.screen)
-
-		# Update the screen
-		pygame.display.flip()
 
 class LevelOne(Level):
 	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, button_level=None):
@@ -588,10 +552,7 @@ class LevelTwo(Level):
 class Game:
 	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, button=None):
 		self.current_level = button
-		if self.current_level == "Tutorial":
-			#print("Tutorial level started")
-			self.current_level = TutorialLevel(screen_width, screen_height, fps, button_level=self.current_level)  # Starts Tutorial Level
-		elif self.current_level == "One":
+		if self.current_level == "One":
 			self.current_level = LevelOne(screen_width, screen_height, fps, button_level=self.current_level)  # Starts Level One
 		elif self.current_level == "Two":
 			self.current_level = LevelTwo(screen_width, screen_height, fps, button_level=self.current_level)  # Starts Level Two

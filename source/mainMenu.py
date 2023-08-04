@@ -327,20 +327,15 @@ class LevelSelectionMenu:
 				
 		# Only the tutorial button is active by default
 		self.tutorial_button.active = True
-		self.tutorial_button.color = variables.LIGHT_GREEN
+		self.tutorial_button.color = variables.AQUAMARINE
 		self.level1_button.active = False
 		self.level2_button.active = False
 
-		if variables.saved_game_data["last_completed_level"] == "Tutorial":
+		if variables.saved_game_data["last_completed_level"] == "None":
 			self.level1_button.active = True
 			self.level1_button.color = variables.LIGHT_GREEN
 			self.level2_button.color = variables.BLACK
-		elif variables.saved_game_data["last_completed_level"] == "One":
-			self.level1_button.active = True
-			self.level2_button.active = True
-			self.level1_button.color = variables.LIGHT_GREEN
-			self.level2_button.color = variables.LIGHT_GREEN
-		elif variables.saved_game_data["last_completed_level"] == "Two":
+		elif variables.saved_game_data["last_completed_level"] == "One" or variables.saved_game_data["last_completed_level"] == "Two":
 			self.level1_button.active = True
 			self.level2_button.active = True
 			self.level1_button.color = variables.LIGHT_GREEN
@@ -375,8 +370,9 @@ class LevelSelectionMenu:
 		# Handle button clicks
 		if self.tutorial_button.active and self.tutorial_button.handle_event(event, pos):
 			self.fade_transition()
-			game = Game(variables.screen_width, variables.screen_height, variables.fps, button="Tutorial")
-			game.start()
+			#game = Game(variables.screen_width, variables.screen_height, variables.fps, button="Tutorial")
+			#game.start()
+			print("Tutorial")
 			#self.reset_buttons()  # Reset the buttons in the level selection menu
 			return True
 		if self.level1_button.active and self.level1_button.handle_event(event, pos):
