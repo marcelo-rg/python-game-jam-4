@@ -205,6 +205,12 @@ class Level():
 			self.asteroid.update()
 			self.planet.update()
 
+			# Check for game over collision between asteroid and the planet
+			if pygame.sprite.collide_circle(self.asteroid, self.planet):
+				self.game_over()
+				self.saveLevelResult()
+				return
+
 			# Update both players
 			self.player_one.update("Player1")
 			self.player_two.update("Player2")
