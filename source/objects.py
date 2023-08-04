@@ -4,22 +4,24 @@ import math
 import random
 import variables
 
-def spiral(center_x, center_y, radius= variables.spiral_radius, speed= variables.spiral_speed, decay_rate=variables.spiral_decay_rate):
+def spiral(center_x, center_y, radius= variables.spiral_radius, base_speed= variables.spiral_speed, decay_rate=variables.spiral_decay_rate, speed_factor=variables.spiral_speed_factor):
 	angle = 0
 	while True:
 		x = center_x + (radius * math.cos(angle))
 		y = center_y + (radius * math.sin(angle))
-		
-		# Update the angle based on the speed
+
+		# Update the angle based on the speed which increases as the asteroid gets closer
+		speed = base_speed + speed_factor / max(1, radius)
 		angle += speed
-		
+
 		# Decrease the radius using the decay_rate
 		radius -= decay_rate
 
 		if radius < 0:
 			break
-		
+
 		yield x, y
+
 
 class Asteroid(Sprite):
 	def __init__(self, sprite ,screen_center_x, screen_center_y):

@@ -183,11 +183,12 @@ player_assets_size = {
 
 # Game Object Variables
 spiral_radius = 400
-spiral_speed = 0.005
+spiral_speed = 0.003
 spaceship_rotation_speed = 2.0
 bullet_speed = 6
 bullet_cooldown = 20
-spiral_decay_rate = 0.005
+spiral_decay_rate = 0.04
+spiral_speed_factor = .5
 
 # Level difficulty variables -> transfered to game_data
 # num_meteors = 3
