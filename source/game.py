@@ -351,49 +351,50 @@ class Level():
 					self.running = False
 					pygame.quit()
 					sys.exit()
-					
+
 				if event.type == pygame.KEYDOWN:
 					if (event.key == variables.player_controls["Player1"]["Menu"]["Use"] or 
 						event.key ==  variables.player_controls["Player2"]["Menu"]["Use"]):
 						if not self.paused:
 							self.sound_player.pauseBackgroundMusic()  # Pause the current background music
-							#self.pause_menu.sound_player.playBackgroundMusic()  # Start the pause menu music
+							if not self.pause_menu.sound_player.isMusicPlaying():  # Check if pause menu music is already playing
+								self.pause_menu.sound_player.playAnotherBackgroundMusic(os.path.join(variables.isolaproduction_path,variables.pause_menu_music))  # Start the pause menu music
 							self.pause_menu.fade_in()
 							self.paused = True  # Update the pause state
 						elif self.paused:
-							#self.pause_menu.sound_player.stopBackgroundMusic()  # Stop the pause menu music
-							self.sound_player.unpauseBackgroundMusic()  # Resume the original background music
+							self.pause_menu.sound_player.stopBackgroundMusic()  # Stop the pause menu music
+							self.sound_player.unpauseBackgroundMusic()  # Unpause the original background music
 							self.pause_menu.fade_out()
 							self.paused = False  # Update the pause state
-				
+
 				if self.paused:
 					pause_menu_action = self.pause_menu.handle_event(event)
+					if pause_menu_action in [1, 2, 3]:  # If any action is performed, stop the pause menu music
+						self.pause_menu.sound_player.stopBackgroundMusic()
 					if pause_menu_action == 1:
 						# Resume game
 						self.paused = False
-						self.sound_player.unpauseBackgroundMusic()  # Resume the original background music
+						self.sound_player.unpauseBackgroundMusic()  # Unpause the original background music
 					elif pause_menu_action == 2:
 						# Restart game
-						#self.reset_game()  # Function to reset your game
 						self.paused = False
 						self.restart()  # Restart the level
 					elif pause_menu_action == 3:
 						# Go to main menu
-						self.sound_player.stopBackgroundMusic()  # Stop the background music
-						#print("Going to main menu")
 						return
 					continue
 				else:
 					self.handle_events()
-			
+
 			if not self.paused:
 				self.update_game_logic()
 				self.render()
 			else:
 				self.pause_menu.draw_menu()
-			
+
 			pygame.display.update()
 			self.clock.tick(self.fps)
+
 
 	def fade_in(self):
 		fade_surface = pygame.Surface((variables.screen_width, variables.screen_height))  # Create new surface
