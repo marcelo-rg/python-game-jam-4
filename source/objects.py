@@ -183,7 +183,7 @@ class Spaceship(Sprite):
 		self.repair_cooldown_frames = variables.spaceship_repair_cooldown  
 		self.repair_frame_counter = 0  # counter to track the number of frames since the repair process started
 		# self.repairing = False  # flag to indicate if the spaceship is currently being repaired
-		self.hp = variables.spaceship_one_hp['max']
+		self.hp = variables.game_data[variables.current_level]["spaceship_one_hp"]["max"]
 
 
 		self.bullets = []  # List to store bullets

@@ -50,11 +50,11 @@ class UI:
 		self.screen = screen
 
 		# Initialize sliders with x, y, width, height
-		self.slider_p1 = Slider(50, 50, 200, 20, "Player 1 HP", variables.spaceship_one_hp)
-		self.slider_p2 = Slider(50, 100, 200, 20, "Player 2 HP", variables.spaceship_two_hp)
-		self.slider_planet = Slider(50, 150, 200, 20, "Planet HP", variables.planet_hp)
-		self.slider_xp = Slider(50, 200, 200, 20, "XP", variables.initial_xp, color = variables.YELLOW)
-		self.slider_asteroid = Slider(50, 250, 200, 20, "Asteroid HP", variables.asteroid_hp, color = variables.RED)
+		self.slider_p1 = Slider(50, 50, 200, 20, "Player 1 HP", variables.game_data[variables.current_level]["spaceship_one_hp"])
+		self.slider_p2 = Slider(50, 100, 200, 20, "Player 2 HP", variables.game_data[variables.current_level]["spaceship_two_hp"])
+		self.slider_planet = Slider(50, 150, 200, 20, "Planet HP", variables.game_data[variables.current_level]["planet_hp"])
+		self.slider_xp = Slider(50, 200, 200, 20, "XP", variables.game_data[variables.current_level]["initial_xp"], color = variables.YELLOW)
+		self.slider_asteroid = Slider(50, 250, 200, 20, "Asteroid HP", variables.game_data[variables.current_level]["asteroid_hp"], color = variables.RED)
 
 	def draw(self):
 		# Draw each slider on the screen
@@ -65,20 +65,21 @@ class UI:
 		self.slider_asteroid.draw(self.screen)
 
 	def update(self):
-		self.slider_p1.value = min(variables.spaceship_one_hp["current"], variables.spaceship_one_hp["max"])/variables.spaceship_one_hp["max"]
-		self.slider_p1.value_current = min(variables.spaceship_one_hp["current"], variables.spaceship_one_hp["max"])
+		self.slider_p1.value = min(variables.game_data[variables.current_level]["spaceship_one_hp"]["current"], variables.game_data[variables.current_level]["spaceship_one_hp"]["max"])/variables.game_data[variables.current_level]["spaceship_one_hp"]["max"]
+		self.slider_p1.value_current = min(variables.game_data[variables.current_level]["spaceship_one_hp"]["current"], variables.game_data[variables.current_level]["spaceship_one_hp"]["max"])
 
-		self.slider_p2.value = min(variables.spaceship_two_hp["current"], variables.spaceship_two_hp["max"])/variables.spaceship_two_hp["max"]
-		self.slider_p2.value_current = min(variables.spaceship_two_hp["current"], variables.spaceship_two_hp["max"])
+		self.slider_p2.value = min(variables.game_data[variables.current_level]["spaceship_two_hp"]["current"], variables.game_data[variables.current_level]["spaceship_two_hp"]["max"])/variables.game_data[variables.current_level]["spaceship_two_hp"]["max"]
+		self.slider_p2.value_current = min(variables.game_data[variables.current_level]["spaceship_two_hp"]["current"], variables.game_data[variables.current_level]["spaceship_two_hp"]["max"])
 
-		self.slider_planet.value = min(variables.planet_hp["current"], variables.planet_hp["max"])/variables.planet_hp["max"]
-		self.slider_planet.value_current = min(variables.planet_hp["current"], variables.planet_hp["max"])
+		self.slider_planet.value = min(variables.game_data[variables.current_level]["planet_hp"]["current"], variables.game_data[variables.current_level]["planet_hp"]["max"])/variables.game_data[variables.current_level]["planet_hp"]["max"]
+		self.slider_planet.value_current = min(variables.game_data[variables.current_level]["planet_hp"]["current"], variables.game_data[variables.current_level]["planet_hp"]["max"])
 
-		self.slider_xp.value = min(variables.initial_xp["current"], variables.initial_xp["max"])/variables.initial_xp["max"]
-		self.slider_xp.value_current = min(variables.initial_xp["current"], variables.initial_xp["max"])
+		self.slider_xp.value = min(variables.game_data[variables.current_level]["initial_xp"]["current"], variables.game_data[variables.current_level]["initial_xp"]["max"])/variables.game_data[variables.current_level]["initial_xp"]["max"]
+		self.slider_xp.value_current = min(variables.game_data[variables.current_level]["initial_xp"]["current"], variables.game_data[variables.current_level]["initial_xp"]["max"])
 
-		self.slider_asteroid.value = min(variables.asteroid_hp["current"], variables.asteroid_hp["max"])/variables.asteroid_hp["max"]
-		self.slider_asteroid.value_current = min(variables.asteroid_hp["current"], variables.asteroid_hp["max"])
+		self.slider_asteroid.value = min(variables.game_data[variables.current_level]["asteroid_hp"]["current"], variables.game_data[variables.current_level]["asteroid_hp"]["max"])/variables.game_data[variables.current_level]["asteroid_hp"]["max"]
+		self.slider_asteroid.value_current = min(variables.game_data[variables.current_level]["asteroid_hp"]["current"], variables.game_data[variables.current_level]["asteroid_hp"]["max"])
+
 
 
 
@@ -123,9 +124,10 @@ class Level():
 		planet_sprite = pygame.image.load(os.path.join(cwd, variables.planet_asset))
 		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
 
-		meteors_sprite_list = [pygame.image.load( \
-				os.path.join(variables.meteor_big_asset + str(iterable) + variables.png_extension)) \
-				for iterable in range(1,4,1)]
+
+		meteors_sprite_list = [pygame.image.load(
+			os.path.join(variables.meteor_big_asset + str(random.randint(1, 3)) + variables.png_extension)
+		) for _ in range(variables.num_meteors)]  # Assuming 'meteor_big_asset' is the path to the meteor sprite
 		self.meteors = [Meteor(meteors_sprite_list[iterable], screen_width, screen_height, self.planet.rect.centerx, self.planet.rect.centery) \
 		  		for iterable in range(len(meteors_sprite_list))]		
 
@@ -197,7 +199,7 @@ class Level():
 	
 	def update_game_logic(self):
 		if not self.paused:
-			# Update game stated
+			# Update game state
 			self.asteroid.update()
 			self.planet.update()
 
@@ -205,8 +207,8 @@ class Level():
 			self.player_one.update("Player1")
 			self.player_two.update("Player2")
 
+			current_level = variables.current_level
 
-			
 			# Check for collisions between players and spaceships, and handle interaction key presses
 			for player, playerID in [(self.player_one, "Player1"), (self.player_two, "Player2")]:
 				keys = pygame.key.get_pressed()
@@ -219,20 +221,20 @@ class Level():
 					else: # Player is not in a spaceship and wants to enter
 						for spaceship in [self.spaceship_one, self.spaceship_two]:
 							if pygame.sprite.collide_circle(player, spaceship):
-								if spaceship.hp == variables.spaceship_one_hp["max"]:
+								if spaceship.hp == variables.game_data[current_level]["spaceship_one_hp"]["max"] or spaceship.hp == variables.game_data[current_level]["spaceship_two_hp"]["max"]:
 									player.enter_spaceship(spaceship, playerID)
 									spaceship.reset_repair_counter()
 
 								else:
 									spaceship.repair()
 									if spaceship == self.spaceship_one:
-										variables.spaceship_one_hp["current"] = spaceship.hp
+										variables.game_data[current_level]["spaceship_one_hp"]["current"] = spaceship.hp
 									elif spaceship == self.spaceship_two:
-										variables.spaceship_two_hp["current"] = spaceship.hp
+										variables.game_data[current_level]["spaceship_two_hp"]["current"] = spaceship.hp
 								break
-			
+
 			# Check for upgrade key
-			if variables.initial_xp['current']>= variables.initial_xp['max']: # Assuming 'u' is the upgrade key
+			if variables.game_data[current_level]["initial_xp"]['current'] >= variables.game_data[current_level]["initial_xp"]['max']: # Assuming 'u' is the upgrade key
 				self.spaceship_one.upgrade(variables.spaceship_one_asset_upgrade)
 				self.spaceship_two.upgrade(variables.spaceship_two_asset_upgrade)
 					# for bullet in player.in_spaceship.bullets:
@@ -244,7 +246,7 @@ class Level():
 				if pygame.sprite.collide_circle(meteor, self.planet):
 					self.sound_player.playSoundEffect("meteor_impact_" + str(random.randint(1, 5)))
 					meteor.respawn()
-					variables.planet_hp['current'] -= variables.planet_hp['damage_per_hit']
+					variables.game_data[current_level]['planet_hp']['current'] -= variables.game_data[current_level]['planet_hp']['damage_per_hit']
 
 				# Check for collisions between bullets and meteors/planet/asteroid
 				for spaceship in [self.spaceship_one, self.spaceship_two]:
@@ -257,7 +259,7 @@ class Level():
 								self.sound_player.playSoundEffect("meteor_blast")
 								bullet.remove()
 								meteor.respawn()
-								variables.initial_xp['current'] +=  variables.initial_xp['xp_per_hit']
+								variables.game_data[current_level]['initial_xp']['current'] +=  variables.game_data[current_level]['initial_xp']['xp_per_hit']
 								bullet_collided = True
 								break  # Stop checking other meteors for this bullet
 
@@ -271,8 +273,7 @@ class Level():
 							bullet.remove()
 							bullet_collided = True
 							if spaceship.upgraded:
-								variables.asteroid_hp['current'] -= variables.asteroid_hp['damage_per_hit']
-								
+								variables.game_data[current_level]['asteroid_hp']['current'] -= variables.game_data[current_level]['asteroid_hp']['damage_per_hit']
 
 			# Update both spaceships and check for collisions with the asteroid
 			for spaceship in [self.spaceship_one, self.spaceship_two]:
@@ -284,27 +285,27 @@ class Level():
 					elif(spaceship.playerID) == "Player2":
 						self.player_two.leave_spaceship()
 					if spaceship == self.spaceship_one:
-						variables.spaceship_one_hp['current'] = 0
+						variables.game_data[current_level]["spaceship_one_hp"]['current'] = 0
 						spaceship.hp = 0
 					elif spaceship == self.spaceship_two:
-						variables.spaceship_two_hp['current'] = 0
+						variables.game_data[current_level]["spaceship_two_hp"]['current'] = 0
 						spaceship.hp = 0
-			
+
 			# Update UI
 			self.ui.update()
 
 			# Win Condition
-			if variables.asteroid_hp['current'] <= 0:
+			if variables.game_data[current_level]['asteroid_hp']['current'] <= 0:
 				self.victory()
 				self.saveLevelResult()
 				return
-				# self.asteroid.destroy() # Assuming there is a destroy method for asteroid
 
 			# Lose Condition
-			if variables.planet_hp['current'] <= 0:
+			if variables.game_data[current_level]['planet_hp']['current'] <= 0:
 				self.game_over()
 				self.saveLevelResult()
 				return
+
 
 	def render(self):
 		# Blit the background image to the screen
