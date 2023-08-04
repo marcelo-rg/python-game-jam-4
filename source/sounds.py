@@ -10,9 +10,6 @@ class SoundManager:
 		self.music_volume = variables.global_music_volume * variables.saved_game_data["music_slider"]
 		self.sound_volume = variables.global_sound_volume * variables.saved_game_data["sound_effect_slider"]
 
-		self.current_music = None  # Add a variable to hold the current music
-		self.is_playing = False  # Add a variable to hold the playing state
-
 	def loadBackgroundMusic(self, level, music_dict):
 		# Generate a random number between 1 and the size of the dictionary
 		#random_number = random.randint(1, len(music_dict))
@@ -30,25 +27,13 @@ class SoundManager:
 
 	def playBackgroundMusic(self):
 		pygame.mixer.music.play(-1)  # -1 means loop indefinitely
-		self.is_playing = True  # Update the playing state
 
 	def setMusicVolume(self, volume_slider, music_volume):
 		self.music_volume = volume_slider * music_volume
 		pygame.mixer.music.set_volume(self.music_volume)
 
-	def playAnotherBackgroundMusic(self, music_path):
-		pygame.mixer.music.load(music_path)  # Load the new music
-		pygame.mixer.music.play(-1)  # Start playing the new music
-		self.current_music = music_path  # Save the current music
-		self.is_playing = True  # Update the playing state
-
-	def resumeBackgroundMusic(self):
-		if self.current_music is not None:  # If a current music is saved
-			pygame.mixer.music.unpause()  # Resume the saved music
-
 	def stopBackgroundMusic(self):
-		pygame.mixer.music.stop()
-		self.is_playing = False  # Update the playing state
+		pygame.mixer.music.stop()  # Stop the current music
 
 	def isMusicPlaying(self):
 		return self.is_playing  # Return the current playing state
