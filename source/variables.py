@@ -110,6 +110,7 @@ RED = (255, 0, 0)
 LIGHT_RED = (255, 114, 118)
 YELLOW = (200, 200, 0)
 LIGHT_GREEN = (80, 200, 120)
+DARK_OCEAN_GREEN = (0, 128, 128)
 AQUAMARINE = (127, 255, 212)
 ANOTHER_GREEN = (46, 139, 87)
 DARK_GREEN_v1 = (21, 71, 52)
@@ -121,7 +122,8 @@ TITLE_COLOR = (219, 161, 15)
 ####################
 
 # Paths
-assets_path = "assets"
+source_path = "source"
+assets_path = os.path.join(source_path, "assets")
 planet_assets_path = os.path.join(assets_path, "planet")
 asteroid_assets_path = os.path.join(assets_path, "asteroid")
 meteors_assets_path = os.path.join(assets_path, "meteors")
@@ -130,7 +132,7 @@ player_assets_path = os.path.join(assets_path, "player")
 background_assets_path = os.path.join(assets_path, "background")
 bullet_sprite_path = os.path.join(assets_path, "bullets","bullet1.png")
 bullet_sprite_path_upgraded = os.path.join(assets_path, "bullets","bullet2.png")
-sound_path = os.path.join(assets_path, "..", "music")
+sound_path = os.path.join(source_path, "music")
 isolaproduction_path = os.path.join(sound_path, "isolaproduction")
 
 ####################
