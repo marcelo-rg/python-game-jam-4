@@ -541,14 +541,14 @@ class LevelTwo(Level):
 		pygame.display.flip()
 
 class Game:
-    def init(self, screen_width=None, screen_height=None, fps=variables.fps, button=None):
+    def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, button=None):
         self.current_level = button
         if self.current_level == "One":
             variables.current_level = "One"
-            self.current_level = LevelOne(screen_width, screen_height, fps, button_level=self.current_level)  # Starts Level One
+            self.current_level = LevelOne(screen_width, screen_height, fps)  # Starts Level One
         elif self.current_level == "Two":
             variables.current_level = "Two"
-            self.current_level = LevelTwo(screen_width, screen_height, fps, button_level=self.current_level)  # Starts Level Two
+            self.current_level = LevelTwo(screen_width, screen_height, fps)  # Starts Level Two
         else:
             print("Invalid level name")
             pygame.quit()
