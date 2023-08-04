@@ -158,11 +158,13 @@ class Level():
 		self.font = pygame.font.Font(None, 120)
 
 	def resetLevel(self):
-		variables.spaceship_one_hp["current"] = variables.spaceship_one_hp["max"]
-		variables.spaceship_two_hp["current"] = variables.spaceship_two_hp["max"]
-		variables.planet_hp["current"] = variables.planet_hp["max"]
-		variables.initial_xp["current"] = 0
-		variables.asteroid_hp["current"] = variables.asteroid_hp["max"]
+		current_level = variables.current_level
+		variables.game_data[current_level]["spaceship_one_hp"]["current"] = variables.game_data[current_level]["spaceship_one_hp"]["max"]
+		variables.game_data[current_level]["spaceship_two_hp"]["current"] = variables.game_data[current_level]["spaceship_two_hp"]["max"]
+		variables.game_data[current_level]["planet_hp"]["current"] = variables.game_data[current_level]["planet_hp"]["max"]
+		variables.game_data[current_level]["initial_xp"]["current"] = 0
+		variables.game_data[current_level]["asteroid_hp"]["current"] = variables.game_data[current_level]["asteroid_hp"]["max"]
+
 
 
 	def handle_events(self):
