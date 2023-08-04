@@ -27,7 +27,7 @@ class SoundManager:
 
 	def playBackgroundMusic(self):
 		pygame.mixer.music.play(-1)  # -1 means loop indefinitely
-
+	
 	def setMusicVolume(self, volume_slider, music_volume):
 		self.music_volume = volume_slider * music_volume
 		pygame.mixer.music.set_volume(self.music_volume)

@@ -1,6 +1,7 @@
+import sys
+sys.path.append('./source/')
 import variables
 import pygame
-import sys
 from pygame.locals import *
 from mainMenu import MainMenu  # Import the MainMenu class
 from saveGame import SaveGame  # Import the SaveGame class

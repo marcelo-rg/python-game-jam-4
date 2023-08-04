@@ -332,7 +332,7 @@ class LevelSelectionMenu:
 				
 		# Only the tutorial button is active by default
 		self.tutorial_button.active = True
-		self.tutorial_button.color = variables.AQUAMARINE
+		self.tutorial_button.color = variables.DARK_OCEAN_GREEN
 		self.level1_button.active = False
 		self.level2_button.active = False
 
