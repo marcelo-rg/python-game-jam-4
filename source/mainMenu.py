@@ -158,6 +158,7 @@ class MainMenu:
 			if not pygame.mixer.music.get_busy():
 				self.sound_player.loadMenuBackgroundMusic(variables.main_menu_music)
 				self.sound_player.playBackgroundMusic()
+				self.level_selection_menu.update_buttons() 
 
 			for event in pygame.event.get():
 				if event.type == QUIT:
@@ -336,18 +337,7 @@ class LevelSelectionMenu:
 		self.level1_button.active = False
 		self.level2_button.active = False
 
-		if variables.saved_game_data["last_completed_level"] == "None":
-			self.level1_button.active = True
-			self.level1_button.color = variables.LIGHT_GREEN
-			self.level2_button.color = variables.BLACK
-		elif variables.saved_game_data["last_completed_level"] == "One" or variables.saved_game_data["last_completed_level"] == "Two":
-			self.level1_button.active = True
-			self.level2_button.active = True
-			self.level1_button.color = variables.LIGHT_GREEN
-			self.level2_button.color = variables.LIGHT_GREEN
-		else:
-			self.level1_button.color = variables.BLACK
-			self.level2_button.color = variables.BLACK
+		self.update_buttons()
 		
 		self.back_callback = back_callback
 		
@@ -364,6 +354,20 @@ class LevelSelectionMenu:
 		self.back_button.rect.centerx = self.screen_rect.centerx
 		self.back_button.rect.centery = self.screen_rect.centery + 75
 		
+	def update_buttons(self):
+		if variables.saved_game_data["last_completed_level"] == "None":
+			self.level1_button.active = True
+			self.level1_button.color = variables.LIGHT_GREEN
+			self.level2_button.color = variables.BLACK
+		elif variables.saved_game_data["last_completed_level"] == "One" or variables.saved_game_data["last_completed_level"] == "Two":
+			self.level1_button.active = True
+			self.level2_button.active = True
+			self.level1_button.color = variables.LIGHT_GREEN
+			self.level2_button.color = variables.LIGHT_GREEN
+		else:
+			self.level1_button.color = variables.BLACK
+			self.level2_button.color = variables.BLACK
+	
 	def draw(self):
 		# Draw buttons
 		self.tutorial_button.draw(self.display)
