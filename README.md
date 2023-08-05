@@ -23,29 +23,20 @@ Participate in the jam or explore other projects on the [Itch.io Jam URL](https:
 ## Installation & Running
 To install and run the game, follow these steps:
 
+```bash
 pip3 install pygame cryptography
 python3 main.py
-
-
-## Link for Diagram
-[**draw.io URL**](https://app.diagrams.net/#G1nsLd9JeE7rMO8jwjvZlMnjNApgCc7dCh)
-
-## Link for Project
-[To Do](https://github.com/users/marcelo-rg/projects/2/views/2)
-
-## Link for game jam website
-[Itch.io Jam URL](https://itch.io/jam/python-game-jam-4)
-
-# How to Install & Run
-- pip3 install pygame
-- pip3 install cryptography
-- python3 main.py
+```
 
 # Only for Devs
-- pip3 install cx_Freeze
+```bash
+pip3 install cx_Freeze
+```
 
 # How to Create the Executable
-- python3 ExeCreator.py build
+```bash
+python3 ExeCreator.py build
+```
 
 **Progress Screenshots**
 ======
