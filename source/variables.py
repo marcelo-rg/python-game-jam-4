@@ -77,9 +77,6 @@ player_controls = {
 		"Interact": {
 			"Use": pygame.K_e
 		},
-		"Upgrade": {
-			"Use": pygame.K_f
-		},
 		"Fire": {
 			"Use": pygame.K_SPACE
 		},
@@ -96,13 +93,10 @@ player_controls = {
 			"Right": pygame.K_RIGHT
 		},
 		"Interact": {
-			"Use": pygame.K_j
-		},
-		"Upgrade": {
 			"Use": pygame.K_i
 		},
 		"Fire": {
-			"Use": pygame.K_l
+			"Use": pygame.K_o
 		},
 		"Menu": {
 			"Use": pygame.K_p
