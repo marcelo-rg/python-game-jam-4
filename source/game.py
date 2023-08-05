@@ -334,9 +334,15 @@ class Level():
 			and self.button_level == "Two":
 			variables.saved_game_data["last_completed_level"] = "Two"
 			saveObject.save(variables.saved_game_data, variables.player_file)
+			print("Game Saved! Level 3 unlocked!")
+
+		elif variables.saved_game_data["last_completed_level"] == "Two" \
+			and self.button_level == "Three":
+			variables.saved_game_data["last_completed_level"] = "Three"
+			saveObject.save(variables.saved_game_data, variables.player_file)
 			print("Game Saved! You completed the game! Thanks for playing!")
 
-		elif variables.saved_game_data["last_completed_level"] == "Two":
+		elif variables.saved_game_data["last_completed_level"] == "Three":
 			pass
 		else:
 			print("Game Saved! No new level was unlocked!")
@@ -560,6 +566,56 @@ class LevelTwo(Level):
 		# Update the screen
 		pygame.display.flip()
 
+class LevelThree(Level):
+	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, button_level=None):
+		super().__init__(screen_width, screen_height, fps)
+
+		self.button_level = button_level
+
+		ast_sprite = pygame.image.load(os.path.join(cwd, variables.asteroid_asset))
+		self.asteroid = Asteroid(ast_sprite, screen_width // 2, screen_height // 2)
+
+		planet_sprite = pygame.image.load(os.path.join(cwd, variables.planet_asset))
+		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
+
+		# Other Level 2 specific initialization...
+		self.sound_player.loadBackgroundMusic(2,variables.background_music)
+
+	def start(self):
+		super().start()
+		print("Level 3 Initialized")
+		self.sound_player.playBackgroundMusic()
+		self.game_loop()
+
+	def handle_events(self):
+		super().handle_events()
+		# Level 2 specific event handling...
+
+	def update_game_logic(self):
+		super().update_game_logic()
+
+
+	def render(self):
+		super().render()
+
+		# Add your rendering code here
+		self.asteroid.render(self.screen)
+		self.planet.render(self.screen)
+		self.spaceship_one.render(self.screen)
+		self.spaceship_two.render(self.screen)
+		
+		# Only render players when they are not inside a spaceship
+		if self.player_one.in_spaceship is None:
+			self.player_one.render(self.screen)
+		if self.player_two.in_spaceship is None:
+			self.player_two.render(self.screen)
+		
+		for meteor in self.meteors:
+			meteor.render(self.screen)
+
+		# Update the screen
+		pygame.display.flip()
+
 class Game:
 	def __init__(self, screen_width=None, screen_height=None, fps=variables.fps, button=None):
 		self.current_level = button
@@ -569,6 +625,9 @@ class Game:
 		elif self.current_level == "Two":
 			variables.current_level = "Two"
 			self.current_level = LevelTwo(screen_width, screen_height, fps, button_level=self.current_level)  # Starts Level Two
+		elif self.current_level == "Three":
+			variables.current_level = "Three"
+			self.current_level = LevelThree(screen_width, screen_height, fps, button_level=self.current_level)  # Starts Level Three
 		else:
 			print("Invalid level name")
 			pygame.quit()
