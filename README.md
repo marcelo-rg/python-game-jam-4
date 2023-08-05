@@ -40,6 +40,30 @@ python3 ExeCreator.py build
 
 **Progress Screenshots**
 ======
+## Main Menu
+![plot](./progress/main_Menu.png)
+
+## Level Select
+![plot](./progress/level_select.png)
+
+## Options Menu
+![plot](./progress/Options_Menu.png)
+
+## Level One
+![plot](./progress/level_one.png)
+
+## Player One Idle
+![plot](./progress/p1-idle.gif)
+
+## Player Two Idle
+![plot](./progress/p2-idle.gif)
+
+## Player One Run
+![plot](./progress/p1-run.gif)
+
+## Player Two Run
+![plot](./progress/p2-run.gif)
+
 ## First Image
 ![plot](./progress/first-image.png)
 
