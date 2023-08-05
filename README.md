@@ -33,7 +33,7 @@ python3 main.py
 pip3 install cx_Freeze
 ```
 
-# How to Create the Executable
+# Creating the Executable
 ```bash
 python3 ExeCreator.py build
 ```
