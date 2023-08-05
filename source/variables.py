@@ -28,7 +28,7 @@ saved_game_data = {
 ####################
 
 # Player Variables
-player_speed = 1
+player_speed = 5
 spaceship_speed = 3
 
 game_data = {
@@ -139,6 +139,8 @@ asteroid_assets_path = os.path.join(assets_path, "asteroid")
 meteors_assets_path = os.path.join(assets_path, "meteors")
 spaceships_assets_path = os.path.join(assets_path, "spaceships")
 player_assets_path = os.path.join(assets_path, "player")
+player_idle_path = os.path.join(player_assets_path, "idle")
+player_move_path = os.path.join(player_assets_path, "move")
 background_assets_path = os.path.join(assets_path, "background")
 bullet_sprite_path = os.path.join(assets_path, "bullets","bullet1.png")
 bullet_sprite_path_upgraded = os.path.join(assets_path, "bullets","bullet2.png")
@@ -170,9 +172,14 @@ spaceship_two_asset = os.path.join(spaceships_assets_path,"playerShip2_green.png
 spaceship_one_asset_upgrade = os.path.join(spaceships_assets_path,"playerShip3_blue.png")
 spaceship_two_asset_upgrade = os.path.join(spaceships_assets_path,"playerShip3_green.png")
 player_assets = {
-	"Player1": os.path.join(player_assets_path, "player1.png"),
-	"Player2": os.path.join(player_assets_path, "player2.png")
+	"Player1": os.path.join(player_idle_path, "p1-idle.gif"),
+	"Player2": os.path.join(player_idle_path, "p1-idle.gif")
 }
+player_running_assets = {
+	"Player1": os.path.join(player_move_path, "p1-run.gif"),
+	"Player2": os.path.join(player_move_path, "p1-run.gif")
+}
+
 
 ####################
 
@@ -186,8 +193,8 @@ spaceship_sprite_size  = {
 	"upgrade_one": [(56, 38), (56, 38)]
 }
 player_assets_size = {
-	"Player1": {"x": 42, "y": 42},
-	"Player2": {"x": 42, "y": 42}
+	"Player1": {"x": 75, "y": 40},
+	"Player2": {"x": 75, "y": 40}
 }
 
 # This dictionary above has sprite size for both spaceships

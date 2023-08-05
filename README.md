@@ -24,7 +24,7 @@ Participate in the jam or explore other projects on the [Itch.io Jam URL](https:
 To install and run the game, follow these steps:
 
 ```bash
-pip3 install pygame cryptography
+pip3 install pygame cryptography pillow
 python3 main.py
 ```
 

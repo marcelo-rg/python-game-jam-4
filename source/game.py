@@ -138,12 +138,12 @@ class Level():
 
 		# Players
 		self.player_one = Player("Player1", variables.player_speed, variables.player_assets["Player1"],
-			   						self.planet.radius,
+			   						variables.player_running_assets["Player1"], self.planet.radius,
 			   						(self.planet.rect.centerx,
 									self.planet.rect.centery)
 								)
 		self.player_two = Player("Player2", variables.player_speed, variables.player_assets["Player2"],
-			   						self.planet.radius,
+			   						variables.player_running_assets["Player2"], self.planet.radius,
 			   						(self.planet.rect.centerx,
 									self.planet.rect.centery)
 								)
@@ -204,7 +204,7 @@ class Level():
 			# Check for game over collision between asteroid and the planet
 			if pygame.sprite.collide_circle(self.asteroid, self.planet):
 				self.game_over()
-				self.saveLevelResult()
+				self.saveLevelResult(condition="lose")
 				return
 
 			# Update both players
@@ -305,13 +305,13 @@ class Level():
 			# Win Condition
 			if variables.game_data[current_level]['asteroid_hp']['current'] <= 0:
 				self.victory()
-				self.saveLevelResult()
+				self.saveLevelResult(condition="win")
 				return
 
 			# Lose Condition
 			if variables.game_data[current_level]['planet_hp']['current'] <= 0:
 				self.game_over()
-				self.saveLevelResult()
+				self.saveLevelResult(condition="lose")
 				return
 
 
@@ -322,31 +322,34 @@ class Level():
 		# Draw UI
 		self.ui.draw()
 
-	def saveLevelResult(self):
-		saveObject = SaveGame()			
-		if variables.saved_game_data["last_completed_level"] == "None" \
-			and self.button_level == "One":
-			variables.saved_game_data["last_completed_level"] = "One"
-			saveObject.save(variables.saved_game_data, variables.player_file)
-			print("Game Saved! Level 2 unlocked!")
+	def saveLevelResult(self,condition):
+		if condition == "win":
+			saveObject = SaveGame()			
+			if variables.saved_game_data["last_completed_level"] == "None" \
+				and self.button_level == "One":
+				variables.saved_game_data["last_completed_level"] = "One"
+				saveObject.save(variables.saved_game_data, variables.player_file)
+				print("Game Saved! Level 2 unlocked!")
 
-		elif variables.saved_game_data["last_completed_level"] == "One" \
-			and self.button_level == "Two":
-			variables.saved_game_data["last_completed_level"] = "Two"
-			saveObject.save(variables.saved_game_data, variables.player_file)
-			print("Game Saved! Level 3 unlocked!")
+			elif variables.saved_game_data["last_completed_level"] == "One" \
+				and self.button_level == "Two":
+				variables.saved_game_data["last_completed_level"] = "Two"
+				saveObject.save(variables.saved_game_data, variables.player_file)
+				print("Game Saved! Level 3 unlocked!")
 
-		elif variables.saved_game_data["last_completed_level"] == "Two" \
-			and self.button_level == "Three":
-			variables.saved_game_data["last_completed_level"] = "Three"
-			saveObject.save(variables.saved_game_data, variables.player_file)
-			print("Game Saved! You completed the game! Thanks for playing!")
+			elif variables.saved_game_data["last_completed_level"] == "Two" \
+				and self.button_level == "Three":
+				variables.saved_game_data["last_completed_level"] = "Three"
+				saveObject.save(variables.saved_game_data, variables.player_file)
+				print("Game Saved! You completed the game! Thanks for playing!")
 
-		elif variables.saved_game_data["last_completed_level"] == "Three":
+			elif variables.saved_game_data["last_completed_level"] == "Three":
+				pass
+			else:
+				print("Game Saved! No new level was unlocked!")
+		elif condition == "lose":
 			pass
-		else:
-			print("Game Saved! No new level was unlocked!")
-		
+
 		self.running = False
 		self.resetLevel()
 
