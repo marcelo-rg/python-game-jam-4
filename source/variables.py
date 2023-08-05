@@ -45,12 +45,22 @@ game_data = {
     "Two": {
         "spaceship_one_hp": {"current": 100, "max": 100},
         "spaceship_two_hp": {"current": 100, "max": 100},
-        "planet_hp": {"current": 500, "max": 500, "damage_per_hit": 30},
-        "initial_xp": {"current": 0, "max": 1000, "xp_per_hit": 100},
+        "planet_hp": {"current": 500, "max": 500, "damage_per_hit": 50},
+        "initial_xp": {"current": 0, "max": 1000, "xp_per_hit": 50},
         "asteroid_hp": {"current": 100, "max": 100, "damage_per_hit": 10},
-        "num_meteors": 4,  # Increased difficulty for level two
-        "meteor_speed": 1.5,  # Increased difficulty for level two
-        "spaceship_repair_cooldown": 150,  # Increased difficulty for level two
+        "num_meteors": 5,  
+        "meteor_speed": 1.5, 
+        "spaceship_repair_cooldown": 100,  
+    },
+    "Three": {
+        "spaceship_one_hp": {"current": 100, "max": 100},
+        "spaceship_two_hp": {"current": 100, "max": 100},
+        "planet_hp": {"current": 500, "max": 500, "damage_per_hit": 50},
+        "initial_xp": {"current": 0, "max": 1000, "xp_per_hit": 25},
+        "asteroid_hp": {"current": 100, "max": 100, "damage_per_hit": 10},
+        "num_meteors": 6,
+        "meteor_speed": 1.5, 
+        "spaceship_repair_cooldown": 100,  
     }
 }
 

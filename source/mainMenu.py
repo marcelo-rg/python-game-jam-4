@@ -158,6 +158,7 @@ class MainMenu:
 			if not pygame.mixer.music.get_busy():
 				self.sound_player.loadMenuBackgroundMusic(variables.main_menu_music)
 				self.sound_player.playBackgroundMusic()
+				self.level_selection_menu.update_buttons() 
 
 			for event in pygame.event.get():
 				if event.type == QUIT:
@@ -338,6 +339,27 @@ class LevelSelectionMenu:
 		self.level2_button.active = False
 		self.level3_button.active = False
 
+		self.update_buttons()
+
+		self.back_callback = back_callback
+		
+		# Set positions of buttons before drawing them
+		self.tutorial_button.rect.centerx = self.screen_rect.centerx
+		self.tutorial_button.rect.centery = self.screen_rect.centery - 100
+
+		self.level1_button.rect.centerx = self.screen_rect.centerx - 150
+		self.level1_button.rect.centery = self.screen_rect.centery - 25
+
+		self.level2_button.rect.centerx = self.screen_rect.centerx + 150
+		self.level2_button.rect.centery = self.screen_rect.centery - 25
+
+		self.level3_button.rect.centerx = self.screen_rect.centerx
+		self.level3_button.rect.centery = self.screen_rect.centery + 50
+
+		self.back_button.rect.centerx = self.screen_rect.centerx
+		self.back_button.rect.centery = self.screen_rect.centery + 125
+		
+	def update_buttons(self):		
 		if variables.saved_game_data["last_completed_level"] == "None":
 			self.level1_button.active = True
 			self.level1_button.color = variables.LIGHT_GREEN
@@ -359,25 +381,7 @@ class LevelSelectionMenu:
 			self.level1_button.color = variables.LIGHT_GREEN
 			self.level2_button.color = variables.BLACK
 			self.level3_button.color = variables.BLACK
-		
-		self.back_callback = back_callback
-		
-		# Set positions of buttons before drawing them
-		self.tutorial_button.rect.centerx = self.screen_rect.centerx
-		self.tutorial_button.rect.centery = self.screen_rect.centery - 100
-
-		self.level1_button.rect.centerx = self.screen_rect.centerx - 150
-		self.level1_button.rect.centery = self.screen_rect.centery - 25
-
-		self.level2_button.rect.centerx = self.screen_rect.centerx + 150
-		self.level2_button.rect.centery = self.screen_rect.centery - 25
-
-		self.level3_button.rect.centerx = self.screen_rect.centerx
-		self.level3_button.rect.centery = self.screen_rect.centery + 50
-
-		self.back_button.rect.centerx = self.screen_rect.centerx
-		self.back_button.rect.centery = self.screen_rect.centery + 125
-		
+	
 	def draw(self):
 		# Draw buttons
 		self.tutorial_button.draw(self.display)
