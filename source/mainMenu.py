@@ -328,6 +328,7 @@ class LevelSelectionMenu:
 		self.tutorial_button = Button(0, 0, 200, 50, 'TUTORIAL', sound_player, "play_button")
 		self.level1_button = Button(0, 0, 200, 50, 'LEVEL 1', sound_player, "option_button")
 		self.level2_button = Button(0, 0, 200, 50, 'LEVEL 2', sound_player, "quit_button")
+		self.level3_button = Button(0, 0, 200, 50, 'LEVEL 3', sound_player, "play_button")
 		self.back_button = Button(0, 0, 200, 50, 'BACK', sound_player, "option_button")
 				
 		# Only the tutorial button is active by default
@@ -335,19 +336,29 @@ class LevelSelectionMenu:
 		self.tutorial_button.color = variables.DARK_OCEAN_GREEN
 		self.level1_button.active = False
 		self.level2_button.active = False
+		self.level3_button.active = False
 
 		if variables.saved_game_data["last_completed_level"] == "None":
 			self.level1_button.active = True
 			self.level1_button.color = variables.LIGHT_GREEN
 			self.level2_button.color = variables.BLACK
-		elif variables.saved_game_data["last_completed_level"] == "One" or variables.saved_game_data["last_completed_level"] == "Two":
+			self.level3_button.color = variables.BLACK
+		elif variables.saved_game_data["last_completed_level"] == "One":
 			self.level1_button.active = True
 			self.level2_button.active = True
 			self.level1_button.color = variables.LIGHT_GREEN
 			self.level2_button.color = variables.LIGHT_GREEN
+		elif variables.saved_game_data["last_completed_level"] == "Two" or variables.saved_game_data["last_completed_level"] == "Three":
+			self.level1_button.active = True
+			self.level2_button.active = True
+			self.level3_button.active = True
+			self.level1_button.color = variables.LIGHT_GREEN
+			self.level2_button.color = variables.LIGHT_GREEN
+			self.level3_button.color = variables.LIGHT_GREEN
 		else:
-			self.level1_button.color = variables.BLACK
+			self.level1_button.color = variables.LIGHT_GREEN
 			self.level2_button.color = variables.BLACK
+			self.level3_button.color = variables.BLACK
 		
 		self.back_callback = back_callback
 		
@@ -361,14 +372,18 @@ class LevelSelectionMenu:
 		self.level2_button.rect.centerx = self.screen_rect.centerx + 150
 		self.level2_button.rect.centery = self.screen_rect.centery - 25
 
+		self.level3_button.rect.centerx = self.screen_rect.centerx
+		self.level3_button.rect.centery = self.screen_rect.centery + 50
+
 		self.back_button.rect.centerx = self.screen_rect.centerx
-		self.back_button.rect.centery = self.screen_rect.centery + 75
+		self.back_button.rect.centery = self.screen_rect.centery + 125
 		
 	def draw(self):
 		# Draw buttons
 		self.tutorial_button.draw(self.display)
 		self.level1_button.draw(self.display)
 		self.level2_button.draw(self.display)
+		self.level3_button.draw(self.display)
 		self.back_button.draw(self.display)
 		
 	def handle_event(self, event, pos):
@@ -394,6 +409,13 @@ class LevelSelectionMenu:
 			game.start()
 			#self.reset_buttons()  # Reset the buttons in the level selection menu
 			return True
+		if self.level3_button.active and self.level3_button.handle_event(event, pos):
+			self.fade_transition()
+			# Replace the following line with the code to start level 2
+			game = Game(variables.screen_width, variables.screen_height, variables.fps, button="Three")
+			game.start()
+			#self.reset_buttons()  # Reset the buttons in the level selection menu
+			return True
 		if self.back_button.handle_event(event, pos):
 			self.back_callback()
 			self.reset_buttons()  # Reset the buttons in the options menu
@@ -405,6 +427,7 @@ class LevelSelectionMenu:
 		self.tutorial_button.reset()
 		self.level1_button.reset()
 		self.level2_button.reset()
+		self.level3_button.reset()
 		self.back_button.reset()
 	
 	def fade_transition(self):
