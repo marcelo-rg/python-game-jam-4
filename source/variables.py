@@ -173,11 +173,11 @@ spaceship_one_asset_upgrade = os.path.join(spaceships_assets_path,"playerShip3_b
 spaceship_two_asset_upgrade = os.path.join(spaceships_assets_path,"playerShip3_green.png")
 player_assets = {
 	"Player1": os.path.join(player_idle_path, "p1-idle.gif"),
-	"Player2": os.path.join(player_idle_path, "p1-idle.gif")
+	"Player2": os.path.join(player_idle_path, "p2-idle.gif")
 }
 player_running_assets = {
 	"Player1": os.path.join(player_move_path, "p1-run.gif"),
-	"Player2": os.path.join(player_move_path, "p1-run.gif")
+	"Player2": os.path.join(player_move_path, "p2-run.gif")
 }
 
 
