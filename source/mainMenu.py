@@ -210,9 +210,6 @@ class MainMenu:
 				self.render_title(variables.level_selection_menu_name, 125, variables.TITLE_COLOR, 100)
 				self.render_title(variables.level_selection_info, 65, variables.WHITE, 200)
 				self.level_selection_menu.draw()
-			elif self.menu_state == "instructions":
-				self.display_instructions()
-				self.menu_state = "main"  # Return to the main menu after displaying instructions
 
 			pygame.display.update()
 
@@ -397,21 +394,29 @@ class LevelSelectionMenu:
 
 	def display_instructions(self):
 		for image in self.images_instructions:
-			for x in range(-image.get_width(), self.screen_width):
-				self.display.fill((0, 0, 0))
-				self.display.blit(self.scaled_background, (0, 0))
-				self.display.blit(image, (x, (self.screen_height - image.get_height()) // 2))
-				pygame.display.update()
-				pygame.time.delay(5)  # Adjust delay for animation speed
+			self.display.fill((0, 0, 0))
+			self.display.blit(image, ((variables.screen_width - image.get_width()) // 2, (variables.screen_height - image.get_height()) // 2))
+			pygame.display.update()
+
+			# Wait for any key press or mouse click
+			while True:
+				for event in pygame.event.get():
+					if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+						# Break out of the loop and continue to the next image
+						break
+				else:
+					# Continue waiting if no key press or mouse click detected
+					continue
+				break
 
 	def handle_event(self, event, pos):
 		# Handle button clicks
 		if self.tutorial_button.active and self.tutorial_button.handle_event(event, pos):
 			#self.fade_transition()
 			self.menu_state = "instructions"
-			print("Instructions")
+			self.display_instructions()
 			#self.reset_buttons()  # Reset the buttons in the level selection menu
-			return True
+			#return True
 		if self.level1_button.active and self.level1_button.handle_event(event, pos):
 			self.fade_transition()
 			# Replace the following line with the code to start level 1
