@@ -9,7 +9,8 @@ Meteor Mayhem is a fast-paced 2D co-op game designed for Python Game Jam #4. Par
 4. [Installation & Running](#installation--running)
 5. [For Developers](#for-developers)
 6. [Creating the Executable](#creating-the-executable)
-7. [Progress Screenshots](#progress-screenshots)
+7. [Instructions Screenshots](#instructions-screenshots)
+8. [Progress Screenshots](#progress-screenshots)
 
 ## Project Diagram
 Access the game's architecture and flow diagram [here](https://app.diagrams.net/#G1nsLd9JeE7rMO8jwjvZlMnjNApgCc7dCh).
@@ -37,6 +38,27 @@ pip3 install cx_Freeze
 ```bash
 python3 ExeCreator.py build
 ```
+
+**Instructions Screenshots**
+======
+## Player Movement
+![plot](./progress/player_movement.png)
+
+## Spaceship Movement
+![plot](./progress/spaceship_movement.png)
+
+## UI
+![plot](./progress/UI.png)
+
+## Shooting
+![plot](./progress/shooting.png)
+
+## Repairing
+![plot](./progress/repairing.png)
+
+## Upgraded Spaceship
+![plot](./progress/upgraded_spaceship.png)
+
 
 **Progress Screenshots**
 ======

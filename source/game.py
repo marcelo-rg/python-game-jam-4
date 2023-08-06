@@ -581,8 +581,8 @@ class LevelThree(Level):
 		planet_sprite = pygame.image.load(os.path.join(cwd, variables.planet_asset))
 		self.planet = Planet(planet_sprite, screen_width // 2, screen_height // 2)
 
-		# Other Level 2 specific initialization...
-		self.sound_player.loadBackgroundMusic(2,variables.background_music)
+		# Other Level 3 specific initialization...
+		self.sound_player.loadBackgroundMusic(3,variables.background_music)
 
 	def start(self):
 		super().start()

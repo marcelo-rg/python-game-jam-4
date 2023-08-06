@@ -175,6 +175,8 @@ player_running_assets = {
 	"Player2": os.path.join(player_move_path, "p2-run.gif")
 }
 instruction_images = [
+    os.path.join(instruction_images_path, "player_movement.png"),
+    os.path.join(instruction_images_path, "spaceship_movement.png"),
     os.path.join(instruction_images_path, "UI.png"),
     os.path.join(instruction_images_path, "shooting.png"),
     os.path.join(instruction_images_path, "repairing.png"),
