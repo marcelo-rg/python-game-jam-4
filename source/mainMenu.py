@@ -232,7 +232,6 @@ class MainMenu:
 	def back_to_main_menu(self):
 		self.menu_state = "main"
 
-
 class Slider:
 	def __init__(self, x, y, w, h, text='', sound_manager=None, value=0, slider_type=''):
 		self.rect = pygame.Rect(x, y, w, h)
@@ -325,11 +324,14 @@ class LevelSelectionMenu:
 		self.display = display
 		self.screen_rect = self.display.get_rect()
 		self.sound_player = sound_player
+		
+		self.images_instructions = [pygame.image.load(path) for path in variables.instruction_images]  # Load images from paths
+
 		# Define the new buttons as instance variables
-		self.tutorial_button = Button(0, 0, 200, 50, 'TUTORIAL', sound_player, "play_button")
-		self.level1_button = Button(0, 0, 200, 50, 'LEVEL 1', sound_player, "option_button")
-		self.level2_button = Button(0, 0, 200, 50, 'LEVEL 2', sound_player, "quit_button")
-		self.level3_button = Button(0, 0, 200, 50, 'LEVEL 3', sound_player, "play_button")
+		self.tutorial_button = Button(0, 0, 250, 50, 'INSTRUCTIONS', sound_player, "option_button")
+		self.level1_button = Button(0, 0, 200, 50, 'LEVEL 1', sound_player, "play_button")
+		self.level2_button = Button(0, 0, 200, 50, 'LEVEL 2', sound_player, "option_button")
+		self.level3_button = Button(0, 0, 200, 50, 'LEVEL 3', sound_player, "quit_button")
 		self.back_button = Button(0, 0, 200, 50, 'BACK', sound_player, "option_button")
 				
 		# Only the tutorial button is active by default
@@ -389,16 +391,32 @@ class LevelSelectionMenu:
 		self.level2_button.draw(self.display)
 		self.level3_button.draw(self.display)
 		self.back_button.draw(self.display)
-		
+
+	def display_instructions(self):
+		for image in self.images_instructions:
+			self.display.fill((0, 0, 0))
+			self.display.blit(image, ((variables.screen_width - image.get_width()) // 2, (variables.screen_height - image.get_height()) // 2))
+			pygame.display.update()
+
+			# Wait for any key press or mouse click
+			while True:
+				for event in pygame.event.get():
+					if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+						# Break out of the loop and continue to the next image
+						break
+				else:
+					# Continue waiting if no key press or mouse click detected
+					continue
+				break
+
 	def handle_event(self, event, pos):
 		# Handle button clicks
 		if self.tutorial_button.active and self.tutorial_button.handle_event(event, pos):
-			self.fade_transition()
-			#game = Game(variables.screen_width, variables.screen_height, variables.fps, button="Tutorial")
-			#game.start()
-			print("Tutorial")
+			#self.fade_transition()
+			self.menu_state = "instructions"
+			self.display_instructions()
 			#self.reset_buttons()  # Reset the buttons in the level selection menu
-			return True
+			#return True
 		if self.level1_button.active and self.level1_button.handle_event(event, pos):
 			self.fade_transition()
 			# Replace the following line with the code to start level 1

@@ -9,7 +9,8 @@ Meteor Mayhem is a fast-paced 2D co-op game designed for Python Game Jam #4. Par
 4. [Installation & Running](#installation--running)
 5. [For Developers](#for-developers)
 6. [Creating the Executable](#creating-the-executable)
-7. [Progress Screenshots](#progress-screenshots)
+7. [Instructions Screenshots](#instructions-screenshots)
+8. [Progress Screenshots](#progress-screenshots)
 
 ## Project Diagram
 Access the game's architecture and flow diagram [here](https://app.diagrams.net/#G1nsLd9JeE7rMO8jwjvZlMnjNApgCc7dCh).
@@ -24,7 +25,7 @@ Participate in the jam or explore other projects on the [Itch.io Jam URL](https:
 To install and run the game, follow these steps:
 
 ```bash
-pip3 install pygame cryptography
+pip3 install pygame cryptography pillow
 python3 main.py
 ```
 
@@ -38,8 +39,53 @@ pip3 install cx_Freeze
 python3 ExeCreator.py build
 ```
 
+**Instructions Screenshots**
+======
+## Player Movement
+![plot](./progress/player_movement.png)
+
+## Spaceship Movement
+![plot](./progress/spaceship_movement.png)
+
+## UI
+![plot](./progress/UI.png)
+
+## Shooting
+![plot](./progress/shooting.png)
+
+## Repairing
+![plot](./progress/repairing.png)
+
+## Upgraded Spaceship
+![plot](./progress/upgraded_spaceship.png)
+
+
 **Progress Screenshots**
 ======
+## Main Menu
+![plot](./progress/main_Menu.png)
+
+## Level Select
+![plot](./progress/level_select.png)
+
+## Options Menu
+![plot](./progress/Options_Menu.png)
+
+## Level One
+![plot](./progress/level_one.png)
+
+## Player One Idle
+![plot](./progress/p1-idle.gif)
+
+## Player Two Idle
+![plot](./progress/p2-idle.gif)
+
+## Player One Run
+![plot](./progress/p1-run.gif)
+
+## Player Two Run
+![plot](./progress/p2-run.gif)
+
 ## First Image
 ![plot](./progress/first-image.png)
 

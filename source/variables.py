@@ -28,7 +28,7 @@ saved_game_data = {
 ####################
 
 # Player Variables
-player_speed = 1
+player_speed = 3
 spaceship_speed = 3
 
 game_data = {
@@ -77,9 +77,6 @@ player_controls = {
 		"Interact": {
 			"Use": pygame.K_e
 		},
-		"Upgrade": {
-			"Use": pygame.K_f
-		},
 		"Fire": {
 			"Use": pygame.K_SPACE
 		},
@@ -96,13 +93,10 @@ player_controls = {
 			"Right": pygame.K_RIGHT
 		},
 		"Interact": {
-			"Use": pygame.K_j
-		},
-		"Upgrade": {
 			"Use": pygame.K_i
 		},
 		"Fire": {
-			"Use": pygame.K_l
+			"Use": pygame.K_o
 		},
 		"Menu": {
 			"Use": pygame.K_p
@@ -139,11 +133,14 @@ asteroid_assets_path = os.path.join(assets_path, "asteroid")
 meteors_assets_path = os.path.join(assets_path, "meteors")
 spaceships_assets_path = os.path.join(assets_path, "spaceships")
 player_assets_path = os.path.join(assets_path, "player")
+player_idle_path = os.path.join(player_assets_path, "idle")
+player_move_path = os.path.join(player_assets_path, "move")
 background_assets_path = os.path.join(assets_path, "background")
 bullet_sprite_path = os.path.join(assets_path, "bullets","bullet1.png")
 bullet_sprite_path_upgraded = os.path.join(assets_path, "bullets","bullet2.png")
 sound_path = os.path.join(source_path, "music")
 isolaproduction_path = os.path.join(sound_path, "isolaproduction")
+instruction_images_path = os.path.join(assets_path, "instructions")
 
 ####################
 
@@ -170,9 +167,21 @@ spaceship_two_asset = os.path.join(spaceships_assets_path,"playerShip2_green.png
 spaceship_one_asset_upgrade = os.path.join(spaceships_assets_path,"playerShip3_blue.png")
 spaceship_two_asset_upgrade = os.path.join(spaceships_assets_path,"playerShip3_green.png")
 player_assets = {
-	"Player1": os.path.join(player_assets_path, "player1.png"),
-	"Player2": os.path.join(player_assets_path, "player2.png")
+	"Player1": os.path.join(player_idle_path, "p1-idle.gif"),
+	"Player2": os.path.join(player_idle_path, "p2-idle.gif")
 }
+player_running_assets = {
+	"Player1": os.path.join(player_move_path, "p1-run.gif"),
+	"Player2": os.path.join(player_move_path, "p2-run.gif")
+}
+instruction_images = [
+    os.path.join(instruction_images_path, "player_movement.png"),
+    os.path.join(instruction_images_path, "spaceship_movement.png"),
+    os.path.join(instruction_images_path, "UI.png"),
+    os.path.join(instruction_images_path, "shooting.png"),
+    os.path.join(instruction_images_path, "repairing.png"),
+    os.path.join(instruction_images_path, "upgraded_spaceship.png"),
+]
 
 ####################
 
@@ -186,8 +195,8 @@ spaceship_sprite_size  = {
 	"upgrade_one": [(56, 38), (56, 38)]
 }
 player_assets_size = {
-	"Player1": {"x": 42, "y": 42},
-	"Player2": {"x": 42, "y": 42}
+	"Player1": {"x": 75, "y": 40},
+	"Player2": {"x": 75, "y": 40}
 }
 
 # This dictionary above has sprite size for both spaceships
@@ -216,11 +225,11 @@ global_music_volume = 0.3
 global_sound_volume = 0.05
 italian_sound_volume = 0.5
 main_menu_music = "ThemeTRY1.mp3"
-#pause_menu_music = "ThemeTRY2.mp3"
 pause_menu_music = "Is_not_over.wav"
 background_music = {
 	1: "Trying_to_go_home.wav",
-	2: "Not_far_enough.wav"
+	2: "Not_far_enough.wav",
+    3: "ThemeTRY2.mp3"
 }
 
 sounds = {
