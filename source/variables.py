@@ -36,7 +36,7 @@ game_data = {
         "spaceship_one_hp": {"current": 100, "max": 100},
         "spaceship_two_hp": {"current": 100, "max": 100},
         "planet_hp": {"current": 500, "max": 500, "damage_per_hit": 30},
-        "initial_xp": {"current": 900, "max": 1000, "xp_per_hit": 100},
+        "initial_xp": {"current": 0, "max": 1000, "xp_per_hit": 100},
         "asteroid_hp": {"current": 100, "max": 100, "damage_per_hit": 10},
         "num_meteors": 3,
         "meteor_speed": 1.0,
