@@ -213,10 +213,16 @@ class Spaceship(Sprite):
 		self.original_sprite = pygame.image.load(new_spaceship_sprite_path)
 		self.original_sprite_scaled = pygame.transform.scale(self.original_sprite, self.scale)
 
-		# You may want to update the current image as well, if it's being used elsewhere
-		self.image = pygame.transform.rotate(self.original_sprite_scaled, self.angle)
+		if self.spaceship_number == 1:
+			# Rotate the scaled original sprite by 180 degrees
+			self.original_sprite_scaled = pygame.transform.rotate(self.original_sprite_scaled, 180)
+			# Set the image using the current angle
+			self.image = pygame.transform.rotate(self.original_sprite_scaled, self.angle)
+		else:
+			# Set the image using the current angle
+			self.image = pygame.transform.rotate(self.original_sprite_scaled, self.angle)
 
-		# Change other properties as desired...
+
 
 
 	def reposition(self, spaceship_number):
