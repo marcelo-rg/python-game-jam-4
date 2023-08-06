@@ -226,17 +226,24 @@ class Spaceship(Sprite):
 		# self.y = variables.spaceship_positions[self.level][self.spaceship_number-1][1]
 		planet_center_x, planet_center_y = (self.screen_width//2, self.screen_height//2)
 
-		if (spaceship_number == 1):
+		if (spaceship_number == 1): # this is the green asset spaceship
 			self.x = planet_center_x + (self.planet_radius + self.radius) * math.cos(self.initial_angle)
 			self.y = planet_center_y + (self.planet_radius + self.radius) * math.sin(self.initial_angle)
 			self.angle = self.initial_angle + 180
 			self.image = pygame.transform.rotate(self.original_sprite_scaled, self.angle)
+
+			# print(self.initial_angle)
+			# # print initial angle in degrees
+			# print(math.degrees(self.initial_angle))
+			# print(math.degrees(self.angle))
+			# exit()
+			self.original_sprite_scaled = pygame.transform.rotate(self.original_sprite_scaled, self.angle)
 		else:
 			# Change these lines to reflect the different initial position and angle for spaceship 2
 			self.x = planet_center_x + (self.planet_radius + self.radius) * math.cos(self.initial_angle)
 			self.y = planet_center_y + (self.planet_radius + self.radius) * math.sin(self.initial_angle)
 			self.angle = self.initial_angle
-			self.image = pygame.transform.rotate(self.original_sprite_scaled, self.initial_angle)
+			self.image = pygame.transform.rotate(self.original_sprite_scaled, self.angle)
 
 		# self.radius = max(self.rect.width // 2, self.rect.height // 2) # radius for collision detection
 
@@ -246,9 +253,12 @@ class Spaceship(Sprite):
 	def shoot(self):
 		# Compute the offset position of the bullet
 		half_height = self.rect.height / 2
-		adjusted_angle = math.radians(-self.angle - 90)  # Convert angle to radians and adjust by -90 degrees
-		offset_x = half_height * math.cos(adjusted_angle)
-		offset_y = half_height * math.sin(adjusted_angle)
+		adjusted_angle =-self.angle - 90 # Convert angle to radians and adjust by -90 degrees
+		if self.spaceship_number == 1:
+			adjusted_angle += 180
+		radians = math.radians(adjusted_angle)
+		offset_x = half_height * math.cos(radians)
+		offset_y = half_height * math.sin(radians)
 
 		# Compute the bullet's initial position
 		bullet_x = self.x + offset_x
@@ -259,7 +269,11 @@ class Spaceship(Sprite):
 			asset_path = variables.bullet_sprite_path_upgraded
 		else:
 			asset_path = variables.bullet_sprite_path
-		bullet = Bullet(bullet_x, bullet_y, self.angle, variables.bullet_speed, asset_path, variables.bullet_sprite_size, self.screen_width, self.screen_height)
+
+		bullet_angle = self.angle
+		if self.spaceship_number == 1:
+			bullet_angle += 180
+		bullet = Bullet(bullet_x, bullet_y, bullet_angle, variables.bullet_speed, asset_path, variables.bullet_sprite_size, self.screen_width, self.screen_height)
 		self.bullets.append(bullet)
 
 
@@ -281,6 +295,8 @@ class Spaceship(Sprite):
 
 	def move(self, distance):
 		adjusted_angle = -self.angle - 90
+		if self.spaceship_number == 1:
+			adjusted_angle += 180  # Additional adjustment for the green asset spaceship
 		radians = math.radians(adjusted_angle)
 		new_x = self.x + distance * math.cos(radians)
 		new_y = self.y + distance * math.sin(radians)
@@ -295,7 +311,7 @@ class Spaceship(Sprite):
 		dist_to_center = ((new_x - center_x)**2 + (new_y - center_y)**2)**0.5  # Pythagorean theorem
 
 		# Check if the spaceship would go inside the planet
-		if dist_to_center < self.planet_radius + self.radius:  # I'm assuming the planet_radius is accessible from the variables module
+		if dist_to_center < self.planet_radius + self.radius: 
 			return  # If it would, block the movement
 
 		# If it wouldn't, apply the movement
