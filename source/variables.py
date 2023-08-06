@@ -186,6 +186,14 @@ instruction_images = [
 ####################
 
 # SPRITE SIZES
+instrutions_size = [
+    [500,600],
+    [870,500],
+    [597,600],
+    [972,600],
+    [606,600],
+    [1200,583]
+] 
 asteroid_sprite_size = 128
 planet_sprite_size = 256
 meteor_sprite_size = 32

@@ -326,6 +326,11 @@ class LevelSelectionMenu:
 		self.sound_player = sound_player
 		
 		self.images_instructions = [pygame.image.load(path) for path in variables.instruction_images]  # Load images from paths
+		# for size, b in variables.instrutions_size:
+		# 	print(b)
+		# 	print(type(b))
+		# 	exit()
+		self.images_instructions = [pygame.transform.scale(image, (image_scale[0], image_scale[1])) for image, image_scale in zip(self.images_instructions, variables.instrutions_size)]  # Scale images to screen size
 
 		# Define the new buttons as instance variables
 		self.tutorial_button = Button(0, 0, 250, 50, 'INSTRUCTIONS', sound_player, "option_button")
