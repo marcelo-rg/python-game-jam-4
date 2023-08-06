@@ -140,6 +140,7 @@ bullet_sprite_path = os.path.join(assets_path, "bullets","bullet1.png")
 bullet_sprite_path_upgraded = os.path.join(assets_path, "bullets","bullet2.png")
 sound_path = os.path.join(source_path, "music")
 isolaproduction_path = os.path.join(sound_path, "isolaproduction")
+instruction_images_path = os.path.join(assets_path, "instructions")
 
 ####################
 
@@ -173,7 +174,12 @@ player_running_assets = {
 	"Player1": os.path.join(player_move_path, "p1-run.gif"),
 	"Player2": os.path.join(player_move_path, "p2-run.gif")
 }
-
+instruction_images = [
+    os.path.join(instruction_images_path, "UI.png"),
+    os.path.join(instruction_images_path, "shooting.png"),
+    os.path.join(instruction_images_path, "repairing.png"),
+    os.path.join(instruction_images_path, "upgraded_spaceship.png"),
+]
 
 ####################
 
@@ -217,11 +223,11 @@ global_music_volume = 0.3
 global_sound_volume = 0.05
 italian_sound_volume = 0.5
 main_menu_music = "ThemeTRY1.mp3"
-#pause_menu_music = "ThemeTRY2.mp3"
 pause_menu_music = "Is_not_over.wav"
 background_music = {
 	1: "Trying_to_go_home.wav",
-	2: "Not_far_enough.wav"
+	2: "Not_far_enough.wav",
+    3: "ThemeTRY2.mp3"
 }
 
 sounds = {

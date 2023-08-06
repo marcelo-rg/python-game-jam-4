@@ -327,6 +327,9 @@ class LevelSelectionMenu:
 		self.display = display
 		self.screen_rect = self.display.get_rect()
 		self.sound_player = sound_player
+		
+		self.images_instructions = [pygame.image.load(path) for path in variables.instruction_images]  # Load images from paths
+
 		# Define the new buttons as instance variables
 		self.tutorial_button = Button(0, 0, 250, 50, 'INSTRUCTIONS', sound_player, "option_button")
 		self.level1_button = Button(0, 0, 200, 50, 'LEVEL 1', sound_player, "play_button")
@@ -393,15 +396,13 @@ class LevelSelectionMenu:
 		self.back_button.draw(self.display)
 
 	def display_instructions(self):
-		images = [pygame.image.load(path) for path in variables.instruction_images]  # Load images from paths
-		for image in images:
+		for image in self.images_instructions:
 			for x in range(-image.get_width(), self.screen_width):
 				self.display.fill((0, 0, 0))
 				self.display.blit(self.scaled_background, (0, 0))
 				self.display.blit(image, (x, (self.screen_height - image.get_height()) // 2))
 				pygame.display.update()
 				pygame.time.delay(5)  # Adjust delay for animation speed
-
 
 	def handle_event(self, event, pos):
 		# Handle button clicks
