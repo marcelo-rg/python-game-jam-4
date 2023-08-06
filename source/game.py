@@ -58,8 +58,8 @@ class UI:
 		self.screen = screen
 
 		# Initialize sliders with x, y, width, height
-		self.slider_p1 = Slider(50, 50, 200, 20, "Player 1 HP", variables.game_data[variables.current_level]["spaceship_one_hp"], apply_gradient=True)
-		self.slider_p2 = Slider(50, 100, 200, 20, "Player 2 HP", variables.game_data[variables.current_level]["spaceship_two_hp"], apply_gradient=True)
+		self.slider_p1 = Slider(50, 50, 200, 20, "Spaceship 1 HP", variables.game_data[variables.current_level]["spaceship_one_hp"], apply_gradient=True)
+		self.slider_p2 = Slider(50, 100, 200, 20, "Spaceship 2 HP", variables.game_data[variables.current_level]["spaceship_two_hp"], apply_gradient=True)
 		self.slider_planet = Slider(50, 150, 200, 20, "Planet HP", variables.game_data[variables.current_level]["planet_hp"], apply_gradient=True)
 		self.slider_xp = Slider(50, 200, 200, 20, "XP", variables.game_data[variables.current_level]["initial_xp"], color = variables.YELLOW)
 		self.slider_asteroid = Slider(50, 250, 200, 20, "Asteroid HP", variables.game_data[variables.current_level]["asteroid_hp"], color = variables.RED)
