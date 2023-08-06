@@ -465,8 +465,8 @@ class Level():
 				if event.type == pygame.QUIT:
 					pygame.quit()
 					sys.exit()
-				if event.type == pygame.KEYUP:
-					time.sleep(1)  # add delay
+				if event.type == pygame.KEYUP or event.type == pygame.MOUSEBUTTONUP:
+					#time.sleep(1)  # add delay
 					return
 
 class LevelOne(Level):

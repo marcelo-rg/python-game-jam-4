@@ -377,6 +377,7 @@ class LevelSelectionMenu:
 			self.level2_button.active = True
 			self.level1_button.color = variables.LIGHT_GREEN
 			self.level2_button.color = variables.LIGHT_GREEN
+			self.level3_button.color = variables.BLACK
 		elif variables.saved_game_data["last_completed_level"] == "Two" or variables.saved_game_data["last_completed_level"] == "Three":
 			self.level1_button.active = True
 			self.level2_button.active = True
