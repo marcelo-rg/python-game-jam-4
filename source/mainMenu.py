@@ -210,6 +210,9 @@ class MainMenu:
 				self.render_title(variables.level_selection_menu_name, 125, variables.TITLE_COLOR, 100)
 				self.render_title(variables.level_selection_info, 65, variables.WHITE, 200)
 				self.level_selection_menu.draw()
+			elif self.menu_state == "instructions":
+				self.display_instructions()
+				self.menu_state = "main"  # Return to the main menu after displaying instructions
 
 			pygame.display.update()
 
@@ -231,7 +234,6 @@ class MainMenu:
 	
 	def back_to_main_menu(self):
 		self.menu_state = "main"
-
 
 class Slider:
 	def __init__(self, x, y, w, h, text='', sound_manager=None, value=0, slider_type=''):
@@ -326,10 +328,10 @@ class LevelSelectionMenu:
 		self.screen_rect = self.display.get_rect()
 		self.sound_player = sound_player
 		# Define the new buttons as instance variables
-		self.tutorial_button = Button(0, 0, 200, 50, 'TUTORIAL', sound_player, "play_button")
-		self.level1_button = Button(0, 0, 200, 50, 'LEVEL 1', sound_player, "option_button")
-		self.level2_button = Button(0, 0, 200, 50, 'LEVEL 2', sound_player, "quit_button")
-		self.level3_button = Button(0, 0, 200, 50, 'LEVEL 3', sound_player, "play_button")
+		self.tutorial_button = Button(0, 0, 250, 50, 'INSTRUCTIONS', sound_player, "option_button")
+		self.level1_button = Button(0, 0, 200, 50, 'LEVEL 1', sound_player, "play_button")
+		self.level2_button = Button(0, 0, 200, 50, 'LEVEL 2', sound_player, "option_button")
+		self.level3_button = Button(0, 0, 200, 50, 'LEVEL 3', sound_player, "quit_button")
 		self.back_button = Button(0, 0, 200, 50, 'BACK', sound_player, "option_button")
 				
 		# Only the tutorial button is active by default
@@ -389,14 +391,24 @@ class LevelSelectionMenu:
 		self.level2_button.draw(self.display)
 		self.level3_button.draw(self.display)
 		self.back_button.draw(self.display)
-		
+
+	def display_instructions(self):
+		images = [pygame.image.load(path) for path in variables.instruction_images]  # Load images from paths
+		for image in images:
+			for x in range(-image.get_width(), self.screen_width):
+				self.display.fill((0, 0, 0))
+				self.display.blit(self.scaled_background, (0, 0))
+				self.display.blit(image, (x, (self.screen_height - image.get_height()) // 2))
+				pygame.display.update()
+				pygame.time.delay(5)  # Adjust delay for animation speed
+
+
 	def handle_event(self, event, pos):
 		# Handle button clicks
 		if self.tutorial_button.active and self.tutorial_button.handle_event(event, pos):
-			self.fade_transition()
-			#game = Game(variables.screen_width, variables.screen_height, variables.fps, button="Tutorial")
-			#game.start()
-			print("Tutorial")
+			#self.fade_transition()
+			self.menu_state = "instructions"
+			print("Instructions")
 			#self.reset_buttons()  # Reset the buttons in the level selection menu
 			return True
 		if self.level1_button.active and self.level1_button.handle_event(event, pos):

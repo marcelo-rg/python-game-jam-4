@@ -28,7 +28,7 @@ saved_game_data = {
 ####################
 
 # Player Variables
-player_speed = 5
+player_speed = 3
 spaceship_speed = 3
 
 game_data = {
