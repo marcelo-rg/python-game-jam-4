@@ -1,5 +1,6 @@
 import os
 import sys
+sys.path.append('../')
 from cx_Freeze import setup, Executable
 
 class ExeCreator:
@@ -16,6 +17,6 @@ class ExeCreator:
         )
 
 if __name__ == "__main__":
-    script_name = "game.py"
+    script_name ="main.py"
     exe_creator = ExeCreator(script_name, "Win32GUI")
     exe_creator.create_exe()
