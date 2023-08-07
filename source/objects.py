@@ -236,7 +236,6 @@ class Spaceship(Sprite):
    
 			self.image = pygame.transform.rotate(self.original_sprite_scaled, self.angle)
 
-			print("problem")
 			# # print initial angle in degrees
 			# print(math.degrees(self.initial_angle))
 			# print(math.degrees(self.angle))
