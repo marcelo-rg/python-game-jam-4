@@ -222,9 +222,6 @@ class Spaceship(Sprite):
 			# Set the image using the current angle
 			self.image = pygame.transform.rotate(self.original_sprite_scaled, self.angle)
 
-
-
-
 	def reposition(self, spaceship_number):
 		"""Reposition the spaceship to its original location in case of collision."""
 		# Load the original position from variables
@@ -236,9 +233,10 @@ class Spaceship(Sprite):
 			self.x = planet_center_x + (self.planet_radius + self.radius) * math.cos(self.initial_angle)
 			self.y = planet_center_y + (self.planet_radius + self.radius) * math.sin(self.initial_angle)
 			self.angle = self.initial_angle + 180
+   
 			self.image = pygame.transform.rotate(self.original_sprite_scaled, self.angle)
 
-			# print(self.initial_angle)
+			print("problem")
 			# # print initial angle in degrees
 			# print(math.degrees(self.initial_angle))
 			# print(math.degrees(self.angle))

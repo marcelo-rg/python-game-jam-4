@@ -290,7 +290,7 @@ class Level():
 					if(spaceship.playerID) == "Player1":
 						self.player_one.leave_spaceship(0)
 					elif(spaceship.playerID) == "Player2":
-						self.player_two.leave_spaceship(1)
+						self.player_two.leave_spaceship(0)
 					if spaceship == self.spaceship_one:
 						variables.game_data[current_level]["spaceship_one_hp"]['current'] = 0
 						spaceship.hp = 0
